@@ -55,12 +55,11 @@ export const Navbar: React.FC<NavbarProps> = ({
             className="flex items-center cursor-pointer group py-2"
             onClick={() => handleNav(AppView.HOME)}
           >
-            <img
-              src="/tmshydra.com/logo1.png"
-              alt="TMS-HYDRA"
-              className="h-[60px] sm:h-[72px] w-auto object-contain transition-transform duration-300 group-hover:scale-105"
-            />
-          </div>
+         <img
+  src={`${import.meta.env.BASE_URL}logo1.png`}
+  alt="TMS-HYDRA"
+  className="h-[60px] sm:h-[72px] w-auto object-contain transition-transform duration-300 group-hover:scale-105"
+/>
 
           {/* DESKTOP MENU */}
           <div className="hidden md:flex items-center space-x-4 lg:space-x-6">
