@@ -50,16 +50,18 @@ export const Navbar: React.FC<NavbarProps> = ({
     <nav className="sticky top-0 z-50 bg-white border-b border-slate-200 shadow-sm">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-24">
+
           {/* LOGO */}
           <div
             className="flex items-center cursor-pointer group py-2"
             onClick={() => handleNav(AppView.HOME)}
           >
-         <img
-  src={`${import.meta.env.BASE_URL}logo1.png`}
-  alt="TMS-HYDRA"
-  className="h-[60px] sm:h-[72px] w-auto object-contain transition-transform duration-300 group-hover:scale-105"
-/>
+            <img
+              src={`${import.meta.env.BASE_URL}logo1.png`}
+              alt="TMS-HYDRA"
+              className="h-[60px] sm:h-[72px] w-auto object-contain transition-transform duration-300 group-hover:scale-105"
+            />
+          </div>
 
           {/* DESKTOP MENU */}
           <div className="hidden md:flex items-center space-x-4 lg:space-x-6">
@@ -100,6 +102,7 @@ export const Navbar: React.FC<NavbarProps> = ({
               )}
             </button>
           </div>
+
         </div>
       </div>
 
@@ -107,6 +110,7 @@ export const Navbar: React.FC<NavbarProps> = ({
       {isOpen && (
         <div className="md:hidden bg-white border-t border-slate-100 py-6 animate-in slide-in-from-top duration-300 shadow-xl">
           <div className="flex flex-col space-y-2 px-4">
+
             {navItems.map((item) => (
               <button
                 key={item.view}
@@ -129,6 +133,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                 Vypočítať cenu (Kalkulačka)
               </button>
             )}
+
           </div>
         </div>
       )}
