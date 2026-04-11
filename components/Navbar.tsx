@@ -57,10 +57,10 @@ export const Navbar: React.FC<NavbarProps> = ({
             onClick={() => handleNav(AppView.HOME)}
           >
             <img
-              src={`${import.meta.env.BASE_URL}logo1.png`}
-              alt="TMS-HYDRA"
-              className="h-[60px] sm:h-[72px] w-auto object-contain transition-transform duration-300 group-hover:scale-105"
-            />
+  src="/tmshydra.com/logo1.png"
+  alt="TMS-HYDRA"
+  className="h-[60px] sm:h-[72px] w-auto object-contain"
+/>
           </div>
 
           {/* DESKTOP MENU */}
