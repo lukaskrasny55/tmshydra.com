@@ -1,131 +1,62 @@
-import React, { useEffect, useState } from 'react';
-import { supabase } from '../lib/supabase';
-import { Save, Calculator } from 'lucide-react';
+import React, { useState } from 'react';
+import { Calculator as CalcIcon } from 'lucide-react';
 
-interface CalculatorSettings {
-  id: string;
-  price_single: number;
-  price_double: number;
-  price_triple_pir: number;
-  price_mpvc: number;
-  discount_percentage: number;
-  minimum_order_price: number;
-}
+export const Calculator: React.FC = () => {
+  const [area, setArea] = useState(100);
+  const [type, setType] = useState('single');
 
-export const CalculatorEditor: React.FC = () => {
-  const [settings, setSettings] = useState<CalculatorSettings | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [saving, setSaving] = useState(false);
-
-  useEffect(() => {
-    fetchSettings();
-  }, []);
-
-  const fetchSettings = async () => {
-    const { data, error } = await supabase.from('calculator_settings').select('*').single();
-    if (error) {
-      console.error(error);
-      // If no settings exist, create default
-      if (error.code === 'PGRST116') {
-        const { data: newData } = await supabase.from('calculator_settings').insert([{
-          price_single: 22,
-          price_double: 33,
-          price_triple_pir: 70,
-          price_mpvc: 28
-        }]).select().single();
-        setSettings(newData);
-      }
-    } else {
-      setSettings(data);
-    }
-    setLoading(false);
+  const prices = {
+    single: 22,
+    double: 33,
+    pir: 70,
+    mpvc: 28,
   };
 
-  const handleSave = async () => {
-    if (!settings) return;
-    setSaving(true);
-    const { error } = await supabase.from('calculator_settings').update(settings).eq('id', settings.id);
-    if (error) alert('Error saving: ' + error.message);
-    else alert('Calculator settings updated!');
-    setSaving(false);
-  };
-
-  if (loading) return <div>Loading...</div>;
+  const total = area * prices[type as keyof typeof prices];
 
   return (
-    <div className="space-y-8">
-      <div className="flex items-center justify-between">
-        <h1 className="text-4xl font-black text-slate-900 uppercase tracking-tighter">Calculator Settings</h1>
-        <button
-          onClick={handleSave}
-          disabled={saving}
-          className="flex items-center gap-2 bg-blue-600 text-white px-8 py-4 rounded-2xl font-black uppercase tracking-widest hover:bg-blue-700 transition-all disabled:opacity-50"
-        >
-          <Save className="w-5 h-5" /> {saving ? 'Saving...' : 'Save Settings'}
-        </button>
-      </div>
-
-      <div className="bg-white p-12 rounded-[3.5rem] shadow-xl border border-slate-100 space-y-12">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12">
-          <div className="space-y-3">
-            <label className="text-[10px] font-black text-blue-500 uppercase tracking-[0.2em] ml-2">Jednovrstvová (€/m²)</label>
-            <input
-              type="number"
-              value={settings?.price_single || 0}
-              onChange={(e) => setSettings({ ...settings!, price_single: parseFloat(e.target.value) })}
-              className="w-full bg-slate-50 border border-slate-200 rounded-2xl px-6 py-4 outline-none focus:border-blue-500 transition-all font-bold"
-            />
-          </div>
-          <div className="space-y-3">
-            <label className="text-[10px] font-black text-blue-500 uppercase tracking-[0.2em] ml-2">Dvojvrstvová (€/m²)</label>
-            <input
-              type="number"
-              value={settings?.price_double || 0}
-              onChange={(e) => setSettings({ ...settings!, price_double: parseFloat(e.target.value) })}
-              className="w-full bg-slate-50 border border-slate-200 rounded-2xl px-6 py-4 outline-none focus:border-blue-500 transition-all font-bold"
-            />
-          </div>
-          <div className="space-y-3">
-            <label className="text-[10px] font-black text-blue-500 uppercase tracking-[0.2em] ml-2">Trojvrstvová PIR (€/m²)</label>
-            <input
-              type="number"
-              value={settings?.price_triple_pir || 0}
-              onChange={(e) => setSettings({ ...settings!, price_triple_pir: parseFloat(e.target.value) })}
-              className="w-full bg-slate-50 border border-slate-200 rounded-2xl px-6 py-4 outline-none focus:border-blue-500 transition-all font-bold"
-            />
-          </div>
-          <div className="space-y-3">
-            <label className="text-[10px] font-black text-blue-500 uppercase tracking-[0.2em] ml-2">mPVC fólia (€/m²)</label>
-            <input
-              type="number"
-              value={settings?.price_mpvc || 0}
-              onChange={(e) => setSettings({ ...settings!, price_mpvc: parseFloat(e.target.value) })}
-              className="w-full bg-slate-50 border border-slate-200 rounded-2xl px-6 py-4 outline-none focus:border-blue-500 transition-all font-bold"
-            />
-          </div>
+    <section id="calculator" className="py-20 bg-slate-100">
+      <div className="max-w-4xl mx-auto bg-white rounded-3xl shadow-xl p-10">
+        <div className="flex items-center gap-3 mb-8">
+          <CalcIcon className="w-8 h-8 text-blue-600" />
+          <h2 className="text-3xl font-black">Kalkulačka ceny strechy</h2>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-12 pt-12 border-t border-slate-100">
-          <div className="space-y-3">
-            <label className="text-[10px] font-black text-blue-500 uppercase tracking-[0.2em] ml-2">Zľava (%)</label>
+        <div className="grid md:grid-cols-2 gap-8">
+
+          <div>
+            <label className="font-bold block mb-2">Rozloha (m²)</label>
             <input
               type="number"
-              value={settings?.discount_percentage || 0}
-              onChange={(e) => setSettings({ ...settings!, discount_percentage: parseFloat(e.target.value) })}
-              className="w-full bg-slate-50 border border-slate-200 rounded-2xl px-6 py-4 outline-none focus:border-blue-500 transition-all font-bold"
+              value={area}
+              onChange={(e) => setArea(Number(e.target.value))}
+              className="w-full border rounded-xl px-4 py-3"
             />
           </div>
-          <div className="space-y-3">
-            <label className="text-[10px] font-black text-blue-500 uppercase tracking-[0.2em] ml-2">Min. cena objednávky (€)</label>
-            <input
-              type="number"
-              value={settings?.minimum_order_price || 0}
-              onChange={(e) => setSettings({ ...settings!, minimum_order_price: parseFloat(e.target.value) })}
-              className="w-full bg-slate-50 border border-slate-200 rounded-2xl px-6 py-4 outline-none focus:border-blue-500 transition-all font-bold"
-            />
+
+          <div>
+            <label className="font-bold block mb-2">Typ strechy</label>
+            <select
+              value={type}
+              onChange={(e) => setType(e.target.value)}
+              className="w-full border rounded-xl px-4 py-3"
+            >
+              <option value="single">Jednovrstvová</option>
+              <option value="double">Dvojvrstvová</option>
+              <option value="pir">Trojvrstvová PIR</option>
+              <option value="mpvc">mPVC fólia</option>
+            </select>
+          </div>
+
+        </div>
+
+        <div className="mt-10 bg-blue-600 text-white rounded-2xl p-8 text-center">
+          <div className="text-lg font-bold">Orientačná cena</div>
+          <div className="text-5xl font-black mt-2">
+            {total.toLocaleString()} €
           </div>
         </div>
       </div>
-    </div>
+    </section>
   );
 };
