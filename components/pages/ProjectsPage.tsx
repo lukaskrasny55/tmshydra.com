@@ -47,7 +47,7 @@ export const ProjectsPage: React.FC<Props> = ({ onBack }) => {
       location: 'Dubnica',
       description: 'Nová strecha bytového domu.',
       gallery: ['bdv1.jpeg', 'bdv2.jpg', 'bdv3.jpg']
-    }
+    },
     {
   id: '5',
   title: 'Biela lepenka',
