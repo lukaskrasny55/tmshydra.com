@@ -48,6 +48,20 @@ export const ProjectsPage: React.FC<Props> = ({ onBack }) => {
       description: 'Nová strecha bytového domu.',
       gallery: ['bdv1.jpeg', 'bdv2.jpg', 'bdv3.jpg']
     }
+    {
+  id: '5',
+  title: 'Biela lepenka',
+  location: 'Pezinok',
+  description: 'Pochôdzna terasa s hydroizoláciou.',
+  gallery: ['bl1.jpeg', 'bl2.jpeg', 'bl3.jpeg']
+},
+{
+  id: '6',
+  title: 'Zelená strecha',
+  location: 'Belgicko',
+  description: 'Prémiová TPO fólia na administratívnom objekte.',
+  gallery: ['b1.jpg', 'b2.jpg', 'b3.jpg']
+}
   ];
 
   const openGallery = (project: Project) => {
