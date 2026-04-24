@@ -28,9 +28,9 @@ export const CalculatorEditor: React.FC = () => {
       // If no settings exist, create default
       if (error.code === 'PGRST116') {
         const { data: newData } = await supabase.from('calculator_settings').insert([{
-          price_single: 22,
-          price_double: 33,
-          price_triple_pir: 70,
+          price_single: 23,
+          price_double: 36,
+          price_triple_pir: 75,
           price_mpvc: 28
         }]).select().single();
         setSettings(newData);

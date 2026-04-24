@@ -29,26 +29,39 @@ export const SeoCityPage: React.FC = () => {
     const fetchPage = async () => {
       if (!service || !city) return;
 
-      const slug = `${service}/${city}`;
-      const { data, error } = await supabase
-        .from('seo_city_pages')
-        .select('*')
-        .eq('slug', slug)
-        .single();
+      try {
+        const slug = `${service}/${city}`;
+        const { data, error } = await supabase
+          .from('seo_city_pages')
+          .select('*')
+          .eq('slug', slug)
+          .single();
 
-      if (!error && data) {
-        setPageData(data);
-      } else {
-        // Generate default content if not found
-        const generatedContent = {
+        if (!error && data) {
+          setPageData(data);
+        } else {
+          // Generate default content if not found
+          const generatedContent = {
+            title: `${serviceName} ${formattedCity}`,
+            meta_title: `${serviceName} ${formattedCity} | TMS-HYDRA`,
+            meta_description: `Profesionálna ${serviceName.toLowerCase()} v meste ${formattedCity}. Kontaktujte TMS-HYDRA pre bezplatnú obhliadku strechy.`,
+            content: `Naša spoločnosť TMS-HYDRA poskytuje profesionálne služby ${serviceName.toLowerCase()} v meste ${formattedCity}. Špecializujeme sa na hydroizolácie a zateplenie plochých striech s využitím moderných technológií a kvalitných materiálov.`
+          };
+          setPageData(generatedContent);
+        }
+      } catch (err) {
+        console.error('Error fetching SEO city page:', err);
+        // Fallback for network error
+        const fallbackContent = {
           title: `${serviceName} ${formattedCity}`,
           meta_title: `${serviceName} ${formattedCity} | TMS-HYDRA`,
-          meta_description: `Profesionálna ${serviceName.toLowerCase()} v meste ${formattedCity}. Kontaktujte TMS-HYDRA pre bezplatnú obhliadku strechy.`,
-          content: `Naša spoločnosť TMS-HYDRA poskytuje profesionálne služby ${serviceName.toLowerCase()} v meste ${formattedCity}. Špecializujeme sa na hydroizolácie a zateplenie plochých striech s využitím moderných technológií a kvalitných materiálov.`
+          meta_description: `Profesionálna ${serviceName.toLowerCase()} v meste ${formattedCity}.`,
+          content: `Naša spoločnosť TMS-HYDRA poskytuje profesionálne služby v meste ${formattedCity}.`
         };
-        setPageData(generatedContent);
+        setPageData(fallbackContent);
+      } finally {
+        setLoading(false);
       }
-      setLoading(false);
     };
 
     fetchPage();

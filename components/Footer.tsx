@@ -39,6 +39,7 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
             <ul className="space-y-4 text-sm">
               <li><button onClick={() => handleNav(AppView.ABOUT)} className="hover:text-blue-400 transition-colors">O nás</button></li>
               <li><button onClick={() => handleNav(AppView.SERVICES)} className="hover:text-blue-400 transition-colors">Naše služby</button></li>
+              <li><button onClick={() => handleNav(AppView.OTHER_SERVICES)} className="hover:text-blue-400 transition-colors">Ostatné služby</button></li>
               <li><button onClick={() => handleNav(AppView.PROJECTS)} className="hover:text-blue-400 transition-colors">Realizácie</button></li>
               <li><button onClick={() => handleNav(AppView.TECH)} className="hover:text-blue-400 transition-colors">Technológie</button></li>
               <li><button onClick={() => handleNav(AppView.CONTACT)} className="hover:text-blue-400 transition-colors">Kontakt</button></li>

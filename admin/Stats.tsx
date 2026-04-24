@@ -12,22 +12,27 @@ export const Stats: React.FC = () => {
 
   useEffect(() => {
     const fetchStats = async () => {
-      const [projectsRes, pagesRes] = await Promise.all([
-        supabase.from('projects').select('id', { count: 'exact' }),
-        supabase.from('pages').select('id, updated_at', { count: 'exact' })
-      ]);
+      try {
+        const [projectsRes, pagesRes] = await Promise.all([
+          supabase.from('projects').select('id', { count: 'exact' }),
+          supabase.from('pages').select('id, updated_at', { count: 'exact' })
+        ]);
 
-      const lastUpdate = pagesRes.data?.reduce((latest, page) => {
-        const pageDate = new Date(page.updated_at);
-        return pageDate > latest ? pageDate : latest;
-      }, new Date(0));
+        const lastUpdate = pagesRes.data?.reduce((latest, page) => {
+          const pageDate = new Date(page.updated_at);
+          return pageDate > latest ? pageDate : latest;
+        }, new Date(0));
 
-      setStats({
-        projects: projectsRes.count || 0,
-        pages: pagesRes.count || 0,
-        lastUpdate: lastUpdate && lastUpdate.getTime() > 0 ? lastUpdate.toLocaleString('sk-SK') : 'N/A'
-      });
-      setLoading(false);
+        setStats({
+          projects: projectsRes.count || 0,
+          pages: pagesRes.count || 0,
+          lastUpdate: lastUpdate && lastUpdate.getTime() > 0 ? lastUpdate.toLocaleString('sk-SK') : 'N/A'
+        });
+      } catch (err) {
+        console.error('Error fetching dashboard stats:', err);
+      } finally {
+        setLoading(false);
+      }
     };
 
     fetchStats();

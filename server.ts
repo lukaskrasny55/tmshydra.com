@@ -5,9 +5,13 @@ import dotenv from "dotenv";
 
 dotenv.config();
 
-const supabaseUrl = process.env.VITE_SUPABASE_URL || "";
-const supabaseKey = process.env.VITE_SUPABASE_ANON_KEY || "";
-const supabase = createClient(supabaseUrl, supabaseKey);
+const supabaseUrl = process.env.VITE_SUPABASE_URL;
+const supabaseKey = process.env.VITE_SUPABASE_ANON_KEY;
+
+// Only create client if variables are present to avoid "supabaseUrl is required" error
+const supabase = supabaseUrl && supabaseKey 
+  ? createClient(supabaseUrl, supabaseKey)
+  : null;
 
 async function startServer() {
   const app = express();
@@ -25,8 +29,15 @@ async function startServer() {
       "/kontakt"
     ];
 
-    const { data: seoPages } = await supabase.from("seo_city_pages").select("slug");
-    const { data: projects } = await supabase.from("projects").select("id");
+    let seoPages = [];
+    let projects = [];
+
+    if (supabase) {
+      const { data: seoData } = await supabase.from("seo_city_pages").select("slug");
+      const { data: projectsData } = await supabase.from("projects").select("id");
+      seoPages = seoData || [];
+      projects = projectsData || [];
+    }
 
     let xml = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">`;
@@ -67,7 +78,7 @@ async function startServer() {
     app.use(vite.middlewares);
   } else {
     app.use(express.static("dist"));
-    app.get("*", (req, res) => {
+    app.get("*all", (req, res) => {
       res.sendFile("dist/index.html", { root: "." });
     });
   }

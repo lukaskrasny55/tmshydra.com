@@ -15,18 +15,21 @@ export const BookingCalendar: React.FC = () => {
     address: ''
   });
 
-  const availableTimes = ['08:00', '10:00', '13:00', '15:00', '17:00'];
+  const availableTimes = ['09:00', '11:00', '13:00', '15:00'];
   
-  // Basic mock for next 5 days
+  // Get next 5 working days
   const getNextDays = () => {
     const days = [];
     const now = new Date();
-    for (let i = 1; i < 7; i++) {
+    let i = 1;
+    while (days.length < 5 && i < 15) { // search up to 14 days ahead for 5 working days
       const d = new Date(now);
       d.setDate(now.getDate() + i);
-      if (d.getDay() !== 0) { // Skip Sunday
+      const dayOfWeek = d.getDay();
+      if (dayOfWeek !== 0 && dayOfWeek !== 6) { // Skip Sunday (0) and Saturday (6)
         days.push(d);
       }
+      i++;
     }
     return days;
   };

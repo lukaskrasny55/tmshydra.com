@@ -3,6 +3,7 @@ export enum AppView {
   HOME = 'home',
   ABOUT = 'about',
   SERVICES = 'services',
+  OTHER_SERVICES = 'other_services',
   PROJECTS = 'projects',
   TECH = 'tech',
   CONTACT = 'contact'
