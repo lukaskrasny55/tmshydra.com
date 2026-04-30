@@ -1,5 +1,7 @@
 {
   "functions": {
-    "api/*.ts": {}
+    "api/send-email.ts": {
+      "maxDuration": 10
+    }
   }
 }
