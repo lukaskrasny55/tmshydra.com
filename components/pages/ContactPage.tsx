@@ -16,7 +16,7 @@ export default function ContactPage() {
     };
 
     try {
-      const res = await fetch('/api/send-email', {
+      const res = await fetch('https://www.tmshydra.com/api/send-email', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
