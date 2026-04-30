@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 import { Calendar as CalendarIcon, Clock, CheckCircle, Send, User, Phone, Mail, MapPin } from 'lucide-react';
 import { trackConversion } from './GoogleAds';
-import { supabase } from '../lib/supabase';
+
 
 export const BookingCalendar: React.FC = () => {
   const [step, setStep] = useState<1 | 2 | 3>(1);
