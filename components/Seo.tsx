@@ -1,5 +1,4 @@
 import React, { useEffect } from 'react';
-import { supabase } from '../lib/supabase';
 
 interface SeoProps {
   slug: string;
@@ -7,50 +6,49 @@ interface SeoProps {
 
 export const Seo: React.FC<SeoProps> = ({ slug }) => {
   useEffect(() => {
-    const fetchSeo = async () => {
-      try {
-        const { data, error } = await supabase
-          .from('seo')
-          .select('*')
-          .eq('page_slug', slug)
-          .single();
-
-        if (!error && data) {
-          document.title = data.meta_title || 'TMS-HYDRA';
-          
-          // Update meta description
-          let metaDesc = document.querySelector('meta[name="description"]');
-          if (!metaDesc) {
-            metaDesc = document.createElement('meta');
-            metaDesc.setAttribute('name', 'description');
-            document.head.appendChild(metaDesc);
-          }
-          metaDesc.setAttribute('content', data.meta_description || '');
-
-          // Update keywords
-          let metaKeywords = document.querySelector('meta[name="keywords"]');
-          if (!metaKeywords) {
-            metaKeywords = document.createElement('meta');
-            metaKeywords.setAttribute('name', 'keywords');
-            document.head.appendChild(metaKeywords);
-          }
-          metaKeywords.setAttribute('content', data.keywords || '');
-
-          // Update OG Image
-          let ogImage = document.querySelector('meta[property="og:image"]');
-          if (!ogImage) {
-            ogImage = document.createElement('meta');
-            ogImage.setAttribute('property', 'og:image');
-            document.head.appendChild(ogImage);
-          }
-          ogImage.setAttribute('content', data.og_image || '');
-        }
-      } catch (err) {
-        console.error('Error fetching SEO data:', err);
-      }
+    const seoData: Record<string, any> = {
+      home: {
+        title: 'TMS HYDRA | Hydroizolácie a zateplenie plochých striech',
+        description: 'Profesionálne hydroizolácie, zateplenie a opravy plochých striech.',
+        keywords: 'hydroizolácia, strechy, TMS HYDRA',
+      },
+      services: {
+        title: 'Naše služby | TMS HYDRA',
+        description: 'Kompletné služby pre ploché strechy.',
+        keywords: 'hydroizolácie, servis striech',
+      },
+      contact: {
+        title: 'Kontakt | TMS HYDRA',
+        description: 'Kontaktujte nás pre cenovú ponuku.',
+        keywords: 'kontakt, TMS HYDRA',
+      },
     };
 
-    fetchSeo();
+    const data = seoData[slug];
+
+    if (data) {
+      document.title = data.title;
+
+      let metaDesc = document.querySelector('meta[name="description"]');
+
+      if (!metaDesc) {
+        metaDesc = document.createElement('meta');
+        metaDesc.setAttribute('name', 'description');
+        document.head.appendChild(metaDesc);
+      }
+
+      metaDesc.setAttribute('content', data.description);
+
+      let metaKeywords = document.querySelector('meta[name="keywords"]');
+
+      if (!metaKeywords) {
+        metaKeywords = document.createElement('meta');
+        metaKeywords.setAttribute('name', 'keywords');
+        document.head.appendChild(metaKeywords);
+      }
+
+      metaKeywords.setAttribute('content', data.keywords);
+    }
   }, [slug]);
 
   return null;
