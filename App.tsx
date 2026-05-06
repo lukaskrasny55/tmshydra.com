@@ -12,7 +12,7 @@ import { ServicesPage } from './components/pages/ServicesPage';
 import { OtherServicesPage } from './components/pages/OtherServicesPage';
 import { ProjectsPage } from './components/pages/ProjectsPage';
 import { TechPage } from './components/pages/TechPage';
-import { ContactPage } from './components/pages/ContactPage';
+import ContactPage from './components/pages/ContactPage';
 
 import { AppView } from './types';
 import { Seo } from './components/Seo';
