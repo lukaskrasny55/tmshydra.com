@@ -1,6 +1,6 @@
 import React from 'react';
 
-const ContactPage = () => {
+export const ContactPage: React.FC = () => {
   return (
     <div className="min-h-screen bg-slate-50">
 
@@ -31,6 +31,7 @@ const ContactPage = () => {
 
               <div className="space-y-8">
 
+                {/* ADRESA */}
                 <div>
                   <p className="text-sm font-black uppercase tracking-[0.3em] text-blue-600 mb-3">
                     Adresa
@@ -47,6 +48,7 @@ const ContactPage = () => {
                   </p>
                 </div>
 
+                {/* ICO */}
                 <div className="border-t border-slate-200 pt-8">
                   <p className="text-sm font-black uppercase tracking-[0.3em] text-blue-600 mb-3">
                     IČO
@@ -55,6 +57,42 @@ const ContactPage = () => {
                   <p className="text-2xl font-black text-slate-800">
                     57 086 699
                   </p>
+                </div>
+
+                {/* DIC */}
+                <div className="border-t border-slate-200 pt-8">
+                  <p className="text-sm font-black uppercase tracking-[0.3em] text-blue-600 mb-3">
+                    DIČ
+                  </p>
+
+                  <p className="text-2xl font-black text-slate-800">
+                    2122561485
+                  </p>
+                </div>
+
+                {/* EMAIL */}
+                <div className="border-t border-slate-200 pt-8">
+                  <p className="text-sm font-black uppercase tracking-[0.3em] text-blue-600 mb-5">
+                    E-mail
+                  </p>
+
+                  <div className="space-y-4">
+
+                    <a
+                      href="mailto:info@tmshydra.com"
+                      className="block text-xl font-black text-slate-800 hover:text-blue-600 transition"
+                    >
+                      info@tmshydra.com
+                    </a>
+
+                    <a
+                      href="mailto:solnokytomas2@gmail.com"
+                      className="block text-xl font-black text-slate-800 hover:text-blue-600 transition"
+                    >
+                      solnokytomas2@gmail.com
+                    </a>
+
+                  </div>
                 </div>
 
               </div>
@@ -140,11 +178,10 @@ const ContactPage = () => {
               </div>
 
             </div>
+
           </div>
         </div>
       </section>
     </div>
   );
 };
-
-export default ContactPage;
