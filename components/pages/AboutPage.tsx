@@ -20,13 +20,17 @@ export const AboutPage: React.FC<Props> = ({ onBack }) => {
         <div className="max-w-7xl mx-auto px-6">
 
           {/* HEADER */}
-          <div className="max-w-4xl mb-20">
+          <div className="max-w-5xl mb-20">
             <p className="text-sm font-black uppercase tracking-[0.4em] text-blue-600 mb-6">
               O spoločnosti
             </p>
 
             <h2 className="text-5xl md:text-7xl font-black text-slate-900 leading-[0.9] tracking-tighter uppercase mb-8">
-              Vitajte vo svete <span className="text-blue-600"> TMS-HYDRA </span>
+              VITAJTE VO SVETE
+              <br />
+              <span className="text-blue-600">
+                TMS-HYDRA
+              </span>
             </h2>
 
             <p className="text-2xl text-slate-500 font-medium leading-relaxed">
@@ -96,8 +100,8 @@ export const AboutPage: React.FC<Props> = ({ onBack }) => {
 
               <div className="relative overflow-hidden rounded-[3rem] border border-slate-200 shadow-2xl">
                 <img
-                  src="/1.png"
-                  alt="TMS HYDRA"
+                  src="1.png"
+                  alt="Tomáš Solnoky - TMS HYDRA"
                   className="w-full h-[500px] object-cover"
                 />
 
