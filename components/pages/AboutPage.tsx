@@ -1,81 +1,161 @@
-import React from 'react';
-import { ShieldCheck, CheckCircle2, Hammer } from 'lucide-react';
-import { HeroSection } from '../HeroSection';
+{/* O NÁS */}
+<section className="py-24 bg-white overflow-hidden">
+  <div className="max-w-7xl mx-auto px-6">
 
-interface Props {
-  onBack: () => void;
-}
+    {/* HEADER */}
+    <div className="max-w-4xl mb-20">
+      <p className="text-sm font-black uppercase tracking-[0.4em] text-blue-600 mb-6">
+        O spoločnosti
+      </p>
 
-export const AboutPage: React.FC<Props> = ({ onBack }) => {
-  return (
-    <div className="min-h-screen bg-slate-50">
-      <HeroSection
-        title="O NÁS"
-        accentTitle="TMS HYDRA"
-        subtitle="Profesionálne hydroizolácie a zateplenie plochých striech."
-      />
+      <h2 className="text-5xl md:text-7xl font-black text-slate-900 leading-[0.9] tracking-tighter uppercase mb-8">
+        Vitajte vo svete <span className="text-blue-600">TMS-HYDRA</span>
+      </h2>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
-          <div>
-            <img
-              src="1.png"
-              alt="TMS Hydra"
-              className="rounded-[3rem] shadow-2xl"
-            />
-          </div>
+      <p className="text-2xl text-slate-500 font-medium leading-relaxed">
+        Príbeh o odbornosti, rodinnom záväzku a precíznej práci,
+        ktorá chráni strechy na dlhé roky.
+      </p>
+    </div>
 
-          <div>
-            <h2 className="text-4xl font-black text-slate-900 mb-8 uppercase">
-              Spoľahlivý partner pre ploché strechy
-            </h2>
+    {/* CONTENT */}
+    <div className="grid lg:grid-cols-2 gap-20 items-start">
 
-            <p className="text-slate-600 text-lg leading-relaxed mb-8">
-              TMS HYDRA sa špecializuje na hydroizolácie,
-              rekonštrukcie a zateplenie plochých striech.
-              Používame moderné technológie a certifikované materiály.
+      {/* LEFT */}
+      <div className="space-y-10">
+
+        <div className="bg-slate-50 rounded-[2.5rem] p-10 border border-slate-200">
+          <p className="text-slate-700 text-lg leading-relaxed font-medium">
+            Moje meno je <strong>Tomáš Solnoky</strong> a som zakladateľom spoločnosti TMS-HYDRA.
+            Za každým projektom, každou hydroizoláciou a každým zateplením plochej strechy
+            stojí nielen odbornosť, ale aj hlboký osobný príbeh a záväzok.
+          </p>
+
+          <p className="text-slate-700 text-lg leading-relaxed font-medium mt-6">
+            Moja cesta začala pred viac ako desiatimi rokmi v Belgicku.
+            Začínal som priamo na streche — s horákom, hydroizoláciou
+            a tepelnými izoláciami v rukách.
+          </p>
+
+          <p className="text-slate-700 text-lg leading-relaxed font-medium mt-6">
+            Belgicko ma naučilo precíznosti, európskym štandardom
+            a tomu, že pri hydroizolácii neexistujú kompromisy.
+            Buď je práca urobená dokonale, alebo nefunguje.
+          </p>
+        </div>
+
+        <div className="bg-blue-600 rounded-[2.5rem] p-10 text-white shadow-2xl">
+          <h3 className="text-3xl font-black uppercase tracking-tight mb-6">
+            Symbolika nášho mena
+          </h3>
+
+          <p className="text-blue-50 text-lg leading-relaxed font-medium">
+            Tie tri písmená — <strong>T.M.S.</strong> — majú pre mňa obrovský význam.
+            Sú to iniciály mojich dvoch synov:
+            <strong> Tomáš a Matias</strong>,
+            a moje priezvisko <strong>Solnoky</strong>.
+          </p>
+
+          <p className="text-blue-50 text-lg leading-relaxed font-medium mt-6">
+            Toto logo nie je len značka.
+            Je to symbol budúcnosti a záväzku,
+            ktorý budujem pre svoju rodinu.
+          </p>
+
+          <div className="h-px bg-white/20 my-8"></div>
+
+          <p className="text-blue-50 text-lg leading-relaxed font-medium">
+            <strong>HYDRA</strong> symbolizuje silu,
+            odolnosť a ochranu pred vodou.
+            Našou úlohou je vytvárať spoľahlivý
+            ochranný štít, ktorý vydrží dlhé roky.
+          </p>
+        </div>
+
+      </div>
+
+      {/* RIGHT */}
+      <div className="space-y-10">
+
+        <div className="relative overflow-hidden rounded-[3rem] border border-slate-200 shadow-2xl">
+          <img
+            src="/1.png"
+            alt="TMS HYDRA"
+            className="w-full h-[500px] object-cover"
+          />
+
+          <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent"></div>
+
+          <div className="absolute bottom-10 left-10 right-10">
+            <p className="text-white text-3xl font-black uppercase tracking-tight leading-tight">
+              Každú strechu realizujeme,
+              akoby bola naša vlastná.
             </p>
-
-            <div className="space-y-6">
-              <div className="flex gap-4">
-                <ShieldCheck className="w-8 h-8 text-blue-600 flex-shrink-0" />
-                <div>
-                  <h3 className="font-black text-xl mb-2">
-                    Certifikované systémy
-                  </h3>
-                  <p className="text-slate-600">
-                    Používame iba overené materiály.
-                  </p>
-                </div>
-              </div>
-
-              <div className="flex gap-4">
-                <CheckCircle2 className="w-8 h-8 text-blue-600 flex-shrink-0" />
-                <div>
-                  <h3 className="font-black text-xl mb-2">
-                    Záruka kvality
-                  </h3>
-                  <p className="text-slate-600">
-                    Dôraz na detail a precízne prevedenie.
-                  </p>
-                </div>
-              </div>
-
-              <div className="flex gap-4">
-                <Hammer className="w-8 h-8 text-blue-600 flex-shrink-0" />
-                <div>
-                  <h3 className="font-black text-xl mb-2">
-                    Dlhoročné skúsenosti
-                  </h3>
-                  <p className="text-slate-600">
-                    Realizujeme projekty po celom Slovensku.
-                  </p>
-                </div>
-              </div>
-            </div>
           </div>
         </div>
+
+        <div className="grid md:grid-cols-2 gap-6">
+
+          <div className="bg-slate-50 rounded-[2rem] p-8 border border-slate-200">
+            <div className="w-16 h-16 rounded-2xl bg-blue-600 flex items-center justify-center mb-6">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="w-8 h-8 text-white"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M5.121 17.804A13.937 13.937 0 0112 16c2.5 0 4.847.655 6.879 1.804M15 11a3 3 0 11-6 0 3 3 0 016 0z"
+                />
+              </svg>
+            </div>
+
+            <h3 className="text-2xl font-black text-slate-900 uppercase tracking-tight mb-4">
+              Osobný prístup
+            </h3>
+
+            <p className="text-slate-600 leading-relaxed font-medium">
+              Každý projekt riešim osobne
+              so zodpovednosťou otca a odborníka.
+            </p>
+          </div>
+
+          <div className="bg-slate-50 rounded-[2rem] p-8 border border-slate-200">
+            <div className="w-16 h-16 rounded-2xl bg-blue-600 flex items-center justify-center mb-6">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="w-8 h-8 text-white"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+                />
+              </svg>
+            </div>
+
+            <h3 className="text-2xl font-black text-slate-900 uppercase tracking-tight mb-4">
+              Európska kvalita
+            </h3>
+
+            <p className="text-slate-600 leading-relaxed font-medium">
+              Skúsenosti z Belgicka pretavené
+              do každého detailu vašej strechy.
+            </p>
+          </div>
+
+        </div>
+
       </div>
+
     </div>
-  );
-};
+  </div>
+</section>
