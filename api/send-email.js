@@ -14,7 +14,7 @@ export default async function handler(req, res) {
   // EMAIL PRE FIRMU
   await resend.emails.send({
     from: 'TMS Hydra <onboarding@resend.dev>',
-    to: 'info@tmshydra.com',
+    to: 'lukaskrasny55@gmail.com',
     subject: 'Nový dopyt z webu',
     html: `
       <h2>Nový dopyt</h2>
