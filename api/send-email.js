@@ -26,7 +26,7 @@ export default async function handler(req, res) {
 
   // POTVRDENIE PRE ZÁKAZNÍKA
   await resend.emails.send({
-    from: 'TMS Hydra <onboarding@resend.dev>',
+    from: 'TMS Hydra <info@tmshydra.com>',
     to: email,
     subject: 'Potvrdenie prijatia dopytu',
     html: `
