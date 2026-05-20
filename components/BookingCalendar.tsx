@@ -39,22 +39,29 @@ export const BookingCalendar: React.FC = () => {
   const handleBooking = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    const { error } = await supabase.from('bookings').insert([{
-      date: booking.date,
-      time: booking.time,
-      name: booking.name,
-      phone: booking.phone,
-      email: booking.email,
-      address: booking.address
-    }]);
+const response = await fetch('/api/send-email', {
+  method: 'POST',
+  headers: {
+    'Content-Type': 'application/json',
+  },
+  body: JSON.stringify({
+    type: 'booking',
+    name: booking.name,
+    email: booking.email,
+    phone: booking.phone,
+    address: booking.address,
+    date: booking.date,
+    time: booking.time,
+  }),
+});
 
-    if (!error) {
-      setStep(3);
-      trackConversion('booking');
-    } else {
-      alert('Chyba pri odosielaní rezervácie. Skúste to prosím neskôr.');
-    }
-  };
+if (response.ok) {
+  setStep(3);
+  trackConversion('booking');
+} else {
+  alert('Chyba pri odoslaní rezervácie. Skúste to prosím neskôr.');
+}
+};
 
   if (step === 3) {
     return (
