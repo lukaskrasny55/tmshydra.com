@@ -9,7 +9,7 @@ export const Seo: React.FC<SeoProps> = ({ slug }) => {
     const seoData: Record<string, any> = {
       home: {
         title: 'TMS HYDRA | Hydroizolácie a zateplenie plochých striech',
-        description: 'Profesionálne hydroizolácie, zateplenie a opravy plochých striech.',
+        description: 'Profesionálne hydroizolácie a zateplenie plochých striech. PVC fólie, rekonštrukcie striech, servis a opravy strešných systémov po celom Slovensku. TMS HYDRA.',
         keywords: 'hydroizolácia, strechy, TMS HYDRA',
       },
       services: {
