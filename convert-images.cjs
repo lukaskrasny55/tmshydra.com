@@ -15,7 +15,7 @@ fs.readdirSync(inputDir).forEach(file => {
     );
 
     sharp(inputPath)
-      .webp({ quality: 80 })
+      .webp({ quality: 55 })
       .toFile(outputPath)
       .then(() => {
         console.log(`Converted: ${file}`);
