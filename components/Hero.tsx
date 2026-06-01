@@ -48,7 +48,7 @@ export const Hero: React.FC<HeroProps> = () => {
     <section className="relative w-full bg-slate-900 text-white py-12 lg:py-20 overflow-x-hidden flex items-center">
       <div className="absolute inset-0">
         <img
-          src="1.png"
+          src="/1.png"
           alt="background"
           className="w-full h-full object-cover opacity-20"
         />
@@ -125,20 +125,19 @@ export const Hero: React.FC<HeroProps> = () => {
               ) : (
                 <motion.div
                   className="flex h-full gap-4 py-8"
-                  animate={{ x: ['0%', '-50%'] }}
-                  transition={{
-                    duration: 40,
-                    repeat: Infinity,
-                    ease: 'linear',
-                  }}
+                  
                 >
                   {[...shuffledImages, ...shuffledImages].map((img, i) => (
                     <div key={i} className="w-[280px] h-full flex-shrink-0">
-                      <img
-                        src={img}
-                        alt=""
-                        className="w-full h-full object-cover rounded-xl"
-                      />
+<img
+  src={img}
+  alt=""
+  width="1200"
+  height="800"
+  loading="lazy"
+  decoding="async"
+  className="w-full h-full object-cover rounded-xl"
+/>
                     </div>
                   ))}
                 </motion.div>
