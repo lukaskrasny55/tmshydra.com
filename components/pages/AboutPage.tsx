@@ -100,7 +100,7 @@ export const AboutPage: React.FC<Props> = ({ onBack }) => {
 
               <div className="relative overflow-hidden rounded-[3rem] border border-slate-200 shadow-2xl">
                 <img
-                  src="1.png"
+                  src="/1.png"
                   alt="Tomáš Solnoky - TMS HYDRA"
                   className="w-full h-[500px] object-cover"
                 />
