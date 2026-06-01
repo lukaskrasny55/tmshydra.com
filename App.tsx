@@ -7,13 +7,47 @@ import { Calculator } from './components/Calculator';
 import { BookingCalendar } from './components/BookingCalendar';
 import { Footer } from './components/Footer';
 
-import React, { useState, useEffect, lazy, Suspense } from 'react';
-
 import { AppView } from './types';
 import { Seo } from './components/Seo';
 import { GoogleAds } from './components/GoogleAds';
 import { SeoCityPage } from './components/SeoCityPage';
 import GoogleAnalytics from './components/GoogleAnalytics';
+
+const AboutPage = lazy(() =>
+  import('./components/pages/AboutPage').then(module => ({
+    default: module.AboutPage
+  }))
+);
+
+const ServicesPage = lazy(() =>
+  import('./components/pages/ServicesPage').then(module => ({
+    default: module.ServicesPage
+  }))
+);
+
+const OtherServicesPage = lazy(() =>
+  import('./components/pages/OtherServicesPage').then(module => ({
+    default: module.OtherServicesPage
+  }))
+);
+
+const ProjectsPage = lazy(() =>
+  import('./components/pages/ProjectsPage').then(module => ({
+    default: module.ProjectsPage
+  }))
+);
+
+const TechPage = lazy(() =>
+  import('./components/pages/TechPage').then(module => ({
+    default: module.TechPage
+  }))
+);
+
+const ContactPage = lazy(() =>
+  import('./components/pages/ContactPage').then(module => ({
+    default: module.ContactPage
+  }))
+);
 
 
 const MainSite: React.FC = () => {
