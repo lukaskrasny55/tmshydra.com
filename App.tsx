@@ -18,6 +18,8 @@ import { AppView } from './types';
 import { Seo } from './components/Seo';
 import { GoogleAds } from './components/GoogleAds';
 import { SeoCityPage } from './components/SeoCityPage';
+import GoogleAnalytics from './components/GoogleAnalytics';
+
 
 const MainSite: React.FC = () => {
   const [currentView, setCurrentView] = useState<AppView>(AppView.HOME);
@@ -90,6 +92,7 @@ const MainSite: React.FC = () => {
     <div className="min-h-screen flex flex-col overflow-x-hidden">
       <Seo slug={getSlug()} />
       <GoogleAds />
+      <GoogleAnalytics />
 
       <Navbar
         currentView={currentView}
