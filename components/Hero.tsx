@@ -14,14 +14,14 @@ interface HeroProps {
 }
 
 const galleryImages = [
-  'vh1.jpg', 'vh2.jpg', 'vh3.jpg', 'vh4.jpg',
-  'nz1.jpg', 'nz2.jpg', 'nz3.jpg', 'nz4.jpg',
-  'ns1.jpg', 'ns2.jpg', 'ns3.jpg', 'ns4.jpg',
-  'bl1.jpeg', 'bl2.jpeg', 'bl3.jpeg',
-  'bdv1.jpeg', 'bdv2.jpg', 'bdv3.jpg',
-  'b1.jpg', 'b2.jpg', 'b3.jpg',
-  't1.jpg', 't2.jpg', 't3.jpg',
-  '1.png'
+  'vh1.webp', 'vh2.webp', 'vh3.webp', 'vh4.webp',
+  'nz1.webp', 'nz2.webp', 'nz3.webp', 'nz4.webp',
+  'ns1.webp', 'ns2.webp', 'ns3.webp', 'ns4.webp',
+  'bl1.webp', 'bl2.webp', 'bl3.webp',
+  'bdv1.webp', 'bdv2.webp', 'bdv3.webp',
+  'b1.webp', 'b2.webp', 'b3.webp',
+  't1.webp', 't2.webp', 't3.webp',
+  '1.webp'
 ];
 
 export const Hero: React.FC<HeroProps> = () => {
