@@ -16,6 +16,26 @@ const serviceNames: Record<string, string> = {
   'oprava-plochej-strechy': 'Oprava plochej strechy'
 };
 
+const cityData: Record<string, any> = {
+  nitra: {
+    title: 'Hydroizolácie plochých striech Nitra',
+    description:
+      'Profesionálne hydroizolácie plochých striech v Nitre a okolí. PVC fólie, rekonštrukcie striech, zateplenie a servis strešných systémov.',
+  },
+
+  'nove-zamky': {
+    title: 'Hydroizolácie plochých striech Nové Zámky',
+    description:
+      'Realizujeme hydroizolácie plochých striech v Nových Zámkoch a okolí. Moderné PVC fólie, zateplenie a rekonštrukcie striech.',
+  },
+
+  trnava: {
+    title: 'Hydroizolácie plochých striech Trnava',
+    description:
+      'TMS HYDRA zabezpečuje profesionálne hydroizolácie plochých striech v Trnave. Kvalitné materiály a dlhoročné skúsenosti.',
+  }
+};
+
 export const SeoCityPage: React.FC = () => {
   const { service, city } = useParams<{ service: string; city: string }>();
 
@@ -30,17 +50,32 @@ export const SeoCityPage: React.FC = () => {
     ? serviceNames[service] || service.replace(/-/g, ' ')
     : '';
 
+  const currentCityData = city
+  ? cityData[city]
+  : null;
+
   useEffect(() => {
-    const generatedContent = {
-      title: `${serviceName} ${formattedCity}`,
-      meta_title: `${serviceName} ${formattedCity} | TMS-HYDRA`,
-      meta_description: `Profesionálna ${serviceName.toLowerCase()} v meste ${formattedCity}. Kontaktujte TMS-HYDRA pre bezplatnú obhliadku strechy.`,
-      content: `Naša spoločnosť TMS-HYDRA poskytuje profesionálne služby ${serviceName.toLowerCase()} v meste ${formattedCity}. Špecializujeme sa na hydroizolácie a zateplenie plochých striech s využitím moderných technológií a kvalitných materiálov.`
-    };
+const generatedContent = {
+  title:
+    currentCityData?.title ||
+    `${serviceName} ${formattedCity}`,
+
+  meta_title:
+    (currentCityData?.title || `${serviceName} ${formattedCity}`) +
+    ' | TMS HYDRA',
+
+  meta_description:
+    currentCityData?.description ||
+    `Profesionálna ${serviceName.toLowerCase()} v meste ${formattedCity}. Kontaktujte TMS HYDRA pre bezplatnú obhliadku strechy.`,
+
+  content:
+    currentCityData?.description ||
+    `Naša spoločnosť TMS HYDRA poskytuje profesionálne služby ${serviceName.toLowerCase()} v meste ${formattedCity}.`
+};
 
     setPageData(generatedContent);
     setLoading(false);
-  }, [serviceName, formattedCity]);
+  }, [service, city, formattedCity]);
 
   if (loading) {
     return (
@@ -132,6 +167,8 @@ export const SeoCityPage: React.FC = () => {
         </div>
       </div>
 
+      
+      
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-20">
 
@@ -165,13 +202,59 @@ export const SeoCityPage: React.FC = () => {
                   >
                     <CheckCircle2 className="w-5 h-5 text-blue-500 flex-shrink-0" />
 
-                    <span className="font-bold text-slate-700">
+                                        <span className="font-bold text-slate-700">
                       {benefit}
                     </span>
                   </div>
                 ))}
               </div>
 
+              <div className="mt-16">
+  <h3 className="text-2xl font-black text-slate-900 uppercase tracking-tight mb-8">
+    Často kladené otázky
+  </h3>
+
+  <div className="space-y-6">
+
+    <div className="p-6 bg-slate-50 rounded-2xl border border-slate-100">
+      <h4 className="font-black text-lg mb-3">
+        Koľko stojí hydroizolácia plochej strechy v meste {formattedCity}?
+      </h4>
+
+      <p className="text-slate-600 leading-relaxed">
+        Cena závisí od veľkosti strechy, typu materiálu a rozsahu rekonštrukcie.
+        Kontaktujte TMS HYDRA pre bezplatnú obhliadku a cenovú ponuku.
+      </p>
+    </div>
+
+    <div className="p-6 bg-slate-50 rounded-2xl border border-slate-100">
+      <h4 className="font-black text-lg mb-3">
+        Ako dlho trvá realizácia?
+      </h4>
+
+      <p className="text-slate-600 leading-relaxed">
+        Väčšina realizácií trvá niekoľko dní v závislosti od rozsahu prác,
+        počasia a typu strešného systému.
+      </p>
+    </div>
+
+    <div className="p-6 bg-slate-50 rounded-2xl border border-slate-100">
+      <h4 className="font-black text-lg mb-3">
+        Poskytujete obhliadku zdarma?
+      </h4>
+
+      <p className="text-slate-600 leading-relaxed">
+        Áno. TMS HYDRA poskytuje bezplatné obhliadky a odborné poradenstvo
+        pre ploché strechy v meste {formattedCity} a okolí.
+      </p>
+    </div>
+
+  </div>
+
+
+                
+
+            </div>
             </div>
           </div>
 
@@ -220,5 +303,8 @@ export const SeoCityPage: React.FC = () => {
         </div>
       </div>
     </div>
-  );
+    
+ );
 };
+
+export default SeoCityPage;
