@@ -54,6 +54,7 @@ export const Hero: React.FC<HeroProps> = () => {
         />
         <div className="absolute inset-0 bg-gradient-to-r from-slate-900 via-slate-900/80 to-transparent"></div>
       </div>
+      
 
       <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
         <div className="grid lg:grid-cols-2 gap-12 items-center">
@@ -123,7 +124,7 @@ export const Hero: React.FC<HeroProps> = () => {
                   className="w-full h-full object-cover"
                 />
               ) : (
-                <motion.div
+                <div
                   className="flex h-full gap-4 py-8"
                   
                 >
@@ -140,7 +141,7 @@ export const Hero: React.FC<HeroProps> = () => {
 />
                     </div>
                   ))}
-                </motion.div>
+                </div>
               )}
             </div>
 
