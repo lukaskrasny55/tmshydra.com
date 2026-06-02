@@ -48,6 +48,40 @@ export const Seo: React.FC<SeoProps> = ({ slug }) => {
       }
 
       metaKeywords.setAttribute('content', data.keywords);
+
+      // Structured Data Schema
+const existingSchema = document.getElementById('local-business-schema');
+
+if (existingSchema) {
+  existingSchema.remove();
+}
+
+const schemaScript = document.createElement('script');
+schemaScript.type = 'application/ld+json';
+schemaScript.id = 'local-business-schema';
+
+schemaScript.innerHTML = JSON.stringify({
+  "@context": "https://schema.org",
+  "@type": "LocalBusiness",
+  "name": "TMS HYDRA",
+  "image": "https://www.tmshydra.com/logo1.png",
+  "url": "https://www.tmshydra.com",
+  "telephone": "+421911551354",
+  "address": {
+    "@type": "PostalAddress",
+    "addressCountry": "SK"
+  },
+  "description": "Hydroizolácie a zateplenie plochých striech po celom Slovensku.",
+  "areaServed": "Slovensko",
+  "serviceType": [
+    "Hydroizolácie plochých striech",
+    "Zateplenie plochých striech",
+    "Rekonštrukcie striech"
+  ]
+});
+
+document.head.appendChild(schemaScript);
+
     }
   }, [slug]);
 
