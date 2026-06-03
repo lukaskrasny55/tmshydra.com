@@ -128,7 +128,7 @@ export const Hero: React.FC<HeroProps> = () => {
                   className="flex h-full gap-4 py-8"
                   
                 >
-                  {[...shuffledImages, ...shuffledImages].map((img, i) => (
+                  {shuffledImages.slice(0, 4).map((img, i) => (
                     <div key={i} className="w-[280px] h-full flex-shrink-0">
 <img
   src={img}

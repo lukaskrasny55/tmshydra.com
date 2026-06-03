@@ -402,6 +402,30 @@ const generatedContent = {
                 Napíšte nám
               </Link>
 
+<div className="mt-24 border-t border-slate-200 pt-12">
+
+  <h3 className="text-2xl font-black text-slate-900 uppercase tracking-tight mb-8">
+    Pôsobíme aj v ďalších mestách
+  </h3>
+
+  <div className="flex flex-wrap gap-4">
+
+    {Object.keys(cityData).map((cityKey) => (
+
+      <Link
+        key={cityKey}
+        to={`/sluzby/${service}/${cityKey}`}
+        className="px-5 py-3 rounded-xl bg-slate-100 hover:bg-blue-600 hover:text-white transition-all font-bold text-slate-700"
+      >
+        {cityKey.replace(/-/g, ' ')}
+      </Link>
+
+    ))}
+
+  </div>
+
+</div>
+
             </div>
 
           </div>
