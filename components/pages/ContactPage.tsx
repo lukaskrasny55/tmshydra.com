@@ -24,7 +24,7 @@ export const ContactPage: React.FC = () => {
           <div className="grid md:grid-cols-2 gap-16">
 
             {/* ADRESA */}
-            <div className="bg-slate-50 rounded-3xl p-10 border border-slate-200 shadow-sm">
+            <div className="bg-slate-50 rounded-[2.5rem] p-10 border border-slate-200 shadow-sm">
               <h2 className="text-3xl font-black text-slate-900 mb-8 uppercase tracking-tight">
                 Kontaktné údaje
               </h2>
@@ -102,7 +102,7 @@ export const ContactPage: React.FC = () => {
             <div className="space-y-8">
 
               {/* TECHNIK */}
-              <div className="bg-slate-50 rounded-3xl p-10 border border-slate-200 shadow-sm">
+              <div className="bg-slate-50 rounded-[2.5rem] p-10 border border-slate-200 shadow-sm">
                 <div className="flex items-center gap-5 mb-8">
 
                   <div className="w-20 h-20 rounded-2xl bg-slate-100 flex items-center justify-center">
@@ -140,7 +140,7 @@ export const ContactPage: React.FC = () => {
               </div>
 
               {/* KANCELÁRIA */}
-              <div className="bg-slate-50 rounded-3xl p-10 border border-slate-200 shadow-sm">
+              <div className="bg-slate-50 rounded-[2.5rem] p-10 border border-slate-200 shadow-sm">
                 <div className="flex items-center gap-5 mb-8">
 
                   <div className="w-20 h-20 rounded-2xl bg-slate-100 flex items-center justify-center">

@@ -109,12 +109,6 @@ const cityData: Record<string, any> = {
       'Kompletné hydroizolačné služby pre ploché strechy vo suranoch a okolí.',
   },
 
-   levice: {
-    title: 'Hydroizolácie plochých striech levice',
-    description:
-      'Kompletné hydroizolačné služby pre ploché strechy vo leviciach a okolí.',
-  },
-
    zvolen: {
     title: 'Hydroizolácie plochých striech Zvolen',
     description:
@@ -236,7 +230,7 @@ const generatedContent = {
         <div className="absolute top-0 right-0 w-1/3 h-full bg-blue-600/10 skew-x-12 transform translate-x-32"></div>
 
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-          <div className="flex items-center gap-2 text-blue-500 font-bold mb-6 uppercase tracking-widest text-sm">
+          <div className="flex items-center gap-2 text-blue-400 font-bold mb-6 uppercase tracking-widest text-sm">
             <MapPin className="w-4 h-4" />
             <span>{formattedCity}</span>
           </div>
@@ -385,7 +379,7 @@ const generatedContent = {
                 </div>
 
                 <div>
-                  <div className="text-xs font-bold text-slate-500 uppercase tracking-widest">
+                  <div className="text-xs font-bold text-slate-400 uppercase tracking-widest">
                     Zavolajte nám
                   </div>
 
@@ -402,9 +396,9 @@ const generatedContent = {
                 Napíšte nám
               </Link>
 
-<div className="mt-24 border-t border-slate-200 pt-12">
+<div className="mt-24 border-t border-white/10 pt-12">
 
-  <h3 className="text-2xl font-black text-slate-900 uppercase tracking-tight mb-8">
+  <h3 className="text-2xl font-black text-white uppercase tracking-tight mb-8">
     Pôsobíme aj v ďalších mestách
   </h3>
 
@@ -415,7 +409,7 @@ const generatedContent = {
       <Link
         key={cityKey}
         to={`/sluzby/${service}/${cityKey}`}
-        className="px-5 py-3 rounded-xl bg-slate-100 hover:bg-blue-600 hover:text-white transition-all font-bold text-slate-700"
+        className="px-5 py-3 rounded-xl bg-white/5 border border-white/10 hover:bg-blue-600 hover:text-white hover:border-blue-600 transition-all font-bold text-slate-300"
       >
         {cityKey.replace(/-/g, ' ')}
       </Link>

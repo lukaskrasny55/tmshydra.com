@@ -104,7 +104,7 @@ export const ProjectsPage: React.FC<Props> = ({ onBack }) => {
           <div
             key={p.id}
             onClick={() => openGallery(p)}
-            className="bg-white rounded-3xl shadow-lg overflow-hidden cursor-pointer hover:shadow-2xl transition"
+            className="bg-white rounded-[2.5rem] shadow-lg overflow-hidden cursor-pointer hover:shadow-2xl hover:-translate-y-1 transition-all"
           >
             <img
               src={p.gallery[0]}

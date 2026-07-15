@@ -17,7 +17,7 @@ export const ProcessSection: React.FC = () => {
             Ako <span className="text-blue-600">pracujeme</span>
           </h2>
           <div className="w-16 h-1.5 bg-blue-600 mx-auto rounded-full mb-6"></div>
-          <p className="text-slate-400 font-bold uppercase tracking-[0.3em] text-[10px]">Päť krokov k vašej chránenej streche</p>
+          <p className="text-slate-600 font-bold uppercase tracking-[0.3em] text-[10px]">Päť krokov k vašej chránenej streche</p>
         </div>
 
         {/* Process Flow */}
@@ -68,7 +68,7 @@ export const ProcessSection: React.FC = () => {
                 {step.showMaterials && (
                   <div className={`flex flex-wrap gap-1.5 mt-6 ${idx % 2 === 1 ? 'justify-end' : 'justify-start'}`}>
                     {materials.map((m, i) => (
-                      <span key={i} className="px-2.5 py-0.5 bg-white text-slate-400 text-[9px] font-bold rounded-full border border-slate-100 uppercase tracking-widest">
+                      <span key={i} className="px-2.5 py-0.5 bg-white text-slate-600 text-[9px] font-bold rounded-full border border-slate-100 uppercase tracking-widest">
                         {m}
                       </span>
                     ))}

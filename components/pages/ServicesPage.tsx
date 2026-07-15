@@ -69,7 +69,7 @@ export const ServicesPage: React.FC<Props> = ({
                 {item.val}
               </div>
 
-              <div className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">
+              <div className="text-[10px] font-black text-slate-600 uppercase tracking-[0.2em]">
                 {item.label}
               </div>
             </div>
