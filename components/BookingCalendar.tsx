@@ -12,7 +12,8 @@ export const BookingCalendar: React.FC = () => {
     name: '',
     phone: '',
     email: '',
-    address: ''
+    address: '',
+    message: ''
   });
 
   const availableTimes = ['09:00', '11:00', '13:00', '15:00'];
@@ -52,6 +53,7 @@ const response = await fetch('/api/send-email', {
     address: booking.address,
     date: booking.date,
     time: booking.time,
+    message: booking.message.trim() || 'Bez poznámky.',
   }),
 });
 
@@ -76,7 +78,7 @@ if (response.ok) {
               Ďakujeme, {booking.name}. Budeme vás kontaktovať ohľadom potvrdenia termínu <strong>{new Date(booking.date).toLocaleDateString('sk-SK')}</strong> o <strong>{booking.time}</strong>.
             </p>
             <button 
-              onClick={() => { setStep(1); setBooking({ date: '', time: '', name: '', phone: '', email: '', address: '' }); }}
+              onClick={() => { setStep(1); setBooking({ date: '', time: '', name: '', phone: '', email: '', address: '', message: '' }); }}
               className="text-blue-600 font-bold hover:underline"
             >
               Naplánovať ďalšiu obhliadku
@@ -226,6 +228,16 @@ if (response.ok) {
                         value={booking.address}
                         onChange={(e) => setBooking({ ...booking, address: e.target.value })}
                         className="w-full pl-12 pr-4 py-4 rounded-xl border-2 border-slate-100 focus:border-blue-500 focus:ring-0 outline-none transition-all"
+                      />
+                    </div>
+                    <div className="relative">
+                      <textarea
+                        placeholder="Poznámka (nepovinné)"
+                        value={booking.message}
+                        onChange={(e) => setBooking({ ...booking, message: e.target.value })}
+                        rows={3}
+                        maxLength={2000}
+                        className="w-full px-4 py-4 rounded-xl border-2 border-slate-100 focus:border-blue-500 focus:ring-0 outline-none transition-all resize-none"
                       />
                     </div>
 
