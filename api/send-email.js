@@ -62,6 +62,16 @@ function forHeader(value) {
   return String(value).replace(/[\r\n]+/g, ' ').trim();
 }
 
+// BookingCalendar sends the booking date as a full ISO timestamp
+// (Date.toISOString()); emails should show it the way a customer reads a date.
+function formatDate(value) {
+  return new Date(value).toLocaleDateString('sk-SK', {
+    day: 'numeric',
+    month: 'long',
+    year: 'numeric',
+  });
+}
+
 function validate(body) {
   const errors = [];
   const { type, name, email, message, phone, address, date, time } = body || {};
@@ -157,7 +167,7 @@ function customerInquiryEmail({ name, message }) {
   };
 }
 
-function customerBookingEmail({ name, date, time, address }) {
+function customerBookingEmail({ name, date, time, address, message }) {
   return {
     subject: 'Potvrdenie rezervácie obhliadky – TMS Hydra',
     html: wrapEmail(`
@@ -165,6 +175,7 @@ function customerBookingEmail({ name, date, time, address }) {
       <p>Vašu obhliadku sme si zaznamenali na termín:</p>
       <p style="font-size:16px"><b style="color:${BRAND.accent}">${date} o ${time}</b></p>
       <p><b>Adresa:</b> ${address}</p>
+      <p><b>Vaša poznámka:</b><br>${message}</p>
       <p>V prípade potreby zmeny termínu nás kontaktujte na info@tmshydra.com alebo telefonicky.</p>
       <br>
       <p>Tešíme sa na stretnutie,<br><b style="color:${BRAND.accent}">TMS Hydra</b><br>Hydroizolácie a ploché strechy</p>
@@ -207,7 +218,7 @@ export default async function handler(req, res) {
     message: escapeHtml(message.trim()),
     phone: isBooking ? escapeHtml(phone.trim()) : undefined,
     address: isBooking ? escapeHtml(address.trim()) : undefined,
-    date: isBooking ? escapeHtml(date.trim()) : undefined,
+    date: isBooking ? escapeHtml(formatDate(date.trim())) : undefined,
     time: isBooking ? escapeHtml(time.trim()) : undefined,
   };
 
