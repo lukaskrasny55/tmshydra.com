@@ -5,6 +5,7 @@ import { Navbar } from './components/Navbar';
 import { Hero } from './components/Hero';
 import { Calculator } from './components/Calculator';
 import { BookingCalendar } from './components/BookingCalendar';
+import { CityLinks } from './components/CityLinks';
 import { Footer } from './components/Footer';
 
 import { AppView } from './types';
@@ -112,6 +113,7 @@ const MainSite: React.FC = () => {
             <Hero onNavigate={(view) => setCurrentView(view)} />
             <Calculator />
             <BookingCalendar />
+            <CityLinks />
           </main>
         );
     }
