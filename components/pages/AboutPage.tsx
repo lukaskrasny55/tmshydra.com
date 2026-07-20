@@ -62,6 +62,23 @@ export const AboutPage: React.FC<Props> = ({ onBack }) => {
                   Belgicko ma naučilo precíznosti, európskym štandardom
                   a tomu, že pri hydroizolácii neexistujú kompromisy.
                   Buď je práca urobená dokonale, alebo nefunguje.
+                  Preto v TMS-HYDRA nespájame len vrstvy izolácie —
+                  spájame odborné skúsenosti s poctivým prístupom k zákazníkom.
+                </p>
+
+                <p className="text-slate-700 text-lg leading-relaxed font-medium mt-6">
+                  Už od malička som vedel, že chcem chrániť to najdôležitejšie —
+                  domovy, v ktorých žijeme, aj miesta, kde sa cítime bezpečne.
+                  Svoje skúsenosti som preto pretavil do práce s plochými strechami:
+                  strecha je srdcom každého domu, štítom pred nepriazňou počasia.
+                  Zahraničná prax ma naučila techniku, rodina ma naučila zodpovednosti.
+                </p>
+
+                <p className="text-slate-700 text-lg leading-relaxed font-medium mt-6">
+                  TMS-HYDRA sa hydroizoláciám plochých striech venuje od roku 2015 —
+                  riešime strechy, balkóny, terasy, podzemné garáže aj izoláciu
+                  základových dosiek, výhradne s certifikovanými materiálmi,
+                  a rovnako radi obnovujeme staré strechy k životu.
                 </p>
               </div>
 
@@ -71,6 +88,12 @@ export const AboutPage: React.FC<Props> = ({ onBack }) => {
                 </h3>
 
                 <p className="text-blue-50 text-lg leading-relaxed font-medium">
+                  Keď som zakladal túto firmu, chcel som, aby niesla odkaz
+                  presahujúci bežné podnikanie — aby bola odrazom mojich
+                  najväčších hodnôt. Tak sa zrodilo TMS-HYDRA.
+                </p>
+
+                <p className="text-blue-50 text-lg leading-relaxed font-medium mt-6">
                   Tie tri písmená — <strong>T.M.S.</strong> — majú pre mňa obrovský význam.
                   Sú to iniciály mojich dvoch synov:
                   <strong> Tomáš a Matias</strong>,
@@ -87,9 +110,16 @@ export const AboutPage: React.FC<Props> = ({ onBack }) => {
 
                 <p className="text-blue-50 text-lg leading-relaxed font-medium">
                   <strong>HYDRA</strong> symbolizuje silu,
-                  odolnosť a ochranu pred vodou.
-                  Našou úlohou je vytvárať spoľahlivý
-                  ochranný štít, ktorý vydrží dlhé roky.
+                  odolnosť a ochranu pred vodou — napokon, naša práca
+                  je práve o krotení vody. Našou úlohou je vytvárať
+                  spoľahlivý ochranný štít, ktorý vydrží dlhé roky.
+                </p>
+
+                <p className="text-blue-50 text-lg leading-relaxed font-medium mt-6">
+                  Keď si vyberiete TMS-HYDRA, nevyberáte si len dodávateľa —
+                  vyberáte si partnera, ktorý k práci pristupuje s rodinnou
+                  zodpovednosťou. Rovnako ako chránim svoju rodinu, chceme
+                  spoľahlivou a pevnou strechou chrániť aj tú vašu.
                 </p>
               </div>
 
