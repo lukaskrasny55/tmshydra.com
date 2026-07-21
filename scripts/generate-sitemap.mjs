@@ -19,6 +19,8 @@ const mainPagePriorities = {
   [ROUTE_PATHS.contact]: '0.8',
   [ROUTE_PATHS.otherServices]: '0.7',
   [ROUTE_PATHS.tech]: '0.7',
+  [ROUTE_PATHS.privacyPolicy]: '0.3',
+  [ROUTE_PATHS.terms]: '0.3',
 };
 
 const urls = Object.entries(mainPagePriorities).map(([routePath, priority]) => ({

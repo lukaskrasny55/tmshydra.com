@@ -41,6 +41,16 @@ const seoData: Record<string, { title: string; description: string; keywords: st
     description: 'Kontaktujte nás pre cenovú ponuku.',
     keywords: 'kontakt, TMS HYDRA',
   },
+  'privacy-policy': {
+    title: 'Ochrana osobných údajov | TMS HYDRA',
+    description: 'Informácie o spracovaní osobných údajov (GDPR) spoločnosťou TMS HYDRA.',
+    keywords: 'ochrana osobných údajov, GDPR, TMS HYDRA',
+  },
+  terms: {
+    title: 'Obchodné podmienky | TMS HYDRA',
+    description: 'Všeobecné obchodné podmienky spoločnosti TMS HYDRA.',
+    keywords: 'obchodné podmienky, TMS HYDRA',
+  },
 };
 
 const localBusinessSchema = {

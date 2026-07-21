@@ -7,6 +7,8 @@ export const ROUTE_PATHS = {
   projects: '/realizacie',
   tech: '/technologie',
   contact: '/kontakt',
+  privacyPolicy: '/ochrana-osobnych-udajov',
+  terms: '/obchodne-podmienky',
 } as const;
 
 const SLUG_BY_PATH: Record<string, string> = {
@@ -17,6 +19,8 @@ const SLUG_BY_PATH: Record<string, string> = {
   [ROUTE_PATHS.projects]: 'projects',
   [ROUTE_PATHS.tech]: 'tech',
   [ROUTE_PATHS.contact]: 'contact',
+  [ROUTE_PATHS.privacyPolicy]: 'privacy-policy',
+  [ROUTE_PATHS.terms]: 'terms',
 };
 
 export const getSlugForPath = (pathname: string): string =>

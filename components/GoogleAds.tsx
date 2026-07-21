@@ -1,7 +1,14 @@
 import React, { useEffect } from 'react';
+import { useConsent } from '../consent';
 
 export const GoogleAds: React.FC = () => {
+  const consent = useConsent();
+
   useEffect(() => {
+    if (consent !== 'accepted') {
+      return;
+    }
+
     const adsId = 'AW-XXXXXXXXXX';
 
     const adsScript = document.createElement('script');
@@ -18,7 +25,7 @@ export const GoogleAds: React.FC = () => {
     `;
 
     document.head.appendChild(inlineScript);
-  }, []);
+  }, [consent]);
 
   return null;
 };

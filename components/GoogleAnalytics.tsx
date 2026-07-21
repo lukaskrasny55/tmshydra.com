@@ -1,4 +1,5 @@
 import { useEffect } from 'react';
+import { useConsent } from '../consent';
 
 declare global {
   interface Window {
@@ -10,7 +11,13 @@ declare global {
 const GA_MEASUREMENT_ID = 'G-9XC82FWJMG';
 
 export default function GoogleAnalytics() {
+  const consent = useConsent();
+
   useEffect(() => {
+    if (consent !== 'accepted') {
+      return;
+    }
+
     const script1 = document.createElement('script');
     script1.async = true;
     script1.src = `https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`;
@@ -25,7 +32,7 @@ export default function GoogleAnalytics() {
       gtag('config', '${GA_MEASUREMENT_ID}');
     `;
     document.head.appendChild(script2);
-  }, []);
+  }, [consent]);
 
   return null;
 }

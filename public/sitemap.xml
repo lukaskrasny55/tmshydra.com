@@ -29,6 +29,14 @@
     <priority>0.7</priority>
   </url>
   <url>
+    <loc>https://www.tmshydra.com/ochrana-osobnych-udajov</loc>
+    <priority>0.3</priority>
+  </url>
+  <url>
+    <loc>https://www.tmshydra.com/obchodne-podmienky</loc>
+    <priority>0.3</priority>
+  </url>
+  <url>
     <loc>https://www.tmshydra.com/sluzby/hydroizolacia-plochej-strechy/nitra</loc>
     <priority>0.7</priority>
   </url>
