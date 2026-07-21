@@ -1,5 +1,5 @@
-import React, { useState, useEffect, lazy, Suspense } from 'react';
-import { Routes, Route } from 'react-router-dom';
+import React, { lazy, Suspense, useEffect } from 'react';
+import { Routes, Route, Outlet, useLocation, useNavigate } from 'react-router-dom';
 
 import { Navbar } from './components/Navbar';
 import { Hero } from './components/Hero';
@@ -8,7 +8,7 @@ import { BookingCalendar } from './components/BookingCalendar';
 import { CityLinks } from './components/CityLinks';
 import { Footer } from './components/Footer';
 
-import { AppView } from './types';
+import { ROUTE_PATHS, getSlugForPath } from './routePaths';
 import { Seo } from './components/Seo';
 import { GoogleAds } from './components/GoogleAds';
 import { SeoCityPage } from './components/SeoCityPage';
@@ -50,93 +50,70 @@ const ContactPage = lazy(() =>
   }))
 );
 
+const HomePage: React.FC = () => (
+  <main className="w-full overflow-x-hidden">
+    <Hero />
+    <Calculator />
+    <BookingCalendar />
+    <CityLinks />
+  </main>
+);
 
-const MainSite: React.FC = () => {
-  const [currentView, setCurrentView] = useState<AppView>(AppView.HOME);
+const Layout: React.FC = () => {
+  const location = useLocation();
 
   useEffect(() => {
-    window.scrollTo(0, 0);
-  }, [currentView]);
-
-  const getSlug = () => {
-    switch (currentView) {
-      case AppView.ABOUT:
-        return 'about';
-      case AppView.SERVICES:
-        return 'services';
-      case AppView.OTHER_SERVICES:
-        return 'other-services';
-      case AppView.PROJECTS:
-        return 'projects';
-      case AppView.TECH:
-        return 'tech';
-      case AppView.CONTACT:
-        return 'contact';
-      default:
-        return 'home';
+    if (location.hash) {
+      const id = location.hash.slice(1);
+      document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
+    } else {
+      window.scrollTo(0, 0);
     }
-  };
-
-  const renderContent = () => {
-    switch (currentView) {
-      case AppView.ABOUT:
-        return <AboutPage onBack={() => setCurrentView(AppView.HOME)} />;
-
-      case AppView.SERVICES:
-        return (
-          <ServicesPage
-            onBack={() => setCurrentView(AppView.HOME)}
-            onNavigateToContact={() => setCurrentView(AppView.CONTACT)}
-          />
-        );
-
-      case AppView.OTHER_SERVICES:
-        return (
-          <OtherServicesPage
-            onBack={() => setCurrentView(AppView.HOME)}
-            onNavigateToContact={() => setCurrentView(AppView.CONTACT)}
-          />
-        );
-
-      case AppView.PROJECTS:
-        return <ProjectsPage onBack={() => setCurrentView(AppView.HOME)} />;
-
-      case AppView.TECH:
-        return <TechPage onBack={() => setCurrentView(AppView.HOME)} />;
-
-      case AppView.CONTACT:
-        return <ContactPage onBack={() => setCurrentView(AppView.HOME)} />;
-
-      default:
-        return (
-          <main className="w-full overflow-x-hidden">
-            <Hero onNavigate={(view) => setCurrentView(view)} />
-            <Calculator />
-            <BookingCalendar />
-            <CityLinks />
-          </main>
-        );
-    }
-  };
+  }, [location.pathname, location.hash]);
 
   return (
     <div className="min-h-screen flex flex-col overflow-x-hidden">
-      <Seo slug={getSlug()} />
+      <Seo slug={getSlugForPath(location.pathname)} />
       <GoogleAds />
       <GoogleAnalytics />
 
-      <Navbar
-        currentView={currentView}
-        onNavigate={setCurrentView}
-        showCalculator={true}
-      />
+      <Navbar showCalculator={true} />
 
       <Suspense fallback={<div className="p-10">Načítava sa...</div>}>
-  <div className="flex-grow">{renderContent()}</div>
-</Suspense>
+        <div className="flex-grow">
+          <Outlet />
+        </div>
+      </Suspense>
 
-      <Footer onNavigate={setCurrentView} />
+      <Footer />
     </div>
+  );
+};
+
+const MainSite: React.FC = () => {
+  const navigate = useNavigate();
+  const goHome = () => navigate(ROUTE_PATHS.home);
+  const goContact = () => navigate(ROUTE_PATHS.contact);
+
+  return (
+    <Routes>
+      <Route element={<Layout />}>
+        <Route index element={<HomePage />} />
+        <Route path="o-nas" element={<AboutPage onBack={goHome} />} />
+        <Route
+          path="sluzby"
+          element={<ServicesPage onBack={goHome} onNavigateToContact={goContact} />}
+        />
+        <Route
+          path="ostatne-sluzby"
+          element={<OtherServicesPage onBack={goHome} onNavigateToContact={goContact} />}
+        />
+        <Route path="realizacie" element={<ProjectsPage onBack={goHome} />} />
+        <Route path="technologie" element={<TechPage onBack={goHome} />} />
+        <Route path="kontakt" element={<ContactPage />} />
+        <Route path="*" element={<HomePage />} />
+      </Route>
+    </Routes>
   );
 };
 

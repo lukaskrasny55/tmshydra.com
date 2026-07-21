@@ -1,39 +1,34 @@
 
 import React, { useState } from 'react';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { Menu, X } from 'lucide-react';
-import { AppView } from '../types';
+import { ROUTE_PATHS } from '../routePaths';
 
 interface NavbarProps {
-  currentView: AppView;
-  onNavigate: (view: AppView) => void;
   showCalculator?: boolean;
 }
 
-export const Navbar: React.FC<NavbarProps> = ({ currentView, onNavigate, showCalculator = true }) => {
+export const Navbar: React.FC<NavbarProps> = ({ showCalculator = true }) => {
   const [isOpen, setIsOpen] = useState(false);
+  const location = useLocation();
+  const navigate = useNavigate();
 
   const navItems = [
-    { label: 'O nás', view: AppView.ABOUT },
-    { label: 'Naše služby', view: AppView.SERVICES },
-    { label: 'Ostatné služby', view: AppView.OTHER_SERVICES },
-    { label: 'Realizácie', view: AppView.PROJECTS },
-    { label: 'Technológie', view: AppView.TECH },
-    { label: 'Kontakt', view: AppView.CONTACT },
+    { label: 'O nás', path: ROUTE_PATHS.about },
+    { label: 'Naše služby', path: ROUTE_PATHS.services },
+    { label: 'Ostatné služby', path: ROUTE_PATHS.otherServices },
+    { label: 'Realizácie', path: ROUTE_PATHS.projects },
+    { label: 'Technológie', path: ROUTE_PATHS.tech },
+    { label: 'Kontakt', path: ROUTE_PATHS.contact },
   ];
 
-  const handleNav = (view: AppView) => {
-    onNavigate(view);
-    setIsOpen(false);
-  };
+  const closeMenu = () => setIsOpen(false);
 
   const scrollToCalculator = () => {
-    if (currentView !== AppView.HOME) {
-      onNavigate(AppView.HOME);
-      setTimeout(() => {
-        document.getElementById('calculator')?.scrollIntoView({ behavior: 'smooth' });
-      }, 100);
-    } else {
+    if (location.pathname === ROUTE_PATHS.home) {
       document.getElementById('calculator')?.scrollIntoView({ behavior: 'smooth' });
+    } else {
+      navigate(`${ROUTE_PATHS.home}#calculator`);
     }
     setIsOpen(false);
   };
@@ -43,29 +38,30 @@ export const Navbar: React.FC<NavbarProps> = ({ currentView, onNavigate, showCal
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-24">
           {/* Brand Section */}
-          <div 
-            className="flex items-center cursor-pointer group py-2" 
-            onClick={() => handleNav(AppView.HOME)}
+          <Link
+            to={ROUTE_PATHS.home}
+            className="flex items-center cursor-pointer group py-2"
+            onClick={closeMenu}
           >
-            <img 
-              src="logo1.png" 
-              alt="TMS-HYDRA - Hydroizolácie a zatepľovanie plochých striech" 
+            <img
+              src="logo1.png"
+              alt="TMS-HYDRA - Hydroizolácie a zatepľovanie plochých striech"
               className="h-[60px] sm:h-[72px] w-auto transition-transform duration-300 group-hover:scale-105 object-contain"
             />
-          </div>
+          </Link>
 
           {/* Desktop Menu */}
           <div className="hidden md:flex items-center space-x-4 lg:space-x-6">
             {navItems.map((item) => (
-              <button
-                key={item.view}
-                onClick={() => handleNav(item.view)}
+              <Link
+                key={item.path}
+                to={item.path}
                 className={`text-[13px] font-bold transition-colors hover:text-blue-600 whitespace-nowrap ${
-                  currentView === item.view ? 'text-blue-600' : 'text-slate-600'
+                  location.pathname === item.path ? 'text-blue-600' : 'text-slate-600'
                 }`}
               >
                 {item.label}
-              </button>
+              </Link>
             ))}
             {showCalculator && (
               <button
@@ -94,15 +90,16 @@ export const Navbar: React.FC<NavbarProps> = ({ currentView, onNavigate, showCal
         <div className="md:hidden bg-white border-t border-slate-100 py-6 animate-in slide-in-from-top duration-300 shadow-xl">
           <div className="flex flex-col space-y-2 px-4">
             {navItems.map((item) => (
-              <button
-                key={item.view}
-                onClick={() => handleNav(item.view)}
+              <Link
+                key={item.path}
+                to={item.path}
+                onClick={closeMenu}
                 className={`text-xl font-bold py-5 px-6 rounded-2xl text-left transition-colors ${
-                  currentView === item.view ? 'bg-blue-50 text-blue-600' : 'text-slate-600 hover:bg-slate-50'
+                  location.pathname === item.path ? 'bg-blue-50 text-blue-600' : 'text-slate-600 hover:bg-slate-50'
                 }`}
               >
                 {item.label}
-              </button>
+              </Link>
             ))}
             {showCalculator && (
               <button

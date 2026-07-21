@@ -6,11 +6,6 @@ import {
   Award,
   MapPin,
 } from 'lucide-react';
-import { AppView } from '../types';
-
-interface HeroProps {
-  onNavigate: (view: AppView) => void;
-}
 
 const stats: [string, any][] = [
   ['Kvalitné materiály', ShieldCheck],
@@ -19,7 +14,7 @@ const stats: [string, any][] = [
   ['Pôsobíme po SR', MapPin],
 ];
 
-export const Hero: React.FC<HeroProps> = () => {
+export const Hero: React.FC = () => {
   return (
     <section className="relative w-full bg-slate-900 text-white py-20 sm:py-24 lg:py-32 overflow-hidden flex items-center min-h-[480px] sm:min-h-[560px] lg:min-h-[640px]">
       <div className="absolute inset-0">

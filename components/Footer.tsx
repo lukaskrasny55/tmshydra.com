@@ -1,48 +1,40 @@
 
 import React from 'react';
-import { AppView } from '../types';
+import { Link } from 'react-router-dom';
+import { ROUTE_PATHS } from '../routePaths';
 
-interface FooterProps {
-  onNavigate?: (view: AppView) => void;
-}
-
-export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
-  const handleNav = (view: AppView) => {
-    if (onNavigate) {
-      onNavigate(view);
-    }
-  };
-
+export const Footer: React.FC = () => {
   return (
     <footer className="bg-slate-900 text-slate-400 py-16 border-t border-slate-800">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-12 mb-12">
           <div>
             <div className="flex items-center mb-6">
-              <img 
-                src="logo1.png" 
-                alt="TMS-HYDRA" 
-                className="h-16 w-auto brightness-0 invert object-contain cursor-pointer" 
-                onClick={() => handleNav(AppView.HOME)}
-                onError={(e) => {
-                  (e.target as HTMLImageElement).src = 'https://placehold.co/200x100/FFFFFF/000000?text=TMS+HYDRA';
-                }}
-              />
+              <Link to={ROUTE_PATHS.home}>
+                <img
+                  src="logo1.png"
+                  alt="TMS-HYDRA"
+                  className="h-16 w-auto brightness-0 invert object-contain cursor-pointer"
+                  onError={(e) => {
+                    (e.target as HTMLImageElement).src = 'https://placehold.co/200x100/FFFFFF/000000?text=TMS+HYDRA';
+                  }}
+                />
+              </Link>
             </div>
             <p className="text-sm leading-relaxed max-w-xs">
               Sme vaším spoľahlivým partnerom v oblasti hydroizolácie a zatepľovania plochých striech. Kvalita a precíznosť sú u nás na prvom mieste.
             </p>
           </div>
-          
+
           <div>
             <h4 className="text-white font-bold mb-6">Rýchle odkazy</h4>
             <ul className="space-y-4 text-sm">
-              <li><button onClick={() => handleNav(AppView.ABOUT)} className="hover:text-blue-400 transition-colors">O nás</button></li>
-              <li><button onClick={() => handleNav(AppView.SERVICES)} className="hover:text-blue-400 transition-colors">Naše služby</button></li>
-              <li><button onClick={() => handleNav(AppView.OTHER_SERVICES)} className="hover:text-blue-400 transition-colors">Ostatné služby</button></li>
-              <li><button onClick={() => handleNav(AppView.PROJECTS)} className="hover:text-blue-400 transition-colors">Realizácie</button></li>
-              <li><button onClick={() => handleNav(AppView.TECH)} className="hover:text-blue-400 transition-colors">Technológie</button></li>
-              <li><button onClick={() => handleNav(AppView.CONTACT)} className="hover:text-blue-400 transition-colors">Kontakt</button></li>
+              <li><Link to={ROUTE_PATHS.about} className="hover:text-blue-400 transition-colors">O nás</Link></li>
+              <li><Link to={ROUTE_PATHS.services} className="hover:text-blue-400 transition-colors">Naše služby</Link></li>
+              <li><Link to={ROUTE_PATHS.otherServices} className="hover:text-blue-400 transition-colors">Ostatné služby</Link></li>
+              <li><Link to={ROUTE_PATHS.projects} className="hover:text-blue-400 transition-colors">Realizácie</Link></li>
+              <li><Link to={ROUTE_PATHS.tech} className="hover:text-blue-400 transition-colors">Technológie</Link></li>
+              <li><Link to={ROUTE_PATHS.contact} className="hover:text-blue-400 transition-colors">Kontakt</Link></li>
             </ul>
           </div>
 
