@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { CheckCircle2, ArrowRight, MapPin, Phone, Calculator } from 'lucide-react';
 import { Helmet } from 'react-helmet-async';
@@ -14,9 +14,6 @@ interface PageContent {
 export const SeoCityPage: React.FC = () => {
   const { service, city } = useParams<{ service: string; city: string }>();
 
-  const [pageData, setPageData] = useState<PageContent | null>(null);
-  const [loading, setLoading] = useState(true);
-
   const formattedCity = city
     ? city.charAt(0).toUpperCase() + city.slice(1)
     : '';
@@ -29,44 +26,23 @@ export const SeoCityPage: React.FC = () => {
   ? cityData[city]
   : null;
 
-  useEffect(() => {
-const generatedContent = {
-  title:
-    currentCityData?.title ||
-    `${serviceName} ${formattedCity}`,
+  const pageData: PageContent = {
+    title:
+      currentCityData?.title ||
+      `${serviceName} ${formattedCity}`,
 
-  meta_title:
-    (currentCityData?.title || `${serviceName} ${formattedCity}`) +
-    ' | TMS HYDRA',
+    meta_title:
+      (currentCityData?.title || `${serviceName} ${formattedCity}`) +
+      ' | TMS HYDRA',
 
-  meta_description:
-    currentCityData?.description ||
-    `Profesionálna ${serviceName.toLowerCase()} v meste ${formattedCity}. Kontaktujte TMS HYDRA pre bezplatnú obhliadku strechy.`,
+    meta_description:
+      currentCityData?.description ||
+      `Profesionálna ${serviceName.toLowerCase()} v meste ${formattedCity}. Kontaktujte TMS HYDRA pre bezplatnú obhliadku strechy.`,
 
-  content:
-    currentCityData?.description ||
-    `Naša spoločnosť TMS HYDRA poskytuje profesionálne služby ${serviceName.toLowerCase()} v meste ${formattedCity}.`
-};
-
-    setPageData(generatedContent);
-    setLoading(false);
-  }, [service, city, formattedCity]);
-
-  if (loading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        Loading...
-      </div>
-    );
-  }
-
-  if (!pageData) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        Page not found
-      </div>
-    );
-  }
+    content:
+      currentCityData?.description ||
+      `Naša spoločnosť TMS HYDRA poskytuje profesionálne služby ${serviceName.toLowerCase()} v meste ${formattedCity}.`
+  };
 
   const structuredData = {
     "@context": "https://schema.org",
