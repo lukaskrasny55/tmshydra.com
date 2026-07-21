@@ -17,6 +17,26 @@ export const Seo: React.FC<SeoProps> = ({ slug }) => {
         description: 'Kompletné služby pre ploché strechy.',
         keywords: 'hydroizolácie, servis striech',
       },
+      about: {
+        title: 'O nás | TMS HYDRA',
+        description: 'TMS HYDRA je rodinná firma Tomáša Solnokyho s 12-ročnou praxou z Belgicka. Hydroizolácie a zateplenie plochých striech s osobným, poctivým prístupom.',
+        keywords: 'o nás, TMS HYDRA, Tomáš Solnoky',
+      },
+      'other-services': {
+        title: 'Ostatné služby | TMS HYDRA',
+        description: 'Zvodové systémy, odvetranie striech, svetlíky, bleskozvody, zelené strechy a skúšky tesnosti hydroizolácií – doplnkové služby pre vašu strechu.',
+        keywords: 'doplnkové služby, bleskozvody, zelené strechy',
+      },
+      projects: {
+        title: 'Realizácie | TMS HYDRA',
+        description: 'Pozrite si naše realizácie hydroizolácií a zateplení plochých striech – rodinné domy, bytové domy aj novostavby po celom Slovensku.',
+        keywords: 'realizácie, referencie, TMS HYDRA',
+      },
+      tech: {
+        title: 'Technológie | TMS HYDRA',
+        description: 'Certifikované strešné systémy a skladby – jednoplášťové, extenzívne zelené aj pochôdzne strechy. Záruka až 15 rokov na naše realizácie.',
+        keywords: 'technológie, hydroizolačné systémy, TMS HYDRA',
+      },
       contact: {
         title: 'Kontakt | TMS HYDRA',
         description: 'Kontaktujte nás pre cenovú ponuku.',
