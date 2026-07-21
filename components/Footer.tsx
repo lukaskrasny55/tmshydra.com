@@ -43,7 +43,7 @@ export const Footer: React.FC = () => {
             <ul className="space-y-4 text-sm">
               <li><button className="hover:text-blue-400 transition-colors">Ochrana osobných údajov (GDPR)</button></li>
               <li><button className="hover:text-blue-400 transition-colors">Obchodné podmienky</button></li>
-              <li><p className="mt-4 text-slate-400">IČO: 12345678<br />DIČ: 2021234567</p></li>
+              <li><p className="mt-4 text-slate-400">IČO: 57 086 699<br />DIČ: 2122561485</p></li>
             </ul>
           </div>
         </div>
