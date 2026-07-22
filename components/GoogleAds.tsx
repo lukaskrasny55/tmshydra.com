@@ -1,5 +1,8 @@
 import React, { useEffect } from 'react';
-import { useConsent } from '../consent';
+import { useConsent, getStoredConsent } from '../consent';
+
+const ADS_ID = 'AW-18181546633';
+const CONVERSION_LABEL = 'HeRnCMjHydQcEInF0d1D';
 
 export const GoogleAds: React.FC = () => {
   const consent = useConsent();
@@ -9,11 +12,9 @@ export const GoogleAds: React.FC = () => {
       return;
     }
 
-    const adsId = 'AW-XXXXXXXXXX';
-
     const adsScript = document.createElement('script');
     adsScript.async = true;
-    adsScript.src = `https://www.googletagmanager.com/gtag/js?id=${adsId}`;
+    adsScript.src = `https://www.googletagmanager.com/gtag/js?id=${ADS_ID}`;
     document.head.appendChild(adsScript);
 
     const inlineScript = document.createElement('script');
@@ -21,7 +22,7 @@ export const GoogleAds: React.FC = () => {
       window.dataLayer = window.dataLayer || [];
       function gtag(){dataLayer.push(arguments);}
       gtag('js', new Date());
-      gtag('config', '${adsId}');
+      gtag('config', '${ADS_ID}');
     `;
 
     document.head.appendChild(inlineScript);
@@ -31,7 +32,17 @@ export const GoogleAds: React.FC = () => {
 };
 
 export const trackConversion = (eventName: 'form' | 'booking') => {
+  // Mirrors the gate in GoogleAds/GoogleAnalytics: gtag is only ever defined
+  // once consent is accepted, but we check consent explicitly too so this
+  // never fires a conversion if consent was accepted then later revoked
+  // without a page reload.
+  if (getStoredConsent() !== 'accepted') {
+    return;
+  }
+
   if ((window as any).gtag) {
-    (window as any).gtag('event', 'conversion');
+    (window as any).gtag('event', 'conversion', {
+      send_to: `${ADS_ID}/${CONVERSION_LABEL}`,
+    });
   }
 };

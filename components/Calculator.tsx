@@ -9,6 +9,7 @@ import {
   Layers,
   Send
 } from 'lucide-react';
+import { trackConversion } from './GoogleAds';
 
 type BuildingType = 'family' | 'apartment' | 'industrial';
 type RoofSystem = 'single' | 'double' | 'triple_pir' | 'mpvc';
@@ -83,6 +84,7 @@ Telefón: ${leadForm.phone}
       }
 
       setIsSubmitted(true);
+      trackConversion('form');
     } catch (err) {
       alert('Chyba pri odoslaní formulára.');
     } finally {
