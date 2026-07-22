@@ -42,9 +42,9 @@ const seoData: Record<string, { title: string; description: string; keywords: st
     keywords: 'kontakt, TMS HYDRA',
   },
   'privacy-policy': {
-    title: 'Ochrana osobných údajov | TMS HYDRA',
-    description: 'Informácie o spracovaní osobných údajov (GDPR) spoločnosťou TMS HYDRA.',
-    keywords: 'ochrana osobných údajov, GDPR, TMS HYDRA',
+    title: 'Ochrana osobných údajov a cookies | TMS HYDRA',
+    description: 'Zásady spracovania osobných údajov (GDPR) a používania súborov cookie na webe spoločnosti TMS HYDRA.',
+    keywords: 'ochrana osobných údajov, GDPR, cookies, TMS HYDRA',
   },
   terms: {
     title: 'Obchodné podmienky | TMS HYDRA',
