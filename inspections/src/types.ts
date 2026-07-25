@@ -137,6 +137,7 @@ export interface QuoteLineItem {
 export interface QuoteAlternative {
   id: string
   label: string
+  discountPercent: string
   totalPrice: string | null
   lineItems: QuoteLineItem[]
 }

@@ -17,9 +17,14 @@ export default async function handler(req: ApiRequest, res: ApiResponse) {
   if (!id) return res.status(400).json({ error: 'Chýba id.' })
 
   if (req.method === 'PATCH') {
-    const { label } = req.body || {}
+    const { label, discountPercent } = req.body || {}
     const data: Record<string, unknown> = {}
     if (label !== undefined) data.label = String(label).trim()
+    if (discountPercent !== undefined) {
+      const percent = Number(discountPercent)
+      if (Number.isNaN(percent)) return res.status(400).json({ error: 'Zľava musí byť číslo.' })
+      data.discountPercent = percent
+    }
 
     try {
       const alternative = await prisma.quoteAlternative.update({ where: { id }, data })

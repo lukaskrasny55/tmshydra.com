@@ -259,6 +259,7 @@ model QuoteAlternative {
   inspectionId           String   @map("inspection_id")
   materialCompositionId  String?  @map("material_composition_id")
   label                  String // e.g. "A" | "B"
+  discountPercent        Decimal  @default(0) @map("discount_percent") @db.Decimal(5, 2)
   totalPrice             Decimal? @map("total_price") @db.Decimal(10, 2)
   documentUrl            String?  @map("document_url")
   createdAt              DateTime @default(now()) @map("created_at")

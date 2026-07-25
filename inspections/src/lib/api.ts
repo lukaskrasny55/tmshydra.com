@@ -152,6 +152,9 @@ export async function createQuoteAlternative(data: { inspectionId: string; label
 export async function deleteQuoteAlternative(id: string) {
   return deleteRequest(`/api/quote-alternatives/${id}`)
 }
+export async function updateQuoteAlternative(id: string, data: Partial<{ label: string; discountPercent: number }>) {
+  return patchJSON<QuoteAlternative>(`/api/quote-alternatives/${id}`, data)
+}
 
 export async function createQuoteLineItem(data: {
   quoteAlternativeId: string

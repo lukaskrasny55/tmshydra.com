@@ -5,19 +5,32 @@ import {
   createQuoteLineItem,
   deleteQuoteAlternative,
   deleteQuoteLineItem,
+  updateQuoteAlternative,
   updateQuoteLineItem,
 } from '../../lib/api'
-import type { InspectionDetail, QuoteAlternative } from '../../types'
+import type { InspectionDetail, LineItemSection, QuoteAlternative, QuoteLineItem } from '../../types'
 
 interface Props {
   inspection: InspectionDetail
   onChange: (patch: Partial<InspectionDetail>) => void
 }
 
-const SECTION_OPTIONS = [
-  { value: 'main', label: 'Hlavná časť' },
-  { value: 'nad_ramec', label: 'Nad rámec' },
+const LINE_ITEM_COLUMNS = [
+  { key: 'description', label: 'Popis', placeholder: 'Popis položky' },
+  { key: 'plannedQty', label: 'Naplánované', type: 'number' as const },
+  { key: 'previousQty', label: 'Predchádzajúci', type: 'number' as const },
+  { key: 'actualQty', label: 'Aktuálne', type: 'number' as const },
+  { key: 'unitPriceSnapshot', label: 'Jedn. cena (€)', type: 'number' as const },
+  { key: 'wastePercent', label: 'Stratné (%)', type: 'number' as const },
+  { key: 'total', label: 'Celkom (€)', type: 'number' as const },
 ]
+
+function sectionTotals(items: QuoteLineItem[], discountPercent: number) {
+  const subtotal = items.reduce((sum, li) => sum + Number(li.total), 0)
+  const discountAmount = Math.round(subtotal * (discountPercent / 100) * 100) / 100
+  const totalAfterDiscount = Math.round((subtotal - discountAmount) * 100) / 100
+  return { subtotal, discountAmount, totalAfterDiscount }
+}
 
 export default function QuoteTab({ inspection, onChange }: Props) {
   const alternatives = inspection.quoteAlternatives
@@ -59,24 +72,32 @@ export default function QuoteTab({ inspection, onChange }: Props) {
     if (activeId === id) setActiveId(remaining[0]?.id ?? null)
   }
 
+  async function handleDiscountBlur(value: string) {
+    if (!active) return
+    const percent = Number(value)
+    if (Number.isNaN(percent) || percent === Number(active.discountPercent)) return
+    const updated = await updateQuoteAlternative(active.id, { discountPercent: percent })
+    replaceAlternative({ ...active, discountPercent: updated.discountPercent })
+  }
+
   async function handleGenerateFromChecklist() {
     if (!active) return
     setGenerating(true)
     setError(null)
     try {
-      const drafts: { description: string; plannedQty: number }[] = []
+      const drafts: { description: string; plannedQty: number; section: LineItemSection }[] = []
       inspection.roofEdges.forEach((edge) => {
-        drafts.push({ description: `Hrana strechy – ${edge.label}`, plannedQty: Number(edge.lengthM) })
-      })
-      inspection.gutterSystemItems.forEach((item) => {
-        drafts.push({ description: `${item.itemType} (${item.unit})`, plannedQty: Number(item.quantity) })
-      })
-      inspection.drainDownspouts.forEach((d) => {
-        drafts.push({ description: `Zvod – ${d.label}`, plannedQty: Number(d.lengthM) })
+        drafts.push({ description: `Hrana strechy – ${edge.label}`, plannedQty: Number(edge.lengthM), section: 'main' })
       })
       if (inspection.areaM2) {
-        drafts.push({ description: 'Hydroizolácia strechy – plocha', plannedQty: Number(inspection.areaM2) })
+        drafts.push({ description: 'Hydroizolácia strechy – plocha', plannedQty: Number(inspection.areaM2), section: 'main' })
       }
+      inspection.gutterSystemItems.forEach((item) => {
+        drafts.push({ description: `${item.itemType} (${item.unit})`, plannedQty: Number(item.quantity), section: 'nad_ramec' })
+      })
+      inspection.drainDownspouts.forEach((d) => {
+        drafts.push({ description: `Zvod – ${d.label}`, plannedQty: Number(d.lengthM), section: 'nad_ramec' })
+      })
 
       let items = [...active.lineItems]
       for (const draft of drafts) {
@@ -85,7 +106,7 @@ export default function QuoteTab({ inspection, onChange }: Props) {
           description: draft.description,
           plannedQty: draft.plannedQty,
           unitPriceSnapshot: 0,
-          section: 'main',
+          section: draft.section,
           source: 'auto_calculated',
         })
         items = [...items, created]
@@ -98,7 +119,44 @@ export default function QuoteTab({ inspection, onChange }: Props) {
     }
   }
 
-  const total = active ? active.lineItems.reduce((sum, li) => sum + Number(li.total), 0) : 0
+  function makeSectionHandlers(section: LineItemSection) {
+    if (!active) return null
+    return {
+      onCreate: async (draft: Record<string, string | boolean>) => {
+        const created = await createQuoteLineItem({
+          quoteAlternativeId: active.id,
+          description: String(draft.description || ''),
+          plannedQty: Number(draft.plannedQty) || 0,
+          unitPriceSnapshot: Number(draft.unitPriceSnapshot) || 0,
+          wastePercent: Number(draft.wastePercent) || 0,
+          section,
+        })
+        replaceAlternative({ ...active, lineItems: [...active.lineItems, created] })
+      },
+      onUpdate: async (id: string, key: string, value: string | boolean) => {
+        const numericKeys = ['plannedQty', 'previousQty', 'actualQty', 'unitPriceSnapshot', 'wastePercent', 'total']
+        const patch = numericKeys.includes(key) ? { [key]: Number(value) } : { [key]: value }
+        const updated = await updateQuoteLineItem(id, patch)
+        replaceAlternative({ ...active, lineItems: active.lineItems.map((li) => (li.id === id ? updated : li)) })
+      },
+      onDelete: async (id: string) => {
+        await deleteQuoteLineItem(id)
+        replaceAlternative({ ...active, lineItems: active.lineItems.filter((li) => li.id !== id) })
+      },
+    }
+  }
+
+  const discountPercent = active ? Number(active.discountPercent) : 0
+  const mainItems = active ? active.lineItems.filter((li) => li.section === 'main') : []
+  const nadRamecItems = active ? active.lineItems.filter((li) => li.section === 'nad_ramec') : []
+  const mainTotals = sectionTotals(mainItems, discountPercent)
+  const nadRamecTotals = sectionTotals(nadRamecItems, discountPercent)
+  const grandSubtotal = mainTotals.subtotal + nadRamecTotals.subtotal
+  const grandDiscountAmount = Math.round(grandSubtotal * (discountPercent / 100) * 100) / 100
+  const grandTotal = Math.round((grandSubtotal - grandDiscountAmount) * 100) / 100
+
+  const mainHandlers = makeSectionHandlers('main')
+  const nadRamecHandlers = makeSectionHandlers('nad_ramec')
 
   return (
     <div className="space-y-4 max-w-4xl">
@@ -145,15 +203,24 @@ export default function QuoteTab({ inspection, onChange }: Props) {
 
       {error && <div className="text-red-600 text-sm">{error}</div>}
 
-      {!active ? (
+      {!active || !mainHandlers || !nadRamecHandlers ? (
         <div className="bg-white border border-slate-200 rounded-lg p-8 text-slate-500 text-sm text-center">
           Zatiaľ žiadna cenová alternatíva. Založ prvú tlačidlom „+ Alternatíva".
         </div>
       ) : (
-        <div className="bg-white border border-slate-200 rounded-lg p-6 space-y-4">
+        <div className="space-y-4">
           <div className="flex items-center justify-between">
-            <h2 className="text-sm font-semibold text-slate-700">Položky ponuky – alternatíva {active.label}</h2>
-            <div className="flex items-center gap-3">
+            <h2 className="text-sm font-semibold text-slate-700">Cenová ponuka – alternatíva {active.label}</h2>
+            <div className="flex items-center gap-4">
+              <label className="flex items-center gap-2 text-xs text-slate-600">
+                Zľava (%)
+                <input
+                  type="number"
+                  defaultValue={active.discountPercent}
+                  onBlur={(e) => handleDiscountBlur(e.target.value)}
+                  className="w-16 px-2 py-1 border border-slate-300 rounded text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                />
+              </label>
               <button
                 onClick={handleGenerateFromChecklist}
                 disabled={generating}
@@ -167,47 +234,50 @@ export default function QuoteTab({ inspection, onChange }: Props) {
             </div>
           </div>
 
-          <EditableList
-            columns={[
-              { key: 'description', label: 'Popis', placeholder: 'Popis položky' },
-              { key: 'plannedQty', label: 'Množstvo', type: 'number' },
-              { key: 'unitPriceSnapshot', label: 'Jedn. cena (€)', type: 'number' },
-              { key: 'wastePercent', label: 'Odpad (%)', type: 'number' },
-              { key: 'total', label: 'Spolu (€)', type: 'number' },
-              { key: 'section', label: 'Časť', type: 'select', options: SECTION_OPTIONS },
-            ]}
-            items={active.lineItems}
-            onCreate={async (draft) => {
-              const created = await createQuoteLineItem({
-                quoteAlternativeId: active.id,
-                description: String(draft.description || ''),
-                plannedQty: Number(draft.plannedQty) || 0,
-                unitPriceSnapshot: Number(draft.unitPriceSnapshot) || 0,
-                wastePercent: Number(draft.wastePercent) || 0,
-                section: (draft.section as 'main' | 'nad_ramec') || 'main',
-              })
-              replaceAlternative({ ...active, lineItems: [...active.lineItems, created] })
-            }}
-            onUpdate={async (id, key, value) => {
-              const numericKeys = ['plannedQty', 'unitPriceSnapshot', 'wastePercent', 'total']
-              const patch = numericKeys.includes(key) ? { [key]: Number(value) } : { [key]: value }
-              const updated = await updateQuoteLineItem(id, patch)
-              replaceAlternative({ ...active, lineItems: active.lineItems.map((li) => (li.id === id ? updated : li)) })
-            }}
-            onDelete={async (id) => {
-              await deleteQuoteLineItem(id)
-              replaceAlternative({ ...active, lineItems: active.lineItems.filter((li) => li.id !== id) })
-            }}
-          />
+          <section className="bg-white border border-slate-200 rounded-lg p-6 space-y-3">
+            <h3 className="text-sm font-semibold text-slate-700">Hydroizolačné a zatepľovacie práce</h3>
+            <EditableList columns={LINE_ITEM_COLUMNS} items={mainItems} {...mainHandlers} />
+            <SectionSummary {...mainTotals} discountPercent={discountPercent} />
+          </section>
 
-          <div className="flex justify-end pt-2 border-t border-slate-100">
-            <div className="text-right">
-              <div className="text-xs text-slate-500">Spolu</div>
-              <div className="text-xl font-semibold text-slate-900">{total.toFixed(2)} €</div>
+          <section className="bg-white border border-slate-200 rounded-lg p-6 space-y-3">
+            <h3 className="text-sm font-semibold text-slate-700">Tesárske a klampiarske práce (nad rámec)</h3>
+            <EditableList columns={LINE_ITEM_COLUMNS} items={nadRamecItems} {...nadRamecHandlers} />
+            <SectionSummary {...nadRamecTotals} discountPercent={discountPercent} />
+          </section>
+
+          <div className="bg-slate-900 text-white rounded-lg p-6 flex justify-end">
+            <div className="text-right space-y-1">
+              <div className="text-xs text-slate-300">Spolu {grandSubtotal.toFixed(2)} € · Zľava {discountPercent}% (−{grandDiscountAmount.toFixed(2)} €)</div>
+              <div className="text-2xl font-semibold">Celkom na úhradu: {grandTotal.toFixed(2)} €</div>
             </div>
           </div>
         </div>
       )}
+    </div>
+  )
+}
+
+function SectionSummary({
+  subtotal,
+  discountAmount,
+  totalAfterDiscount,
+  discountPercent,
+}: {
+  subtotal: number
+  discountAmount: number
+  totalAfterDiscount: number
+  discountPercent: number
+}) {
+  return (
+    <div className="flex justify-end pt-2 border-t border-slate-100">
+      <div className="text-right text-sm space-y-0.5">
+        <div className="text-slate-500">Spolu: {subtotal.toFixed(2)} €</div>
+        <div className="text-slate-500">
+          Zľava {discountPercent}%: −{discountAmount.toFixed(2)} €
+        </div>
+        <div className="font-semibold text-slate-900">Celkom na úhradu: {totalAfterDiscount.toFixed(2)} €</div>
+      </div>
     </div>
   )
 }
