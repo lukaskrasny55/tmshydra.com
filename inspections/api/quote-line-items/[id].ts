@@ -30,6 +30,7 @@ export default async function handler(req: ApiRequest, res: ApiResponse) {
 
     if (body.description !== undefined) data.description = String(body.description).trim()
     if (body.section !== undefined) data.section = body.section === 'nad_ramec' ? 'nad_ramec' : 'main'
+    if (body.unit !== undefined) data.unit = String(body.unit).trim() || 'ks'
 
     const hasRecalcInput = body.plannedQty !== undefined || body.unitPriceSnapshot !== undefined || body.wastePercent !== undefined
     const nextQty = body.plannedQty !== undefined ? Number(body.plannedQty) : Number(existing.plannedQty ?? 0)

@@ -13,7 +13,7 @@ interface ApiResponse extends ServerResponse {
 
 export default async function handler(req: ApiRequest, res: ApiResponse) {
   if (req.method === 'GET') {
-    const items = await prisma.materialComposition.findMany({ orderBy: { name: 'asc' } })
+    const items = await prisma.materialComposition.findMany({ orderBy: { name: 'asc' }, include: { featuredProduct: true } })
     return res.status(200).json(items)
   }
 

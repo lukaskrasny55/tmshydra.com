@@ -9,11 +9,12 @@ interface Props {
   onSaved: (customer: Customer) => void
 }
 
-type FieldKey = 'name' | 'address' | 'phone' | 'email' | 'buildingAdmin'
+type FieldKey = 'name' | 'address' | 'siteAddress' | 'phone' | 'email' | 'buildingAdmin'
 
 const FIELDS: { key: FieldKey; label: string; type?: string }[] = [
   { key: 'name', label: 'Meno / názov' },
   { key: 'address', label: 'Adresa' },
+  { key: 'siteAddress', label: 'Pracovisko (adresa realizácie, ak iná ako adresa)' },
   { key: 'phone', label: 'Telefón', type: 'tel' },
   { key: 'email', label: 'Email', type: 'email' },
   { key: 'buildingAdmin', label: 'Správca budovy' },
@@ -23,6 +24,7 @@ export default function ContactTab({ customer, onSaved }: Props) {
   const [values, setValues] = useState<Record<FieldKey, string>>({
     name: customer.name,
     address: customer.address ?? '',
+    siteAddress: customer.siteAddress ?? '',
     phone: customer.phone ?? '',
     email: customer.email ?? '',
     buildingAdmin: customer.buildingAdmin ?? '',

@@ -46,6 +46,7 @@ export default async function handler(req: ApiRequest, res: ApiResponse) {
         data: {
           ...(name !== undefined ? { name } : {}),
           ...(body.address !== undefined ? { address: cleanString(body.address) } : {}),
+          ...(body.siteAddress !== undefined ? { siteAddress: cleanString(body.siteAddress) } : {}),
           ...(body.phone !== undefined ? { phone: cleanString(body.phone) } : {}),
           ...(body.email !== undefined ? { email: cleanString(body.email) } : {}),
           ...(body.buildingAdmin !== undefined ? { buildingAdmin: cleanString(body.buildingAdmin) } : {}),

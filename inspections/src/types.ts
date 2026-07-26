@@ -11,6 +11,7 @@ export interface Customer {
   id: string
   name: string
   address: string | null
+  siteAddress: string | null
   phone: string | null
   email: string | null
   buildingAdmin: string | null
@@ -87,18 +88,20 @@ export interface Technician {
   email: string | null
 }
 
+export interface MaterialProduct {
+  id: string
+  name: string
+  description: string
+}
+
 export interface MaterialComposition {
   id: string
   name: string
   layersJson: string[]
   workStepsTemplate: string | null
   warrantyYears: number | null
-}
-
-export interface MaterialProduct {
-  id: string
-  name: string
-  description: string
+  featuredProductId: string | null
+  featuredProduct: MaterialProduct | null
 }
 
 export interface DocumentTemplate {
@@ -130,6 +133,7 @@ export interface QuoteLineItem {
   previousQty: string | null
   actualQty: string | null
   wastePercent: string | null
+  unit: string
   unitPriceSnapshot: string
   total: string
   section: LineItemSection
@@ -139,8 +143,14 @@ export interface QuoteLineItem {
 export interface QuoteAlternative {
   id: string
   label: string
+  description: string | null
   discountPercent: string
   totalPrice: string | null
+  issuedDate: string | null
+  validUntil: string | null
+  warrantyYears: number | null
+  materialCompositionId: string | null
+  materialComposition: MaterialComposition | null
   lineItems: QuoteLineItem[]
 }
 

@@ -33,6 +33,7 @@ model Customer {
   id             String   @id @default(cuid())
   name           String
   address        String?
+  siteAddress    String?  @map("site_address")
   phone          String?
   email          String?
   buildingAdmin  String?  @map("building_admin")
@@ -211,9 +212,11 @@ model MaterialComposition {
   layersJson         Json     @map("layers_json")
   workStepsTemplate  String?  @map("work_steps_template")
   warrantyYears      Int?     @map("warranty_years")
+  featuredProductId  String?  @map("featured_product_id")
   createdAt          DateTime @default(now()) @map("created_at")
   updatedAt          DateTime @updatedAt @map("updated_at")
 
+  featuredProduct    MaterialProduct?    @relation(fields: [featuredProductId], references: [id])
   quoteAlternatives  QuoteAlternative[]
 
   @@map("material_compositions")
@@ -221,11 +224,13 @@ model MaterialComposition {
 
 // Reusable library of technical product descriptions (e.g. "BITUTOP APAO") for reuse across documents.
 model MaterialProduct {
-  id          String   @id @default(cuid())
-  name        String
-  description String
-  createdAt   DateTime @default(now()) @map("created_at")
-  updatedAt   DateTime @updatedAt @map("updated_at")
+  id           String   @id @default(cuid())
+  name         String
+  description  String
+  createdAt    DateTime @default(now()) @map("created_at")
+  updatedAt    DateTime @updatedAt @map("updated_at")
+
+  compositions MaterialComposition[]
 
   @@map("material_products")
 }
@@ -261,8 +266,12 @@ model QuoteAlternative {
   inspectionId           String   @map("inspection_id")
   materialCompositionId  String?  @map("material_composition_id")
   label                  String // e.g. "A" | "B"
+  description            String? // e.g. "zo zateplením"
   discountPercent        Decimal  @default(0) @map("discount_percent") @db.Decimal(5, 2)
   totalPrice             Decimal? @map("total_price") @db.Decimal(10, 2)
+  issuedDate             DateTime? @map("issued_date")
+  validUntil             DateTime? @map("valid_until")
+  warrantyYears          Int?      @map("warranty_years")
   documentUrl            String?  @map("document_url")
   createdAt              DateTime @default(now()) @map("created_at")
   updatedAt              DateTime @updatedAt @map("updated_at")
@@ -283,6 +292,7 @@ model QuoteLineItem {
   previousQty         Decimal?         @map("previous_qty") @db.Decimal(10, 2)
   actualQty           Decimal?         @map("actual_qty") @db.Decimal(10, 2)
   wastePercent        Decimal?         @map("waste_percent") @db.Decimal(5, 2)
+  unit                String           @default("ks")
   unitPriceSnapshot    Decimal         @map("unit_price_snapshot") @db.Decimal(10, 2)
   total               Decimal          @db.Decimal(10, 2)
   section             LineItemSection  @default(main)

@@ -17,13 +17,24 @@ export default async function handler(req: ApiRequest, res: ApiResponse) {
   if (!id) return res.status(400).json({ error: 'Chýba id.' })
 
   if (req.method === 'PATCH') {
-    const { label, discountPercent } = req.body || {}
+    const { label, discountPercent, description, issuedDate, validUntil, warrantyYears, materialCompositionId } = req.body || {}
     const data: Record<string, unknown> = {}
     if (label !== undefined) data.label = String(label).trim()
     if (discountPercent !== undefined) {
       const percent = Number(discountPercent)
       if (Number.isNaN(percent)) return res.status(400).json({ error: 'Zľava musí byť číslo.' })
       data.discountPercent = percent
+    }
+    if (description !== undefined) {
+      data.description = typeof description === 'string' && description.trim() ? description.trim() : null
+    }
+    if (issuedDate !== undefined) data.issuedDate = issuedDate ? new Date(issuedDate) : null
+    if (validUntil !== undefined) data.validUntil = validUntil ? new Date(validUntil) : null
+    if (warrantyYears !== undefined) {
+      data.warrantyYears = warrantyYears === null || warrantyYears === '' ? null : Number(warrantyYears)
+    }
+    if (materialCompositionId !== undefined) {
+      data.materialCompositionId = materialCompositionId || null
     }
 
     try {

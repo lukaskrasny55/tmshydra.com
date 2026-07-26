@@ -17,7 +17,7 @@ export default async function handler(req: ApiRequest, res: ApiResponse) {
   if (!id) return res.status(400).json({ error: 'Chýba id.' })
 
   if (req.method === 'PATCH') {
-    const { name, layers, workStepsTemplate, warrantyYears } = req.body || {}
+    const { name, layers, workStepsTemplate, warrantyYears, featuredProductId } = req.body || {}
     const data: Record<string, unknown> = {}
 
     if (name !== undefined) data.name = String(name).trim()
@@ -28,9 +28,12 @@ export default async function handler(req: ApiRequest, res: ApiResponse) {
     if (warrantyYears !== undefined) {
       data.warrantyYears = warrantyYears === null || warrantyYears === '' ? null : Number(warrantyYears)
     }
+    if (featuredProductId !== undefined) {
+      data.featuredProductId = featuredProductId || null
+    }
 
     try {
-      const item = await prisma.materialComposition.update({ where: { id }, data })
+      const item = await prisma.materialComposition.update({ where: { id }, data, include: { featuredProduct: true } })
       return res.status(200).json(item)
     } catch {
       return res.status(404).json({ error: 'Skladba nebola nájdená.' })

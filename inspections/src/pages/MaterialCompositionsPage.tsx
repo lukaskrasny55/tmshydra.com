@@ -4,12 +4,14 @@ import {
   createMaterialComposition,
   deleteMaterialComposition,
   fetchMaterialCompositions,
+  fetchMaterialProducts,
   updateMaterialComposition,
 } from '../lib/api'
-import type { MaterialComposition } from '../types'
+import type { MaterialComposition, MaterialProduct } from '../types'
 
 export default function MaterialCompositionsPage() {
   const [items, setItems] = useState<MaterialComposition[]>([])
+  const [products, setProducts] = useState<MaterialProduct[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const [showNewForm, setShowNewForm] = useState(false)
@@ -17,8 +19,11 @@ export default function MaterialCompositionsPage() {
   const [creating, setCreating] = useState(false)
 
   useEffect(() => {
-    fetchMaterialCompositions()
-      .then(setItems)
+    Promise.all([fetchMaterialCompositions(), fetchMaterialProducts()])
+      .then(([compositions, materialProducts]) => {
+        setItems(compositions)
+        setProducts(materialProducts)
+      })
       .catch((err) => setError(err.message))
       .finally(() => setLoading(false))
   }, [])
@@ -97,7 +102,9 @@ export default function MaterialCompositionsPage() {
             Zatiaľ žiadne skladby. Založ prvú tlačidlom vyššie.
           </div>
         ) : (
-          items.map((item) => <CompositionCard key={item.id} item={item} onUpdated={handleUpdated} onDelete={handleDelete} />)
+          items.map((item) => (
+            <CompositionCard key={item.id} item={item} products={products} onUpdated={handleUpdated} onDelete={handleDelete} />
+          ))
         )}
       </main>
     </div>
@@ -106,10 +113,12 @@ export default function MaterialCompositionsPage() {
 
 function CompositionCard({
   item,
+  products,
   onUpdated,
   onDelete,
 }: {
   item: MaterialComposition
+  products: MaterialProduct[]
   onUpdated: (updated: MaterialComposition) => void
   onDelete: (id: string) => void
 }) {
@@ -119,7 +128,9 @@ function CompositionCard({
   const [warrantyYears, setWarrantyYears] = useState(item.warrantyYears?.toString() ?? '')
   const [status, setStatus] = useState<'idle' | 'saving' | 'saved' | 'error'>('idle')
 
-  async function save(patch: Partial<{ name: string; layers: string[]; workStepsTemplate: string | null; warrantyYears: number | null }>) {
+  async function save(
+    patch: Partial<{ name: string; layers: string[]; workStepsTemplate: string | null; warrantyYears: number | null; featuredProductId: string | null }>,
+  ) {
     setStatus('saving')
     try {
       const updated = await updateMaterialComposition(item.id, patch)
@@ -170,15 +181,32 @@ function CompositionCard({
         />
       </div>
 
-      <div className="w-40">
-        <label className="block text-xs font-medium text-slate-500 mb-1">Záruka (roky)</label>
-        <input
-          type="number"
-          value={warrantyYears}
-          onChange={(e) => setWarrantyYears(e.target.value)}
-          onBlur={() => save({ warrantyYears: warrantyYears === '' ? null : Number(warrantyYears) })}
-          className="w-full px-3 py-2 border border-slate-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-        />
+      <div className="grid grid-cols-2 gap-4">
+        <div>
+          <label className="block text-xs font-medium text-slate-500 mb-1">Záruka (roky)</label>
+          <input
+            type="number"
+            value={warrantyYears}
+            onChange={(e) => setWarrantyYears(e.target.value)}
+            onBlur={() => save({ warrantyYears: warrantyYears === '' ? null : Number(warrantyYears) })}
+            className="w-full px-3 py-2 border border-slate-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+          />
+        </div>
+        <div>
+          <label className="block text-xs font-medium text-slate-500 mb-1">Vyzdvihnutý produkt (technická charakteristika)</label>
+          <select
+            value={item.featuredProductId ?? ''}
+            onChange={(e) => save({ featuredProductId: e.target.value || null })}
+            className="w-full px-3 py-2 border border-slate-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+          >
+            <option value="">— žiadny —</option>
+            {products.map((p) => (
+              <option key={p.id} value={p.id}>
+                {p.name}
+              </option>
+            ))}
+          </select>
+        </div>
       </div>
     </div>
   )

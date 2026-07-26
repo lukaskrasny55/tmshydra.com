@@ -88,7 +88,7 @@ export async function createInspection(data: {
   return (await res.json()) as InspectionListItem
 }
 
-export async function updateCustomer(id: string, data: Partial<Pick<Customer, 'name' | 'address' | 'phone' | 'email' | 'buildingAdmin'>>) {
+export async function updateCustomer(id: string, data: Partial<Pick<Customer, 'name' | 'address' | 'siteAddress' | 'phone' | 'email' | 'buildingAdmin'>>) {
   return patchJSON<Customer>(`/api/customers/${id}`, data)
 }
 
@@ -152,7 +152,18 @@ export async function createQuoteAlternative(data: { inspectionId: string; label
 export async function deleteQuoteAlternative(id: string) {
   return deleteRequest(`/api/quote-alternatives/${id}`)
 }
-export async function updateQuoteAlternative(id: string, data: Partial<{ label: string; discountPercent: number }>) {
+export async function updateQuoteAlternative(
+  id: string,
+  data: Partial<{
+    label: string
+    discountPercent: number
+    description: string | null
+    issuedDate: string | null
+    validUntil: string | null
+    warrantyYears: number | null
+    materialCompositionId: string | null
+  }>,
+) {
   return patchJSON<QuoteAlternative>(`/api/quote-alternatives/${id}`, data)
 }
 
@@ -162,6 +173,7 @@ export async function createQuoteLineItem(data: {
   plannedQty?: number
   unitPriceSnapshot?: number
   wastePercent?: number
+  unit?: string
   section?: 'main' | 'nad_ramec'
   source?: 'auto_calculated' | 'manual'
 }) {
@@ -169,7 +181,7 @@ export async function createQuoteLineItem(data: {
 }
 export async function updateQuoteLineItem(
   id: string,
-  data: Partial<{ description: string; plannedQty: number; unitPriceSnapshot: number; wastePercent: number; section: 'main' | 'nad_ramec'; total: number }>,
+  data: Partial<{ description: string; plannedQty: number; unitPriceSnapshot: number; wastePercent: number; unit: string; section: 'main' | 'nad_ramec'; total: number }>,
 ) {
   return patchJSON<QuoteLineItem>(`/api/quote-line-items/${id}`, data)
 }
@@ -263,7 +275,7 @@ export async function createMaterialComposition(data: { name: string; layers?: s
 }
 export async function updateMaterialComposition(
   id: string,
-  data: Partial<{ name: string; layers: string[]; workStepsTemplate: string | null; warrantyYears: number | null }>,
+  data: Partial<{ name: string; layers: string[]; workStepsTemplate: string | null; warrantyYears: number | null; featuredProductId: string | null }>,
 ) {
   return patchJSON<MaterialComposition>(`/api/material-compositions/${id}`, data)
 }

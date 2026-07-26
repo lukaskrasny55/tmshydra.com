@@ -79,7 +79,7 @@ export default async function handler(req: ApiRequest, res: ApiResponse) {
         drainDownspouts: true,
         gutterSystemItems: true,
         additionalServices: true,
-        quoteAlternatives: { include: { lineItems: true } },
+        quoteAlternatives: { include: { lineItems: true, materialComposition: true } },
       },
     })
 

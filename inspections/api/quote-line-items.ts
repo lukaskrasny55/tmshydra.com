@@ -18,7 +18,7 @@ function computeTotal(plannedQty: number, unitPrice: number, wastePercent: numbe
 
 export default async function handler(req: ApiRequest, res: ApiResponse) {
   if (req.method === 'POST') {
-    const { quoteAlternativeId, description, plannedQty, unitPriceSnapshot, wastePercent, section, source } = req.body || {}
+    const { quoteAlternativeId, description, plannedQty, unitPriceSnapshot, wastePercent, unit, section, source } = req.body || {}
 
     if (typeof quoteAlternativeId !== 'string' || !quoteAlternativeId) {
       return res.status(400).json({ error: 'Chýba quoteAlternativeId.' })
@@ -43,6 +43,7 @@ export default async function handler(req: ApiRequest, res: ApiResponse) {
         plannedQty: qty,
         unitPriceSnapshot: price,
         wastePercent: waste,
+        unit: typeof unit === 'string' && unit.trim() ? unit.trim() : 'ks',
         total: computeTotal(qty, price, waste),
         section: section === 'nad_ramec' ? 'nad_ramec' : 'main',
         source: source === 'auto_calculated' ? 'auto_calculated' : 'manual',

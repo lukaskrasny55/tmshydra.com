@@ -1,14 +1,15 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import EditableList from '../EditableList'
 import {
   createQuoteAlternative,
   createQuoteLineItem,
   deleteQuoteAlternative,
   deleteQuoteLineItem,
+  fetchMaterialCompositions,
   updateQuoteAlternative,
   updateQuoteLineItem,
 } from '../../lib/api'
-import type { InspectionDetail, LineItemSection, QuoteAlternative, QuoteLineItem } from '../../types'
+import type { InspectionDetail, LineItemSection, MaterialComposition, QuoteAlternative, QuoteLineItem } from '../../types'
 
 interface Props {
   inspection: InspectionDetail
@@ -20,6 +21,7 @@ const LINE_ITEM_COLUMNS = [
   { key: 'plannedQty', label: 'Naplánované', type: 'number' as const },
   { key: 'previousQty', label: 'Predchádzajúci', type: 'number' as const },
   { key: 'actualQty', label: 'Aktuálne', type: 'number' as const },
+  { key: 'unit', label: 'Jednotky', placeholder: 'bm / m2 / ks' },
   { key: 'unitPriceSnapshot', label: 'Jedn. cena (€)', type: 'number' as const },
   { key: 'wastePercent', label: 'Stratné (%)', type: 'number' as const },
   { key: 'total', label: 'Celkom (€)', type: 'number' as const },
@@ -40,6 +42,13 @@ export default function QuoteTab({ inspection, onChange }: Props) {
   const [creating, setCreating] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [generating, setGenerating] = useState(false)
+  const [compositions, setCompositions] = useState<MaterialComposition[]>([])
+
+  useEffect(() => {
+    fetchMaterialCompositions()
+      .then(setCompositions)
+      .catch(() => setCompositions([]))
+  }, [])
 
   const active = alternatives.find((a) => a.id === activeId) ?? alternatives[0] ?? null
 
@@ -80,23 +89,54 @@ export default function QuoteTab({ inspection, onChange }: Props) {
     replaceAlternative({ ...active, discountPercent: updated.discountPercent })
   }
 
+  async function handleDescriptionBlur(value: string) {
+    if (!active || value === (active.description ?? '')) return
+    const updated = await updateQuoteAlternative(active.id, { description: value || null })
+    replaceAlternative({ ...active, description: updated.description })
+  }
+
+  async function handleDateBlur(field: 'issuedDate' | 'validUntil', value: string) {
+    if (!active) return
+    const current = active[field] ? active[field]!.slice(0, 10) : ''
+    if (value === current) return
+    const updated = await updateQuoteAlternative(active.id, { [field]: value || null })
+    replaceAlternative({ ...active, [field]: updated[field] })
+  }
+
+  async function handleWarrantyBlur(value: string) {
+    if (!active) return
+    const years = value === '' ? null : Number(value)
+    if (value !== '' && Number.isNaN(years)) return
+    if (years === active.warrantyYears) return
+    const updated = await updateQuoteAlternative(active.id, { warrantyYears: years })
+    replaceAlternative({ ...active, warrantyYears: updated.warrantyYears })
+  }
+
+  async function handleCompositionChange(value: string) {
+    if (!active) return
+    const materialCompositionId = value || null
+    const updated = await updateQuoteAlternative(active.id, { materialCompositionId })
+    const composition = compositions.find((c) => c.id === materialCompositionId) ?? null
+    replaceAlternative({ ...active, materialCompositionId: updated.materialCompositionId, materialComposition: composition })
+  }
+
   async function handleGenerateFromChecklist() {
     if (!active) return
     setGenerating(true)
     setError(null)
     try {
-      const drafts: { description: string; plannedQty: number; section: LineItemSection }[] = []
+      const drafts: { description: string; plannedQty: number; unit: string; section: LineItemSection }[] = []
       inspection.roofEdges.forEach((edge) => {
-        drafts.push({ description: `Hrana strechy – ${edge.label}`, plannedQty: Number(edge.lengthM), section: 'main' })
+        drafts.push({ description: `Hrana strechy – ${edge.label}`, plannedQty: Number(edge.lengthM), unit: 'bm', section: 'main' })
       })
       if (inspection.areaM2) {
-        drafts.push({ description: 'Hydroizolácia strechy – plocha', plannedQty: Number(inspection.areaM2), section: 'main' })
+        drafts.push({ description: 'Hydroizolácia strechy – plocha', plannedQty: Number(inspection.areaM2), unit: 'm2', section: 'main' })
       }
       inspection.gutterSystemItems.forEach((item) => {
-        drafts.push({ description: `${item.itemType} (${item.unit})`, plannedQty: Number(item.quantity), section: 'nad_ramec' })
+        drafts.push({ description: item.itemType, plannedQty: Number(item.quantity), unit: item.unit, section: 'nad_ramec' })
       })
       inspection.drainDownspouts.forEach((d) => {
-        drafts.push({ description: `Zvod – ${d.label}`, plannedQty: Number(d.lengthM), section: 'nad_ramec' })
+        drafts.push({ description: `Zvod – ${d.label}`, plannedQty: Number(d.lengthM), unit: 'bm', section: 'nad_ramec' })
       })
 
       let items = [...active.lineItems]
@@ -106,6 +146,7 @@ export default function QuoteTab({ inspection, onChange }: Props) {
           description: draft.description,
           plannedQty: draft.plannedQty,
           unitPriceSnapshot: 0,
+          unit: draft.unit,
           section: draft.section,
           source: 'auto_calculated',
         })
@@ -129,6 +170,7 @@ export default function QuoteTab({ inspection, onChange }: Props) {
           plannedQty: Number(draft.plannedQty) || 0,
           unitPriceSnapshot: Number(draft.unitPriceSnapshot) || 0,
           wastePercent: Number(draft.wastePercent) || 0,
+          unit: String(draft.unit || 'ks'),
           section,
         })
         replaceAlternative({ ...active, lineItems: [...active.lineItems, created] })
@@ -228,11 +270,84 @@ export default function QuoteTab({ inspection, onChange }: Props) {
               >
                 {generating ? 'Generujem…' : '↻ Generovať z checklistu'}
               </button>
+              <a
+                href={`/api/generate-quote-document?id=${active.id}`}
+                className="text-xs font-medium text-white bg-slate-900 hover:bg-slate-800 px-3 py-1.5 rounded-md"
+              >
+                ⬇ Cenová ponuka (DOCX)
+              </a>
+              <a
+                href={`/api/generate-technical-document?id=${active.id}`}
+                className="text-xs font-medium text-white bg-slate-700 hover:bg-slate-600 px-3 py-1.5 rounded-md"
+              >
+                ⬇ Návrh riešenia (DOCX)
+              </a>
               <button onClick={() => handleDeleteAlternative(active.id)} className="text-xs font-medium text-red-500 hover:text-red-700">
                 Vymazať alternatívu
               </button>
             </div>
           </div>
+
+          <section className="bg-white border border-slate-200 rounded-lg p-6">
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+              <div className="col-span-2">
+                <label className="block text-xs font-medium text-slate-500 mb-1">Popis alternatívy</label>
+                <input
+                  key={active.id}
+                  defaultValue={active.description ?? ''}
+                  placeholder="napr. zo zateplením"
+                  onBlur={(e) => handleDescriptionBlur(e.target.value)}
+                  className="w-full px-3 py-2 border border-slate-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                />
+              </div>
+              <div>
+                <label className="block text-xs font-medium text-slate-500 mb-1">Dátum vystavenia</label>
+                <input
+                  key={`${active.id}-issued`}
+                  type="date"
+                  defaultValue={active.issuedDate ? active.issuedDate.slice(0, 10) : ''}
+                  onBlur={(e) => handleDateBlur('issuedDate', e.target.value)}
+                  className="w-full px-3 py-2 border border-slate-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                />
+              </div>
+              <div>
+                <label className="block text-xs font-medium text-slate-500 mb-1">Platí do</label>
+                <input
+                  key={`${active.id}-valid`}
+                  type="date"
+                  defaultValue={active.validUntil ? active.validUntil.slice(0, 10) : ''}
+                  onBlur={(e) => handleDateBlur('validUntil', e.target.value)}
+                  className="w-full px-3 py-2 border border-slate-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                />
+              </div>
+              <div>
+                <label className="block text-xs font-medium text-slate-500 mb-1">Záruka (roky)</label>
+                <input
+                  key={`${active.id}-warranty`}
+                  type="number"
+                  defaultValue={active.warrantyYears ?? ''}
+                  onBlur={(e) => handleWarrantyBlur(e.target.value)}
+                  className="w-full px-3 py-2 border border-slate-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                />
+              </div>
+              <div className="col-span-2">
+                <label className="block text-xs font-medium text-slate-500 mb-1">Materiálová skladba (pre Návrh technického riešenia)</label>
+                <select
+                  key={`${active.id}-composition`}
+                  value={active.materialCompositionId ?? ''}
+                  onChange={(e) => handleCompositionChange(e.target.value)}
+                  className="w-full px-3 py-2 border border-slate-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                >
+                  <option value="">— žiadna —</option>
+                  {compositions.map((c) => (
+                    <option key={c.id} value={c.id}>
+                      {c.name}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            </div>
+          </section>
 
           <section className="bg-white border border-slate-200 rounded-lg p-6 space-y-3">
             <h3 className="text-sm font-semibold text-slate-700">Hydroizolačné a zatepľovacie práce</h3>
