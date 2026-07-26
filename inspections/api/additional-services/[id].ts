@@ -17,9 +17,12 @@ export default async function handler(req: ApiRequest, res: ApiResponse) {
   if (!id) return res.status(400).json({ error: 'Chýba id.' })
 
   if (req.method === 'PATCH') {
-    const { description } = req.body || {}
+    const { description, photoUrl } = req.body || {}
     const data: Record<string, unknown> = {}
     if (description !== undefined) data.description = String(description).trim()
+    if (photoUrl !== undefined) {
+      data.photoUrl = typeof photoUrl === 'string' && photoUrl.startsWith('data:') ? photoUrl : null
+    }
 
     try {
       const service = await prisma.additionalService.update({ where: { id }, data })

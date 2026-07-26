@@ -207,7 +207,7 @@ export async function deleteRoofAreaSection(id: string) {
 export async function createAdditionalService(data: { inspectionId: string; description: string; photoUrl?: string }) {
   return postJSON<AdditionalService>('/api/additional-services', data)
 }
-export async function updateAdditionalService(id: string, data: Partial<{ description: string }>) {
+export async function updateAdditionalService(id: string, data: Partial<{ description: string; photoUrl: string | null }>) {
   return patchJSON<AdditionalService>(`/api/additional-services/${id}`, data)
 }
 export async function deleteAdditionalService(id: string) {

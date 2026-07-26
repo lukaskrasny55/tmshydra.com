@@ -4,19 +4,29 @@ import { fetchCompanySettings, updateCompanySettings } from '../lib/api'
 import { fileToStorableDataUrl } from '../lib/image'
 
 type SaveStatus = 'idle' | 'saving' | 'saved' | 'error'
-type FieldKey = 'ico' | 'dic' | 'iban' | 'bic' | 'address'
+type FieldKey = 'ico' | 'dic' | 'iban' | 'bic' | 'address' | 'email' | 'phone'
 
 const FIELDS: { key: FieldKey; label: string }[] = [
+  { key: 'address', label: 'Adresa firmy' },
   { key: 'ico', label: 'IČO' },
   { key: 'dic', label: 'DIČ' },
   { key: 'iban', label: 'IBAN' },
   { key: 'bic', label: 'BIC/SWIFT' },
-  { key: 'address', label: 'Adresa firmy' },
+  { key: 'email', label: 'E-mail' },
+  { key: 'phone', label: 'Telefón' },
 ]
 
 export default function CompanySettingsPage() {
   const [loading, setLoading] = useState(true)
-  const [values, setValues] = useState<Record<FieldKey, string>>({ ico: '', dic: '', iban: '', bic: '', address: '' })
+  const [values, setValues] = useState<Record<FieldKey, string>>({
+    ico: '',
+    dic: '',
+    iban: '',
+    bic: '',
+    address: '',
+    email: '',
+    phone: '',
+  })
   const [logoUrl, setLogoUrl] = useState<string | null>(null)
   const [status, setStatus] = useState<SaveStatus>('idle')
   const [error, setError] = useState<string | null>(null)
@@ -33,6 +43,8 @@ export default function CompanySettingsPage() {
             iban: settings.iban ?? '',
             bic: settings.bic ?? '',
             address: settings.address ?? '',
+            email: settings.email ?? '',
+            phone: settings.phone ?? '',
           })
           setLogoUrl(settings.logoUrl)
         }

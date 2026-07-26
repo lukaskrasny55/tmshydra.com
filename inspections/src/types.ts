@@ -23,6 +23,8 @@ export interface CompanySettings {
   iban: string | null
   bic: string | null
   address: string | null
+  email: string | null
+  phone: string | null
   logoUrl: string | null
 }
 

@@ -20,7 +20,7 @@ export default async function handler(req: ApiRequest, res: ApiResponse) {
   }
 
   if (req.method === 'PATCH') {
-    const { ico, dic, iban, bic, address, logoUrl } = req.body || {}
+    const { ico, dic, iban, bic, address, email, phone, logoUrl } = req.body || {}
     const clean = (v: unknown) => (typeof v === 'string' && v.trim() ? v.trim() : null)
 
     const data = {
@@ -29,6 +29,8 @@ export default async function handler(req: ApiRequest, res: ApiResponse) {
       ...(iban !== undefined ? { iban: clean(iban) } : {}),
       ...(bic !== undefined ? { bic: clean(bic) } : {}),
       ...(address !== undefined ? { address: clean(address) } : {}),
+      ...(email !== undefined ? { email: clean(email) } : {}),
+      ...(phone !== undefined ? { phone: clean(phone) } : {}),
       ...(logoUrl !== undefined ? { logoUrl: typeof logoUrl === 'string' && logoUrl.startsWith('data:') ? logoUrl : null } : {}),
     }
 

@@ -1,5 +1,6 @@
 import { useRef, useState } from 'react'
 import EditableList from '../EditableList'
+import AdditionalServicesList from '../AdditionalServicesList'
 import {
   createAdditionalService,
   createDrainDownspout,
@@ -269,18 +270,14 @@ export default function ChecklistTab({ inspection, onChange }: Props) {
 
       <section className="bg-white border border-slate-200 rounded-lg p-6">
         <h2 className="text-sm font-semibold text-slate-700 mb-3">Doplnkové práce navyše</h2>
-        <EditableList
-          columns={[{ key: 'description', label: 'Popis', placeholder: 'napr. Výmena zhnitého laťovania pri komíne' }]}
+        <AdditionalServicesList
           items={inspection.additionalServices}
-          onCreate={async (draft) => {
-            const created = await createAdditionalService({
-              inspectionId: inspection.id,
-              description: String(draft.description || ''),
-            })
+          onCreate={async (data) => {
+            const created = await createAdditionalService({ inspectionId: inspection.id, ...data })
             onChange({ additionalServices: [...inspection.additionalServices, created] })
           }}
-          onUpdate={async (id, key, value) => {
-            const updated = await updateAdditionalService(id, { [key]: value } as any)
+          onUpdate={async (id, data) => {
+            const updated = await updateAdditionalService(id, data)
             onChange({ additionalServices: inspection.additionalServices.map((e) => (e.id === id ? updated : e)) })
           }}
           onDelete={async (id) => {

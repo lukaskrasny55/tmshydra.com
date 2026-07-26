@@ -56,7 +56,13 @@ export default async function handler(req: ApiRequest, res: ApiResponse) {
       },
     })
 
-    const referenceNumber = `OBH-${Date.now()}`
+    const year = new Date().getFullYear()
+    const yearStart = new Date(year, 0, 1)
+    const yearEnd = new Date(year + 1, 0, 1)
+    const countThisYear = await prisma.inspection.count({
+      where: { createdAt: { gte: yearStart, lt: yearEnd } },
+    })
+    const referenceNumber = `OBH-${String(countThisYear + 1).padStart(3, '0')}/${year}`
 
     const inspection = await prisma.inspection.create({
       data: {
