@@ -60,10 +60,10 @@ export default function AdditionalServicesList({ items, onCreate, onUpdate, onDe
           value={newDescription}
           onChange={(e) => setNewDescription(e.target.value)}
           placeholder="napr. Výmena zhnitého laťovania pri komíne"
-          className="w-full px-3 py-2 border border-slate-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="w-full px-3 py-2 border border-slate-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-brand-500"
         />
         <div className="flex items-center gap-3">
-          <label className="text-xs font-medium text-blue-600 hover:text-blue-700 cursor-pointer">
+          <label className="text-xs font-medium text-brand-600 hover:text-brand-700 cursor-pointer">
             {uploadingNew ? 'Nahrávam…' : newPhotoUrl ? 'Fotka pripravená ✓' : '+ Pridať fotku'}
             <input
               ref={newFileInputRef}
@@ -127,11 +127,11 @@ function ServiceCard({
           value={description}
           onChange={(e) => setDescription(e.target.value)}
           onBlur={() => description !== item.description && onUpdate(item.id, { description })}
-          className="w-full px-2 py-1 border border-transparent hover:border-slate-200 focus:border-blue-400 rounded text-sm focus:outline-none bg-white"
+          className="w-full px-2 py-1 border border-transparent hover:border-slate-200 focus:border-brand-400 rounded text-sm focus:outline-none bg-white"
         />
         {error && <div className="text-red-600 text-xs">{error}</div>}
         <div className="flex items-center gap-3">
-          <label className="text-xs font-medium text-blue-600 hover:text-blue-700 cursor-pointer">
+          <label className="text-xs font-medium text-brand-600 hover:text-brand-700 cursor-pointer">
             {uploading ? 'Nahrávam…' : item.photoUrl ? 'Zmeniť fotku' : '+ Pridať fotku'}
             <input
               ref={fileInputRef}

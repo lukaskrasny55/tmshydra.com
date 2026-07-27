@@ -57,7 +57,7 @@ export default function DocumentTemplatesPage() {
         </div>
         <button
           onClick={() => setShowNewForm((v) => !v)}
-          className="px-4 py-2.5 rounded-lg bg-blue-600 text-white text-sm font-medium hover:bg-blue-700 transition"
+          className="px-4 py-2.5 rounded-lg bg-brand-600 text-white text-sm font-medium hover:bg-brand-700 transition"
         >
           + Nová šablóna
         </button>
@@ -74,7 +74,7 @@ export default function DocumentTemplatesPage() {
                 autoFocus
                 value={newKey}
                 onChange={(e) => setNewKey(e.target.value)}
-                className="w-full px-3 py-2 border border-slate-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full px-3 py-2 border border-slate-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-brand-500"
               />
             </div>
             <div>
@@ -82,7 +82,7 @@ export default function DocumentTemplatesPage() {
               <input
                 value={newTitle}
                 onChange={(e) => setNewTitle(e.target.value)}
-                className="w-full px-3 py-2 border border-slate-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full px-3 py-2 border border-slate-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-brand-500"
               />
             </div>
             <button
@@ -141,7 +141,7 @@ function TemplateCard({
             value={title}
             onChange={(e) => setTitle(e.target.value)}
             onBlur={() => title !== item.title && save({ title })}
-            className="text-sm font-semibold text-slate-700 px-2 py-1 border border-transparent hover:border-slate-200 focus:border-blue-400 rounded focus:outline-none"
+            className="text-sm font-semibold text-slate-700 px-2 py-1 border border-transparent hover:border-slate-200 focus:border-brand-400 rounded focus:outline-none"
           />
           <div className="text-xs text-slate-400 px-2">{item.key}</div>
         </div>
@@ -158,7 +158,7 @@ function TemplateCard({
         onChange={(e) => setContent(e.target.value)}
         onBlur={() => content !== item.content && save({ content })}
         rows={6}
-        className="w-full px-3 py-2 border border-slate-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+        className="w-full px-3 py-2 border border-slate-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-brand-500"
       />
     </div>
   )

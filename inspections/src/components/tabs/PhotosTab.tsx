@@ -65,7 +65,7 @@ export default function PhotosTab({ inspection, onChange }: Props) {
     <div className="max-w-4xl space-y-4">
       <div className="flex items-center justify-between">
         <h2 className="text-sm font-semibold text-slate-700">Fotky strechy</h2>
-        <label className="px-4 py-2.5 rounded-lg bg-blue-600 text-white text-sm font-medium hover:bg-blue-700 transition cursor-pointer">
+        <label className="px-4 py-2.5 rounded-lg bg-brand-600 text-white text-sm font-medium hover:bg-brand-700 transition cursor-pointer">
           {uploading ? 'Nahrávam…' : '+ Pridať fotky'}
           <input
             ref={fileInputRef}
@@ -97,7 +97,7 @@ export default function PhotosTab({ inspection, onChange }: Props) {
                   placeholder="Popis fotky…"
                   disabled={busyId === photo.id}
                   onBlur={(e) => handleCaptionBlur(photo, e.target.value)}
-                  className="flex-1 min-w-0 px-2 py-1 text-xs border border-transparent hover:border-slate-200 focus:border-blue-400 rounded focus:outline-none"
+                  className="flex-1 min-w-0 px-2 py-1 text-xs border border-transparent hover:border-slate-200 focus:border-brand-400 rounded focus:outline-none"
                 />
                 <button
                   onClick={() => handleDelete(photo.id)}

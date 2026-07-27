@@ -76,7 +76,7 @@ export default function ContactTab({ customer, onSaved }: Props) {
             type={field.type ?? 'text'}
             value={values[field.key]}
             onChange={(e) => handleChange(field.key, e.target.value)}
-            className="w-full px-3 py-2.5 border border-slate-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full px-3 py-2.5 border border-slate-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-brand-500"
           />
         </div>
       ))}

@@ -57,7 +57,7 @@ export default function MaterialProductsPage() {
         </div>
         <button
           onClick={() => setShowNewForm((v) => !v)}
-          className="px-4 py-2.5 rounded-lg bg-blue-600 text-white text-sm font-medium hover:bg-blue-700 transition"
+          className="px-4 py-2.5 rounded-lg bg-brand-600 text-white text-sm font-medium hover:bg-brand-700 transition"
         >
           + Nový produkt
         </button>
@@ -74,7 +74,7 @@ export default function MaterialProductsPage() {
                 autoFocus
                 value={newName}
                 onChange={(e) => setNewName(e.target.value)}
-                className="w-full px-3 py-2 border border-slate-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full px-3 py-2 border border-slate-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-brand-500"
               />
             </div>
             <div>
@@ -83,7 +83,7 @@ export default function MaterialProductsPage() {
                 value={newDescription}
                 onChange={(e) => setNewDescription(e.target.value)}
                 rows={4}
-                className="w-full px-3 py-2 border border-slate-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full px-3 py-2 border border-slate-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-brand-500"
               />
             </div>
             <button
@@ -141,7 +141,7 @@ function ProductCard({
           value={name}
           onChange={(e) => setName(e.target.value)}
           onBlur={() => name !== item.name && save({ name })}
-          className="text-sm font-semibold text-slate-700 px-2 py-1 border border-transparent hover:border-slate-200 focus:border-blue-400 rounded focus:outline-none"
+          className="text-sm font-semibold text-slate-700 px-2 py-1 border border-transparent hover:border-slate-200 focus:border-brand-400 rounded focus:outline-none"
         />
         <div className="flex items-center gap-3">
           {status === 'saving' && <span className="text-xs text-slate-400">Ukladám…</span>}
@@ -156,7 +156,7 @@ function ProductCard({
         onChange={(e) => setDescription(e.target.value)}
         onBlur={() => description !== item.description && save({ description })}
         rows={4}
-        className="w-full px-3 py-2 border border-slate-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+        className="w-full px-3 py-2 border border-slate-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-brand-500"
       />
     </div>
   )

@@ -87,7 +87,7 @@ export default function InspectionDetailPage() {
     return (
       <div className="min-h-screen flex flex-col items-center justify-center gap-3 text-slate-500">
         <div>{error || 'Obhliadka nebola nájdená.'}</div>
-        <Link to="/" className="text-blue-600 text-sm">
+        <Link to="/" className="text-brand-600 text-sm">
           Späť na zoznam
         </Link>
       </div>
@@ -108,7 +108,7 @@ export default function InspectionDetailPage() {
           <select
             value={inspection.technicianId ?? ''}
             onChange={(e) => handleTechnicianChange(e.target.value)}
-            className="text-xs font-medium px-3 py-1.5 rounded-full bg-slate-100 text-slate-700 border-none focus:outline-none focus:ring-2 focus:ring-blue-500 cursor-pointer"
+            className="text-xs font-medium px-3 py-1.5 rounded-full bg-slate-100 text-slate-700 border-none focus:outline-none focus:ring-2 focus:ring-brand-500 cursor-pointer"
           >
             <option value="">Bez technika</option>
             {technicians.map((tech) => (
@@ -120,7 +120,7 @@ export default function InspectionDetailPage() {
           <select
             value={inspection.status}
             onChange={(e) => handleStatusChange(e.target.value as InspectionStatus)}
-            className="text-xs font-medium px-3 py-1.5 rounded-full bg-slate-100 text-slate-700 border-none focus:outline-none focus:ring-2 focus:ring-blue-500 cursor-pointer"
+            className="text-xs font-medium px-3 py-1.5 rounded-full bg-slate-100 text-slate-700 border-none focus:outline-none focus:ring-2 focus:ring-brand-500 cursor-pointer"
           >
             {(Object.keys(STATUS_LABELS) as InspectionStatus[]).map((status) => (
               <option key={status} value={status}>
@@ -139,7 +139,7 @@ export default function InspectionDetailPage() {
               onClick={() => setActiveTab(tab.key)}
               className={`w-full text-left px-5 py-3.5 text-sm font-medium transition border-l-4 ${
                 activeTab === tab.key
-                  ? 'border-blue-600 bg-blue-50 text-blue-700'
+                  ? 'border-brand-600 bg-brand-50 text-brand-700'
                   : 'border-transparent text-slate-600 hover:bg-slate-50'
               }`}
             >

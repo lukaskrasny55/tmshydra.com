@@ -116,7 +116,7 @@ export default function CompanySettingsPage() {
               <input
                 value={values[field.key]}
                 onChange={(e) => handleChange(field.key, e.target.value)}
-                className="w-full px-3 py-2.5 border border-slate-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full px-3 py-2.5 border border-slate-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-brand-500"
               />
             </div>
           ))}
@@ -125,7 +125,7 @@ export default function CompanySettingsPage() {
         <div className="bg-white border border-slate-200 rounded-lg p-6 space-y-3">
           <h2 className="text-sm font-semibold text-slate-700">Logo</h2>
           {logoUrl && <img src={logoUrl} alt="Logo" className="h-20 object-contain" />}
-          <label className="inline-block px-4 py-2.5 rounded-lg bg-blue-600 text-white text-sm font-medium hover:bg-blue-700 transition cursor-pointer">
+          <label className="inline-block px-4 py-2.5 rounded-lg bg-brand-600 text-white text-sm font-medium hover:bg-brand-700 transition cursor-pointer">
             {uploadingLogo ? 'Nahrávam…' : logoUrl ? 'Nahradiť logo' : 'Nahrať logo'}
             <input
               type="file"

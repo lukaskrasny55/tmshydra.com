@@ -82,7 +82,7 @@ export default function EditableList({ columns, items, onCreate, onUpdate, onDel
           value={String(value ?? '')}
           disabled={disabled}
           onChange={(e) => onCommit(e.target.value)}
-          className="w-full px-2 py-1 border border-transparent hover:border-slate-200 focus:border-blue-400 rounded text-sm focus:outline-none bg-transparent"
+          className="w-full px-2 py-1 border border-transparent hover:border-slate-200 focus:border-brand-400 rounded text-sm focus:outline-none bg-transparent"
         >
           {col.options?.map((opt) => (
             <option key={opt.value} value={opt.value}>
@@ -133,7 +133,7 @@ export default function EditableList({ columns, items, onCreate, onUpdate, onDel
                             handleCellUpdate(item.id, col.key, e.target.value)
                           }
                         }}
-                        className="w-full px-2 py-1 border border-transparent hover:border-slate-200 focus:border-blue-400 rounded text-sm focus:outline-none"
+                        className="w-full px-2 py-1 border border-transparent hover:border-slate-200 focus:border-brand-400 rounded text-sm focus:outline-none"
                       />
                     )}
                   </td>
@@ -166,7 +166,7 @@ export default function EditableList({ columns, items, onCreate, onUpdate, onDel
                       onKeyDown={(e) => {
                         if (e.key === 'Enter') handleAdd()
                       }}
-                      className="w-full px-2 py-1 border border-dashed border-slate-300 rounded text-sm focus:outline-none focus:border-blue-400"
+                      className="w-full px-2 py-1 border border-dashed border-slate-300 rounded text-sm focus:outline-none focus:border-brand-400"
                     />
                   )}
                 </td>
@@ -175,7 +175,7 @@ export default function EditableList({ columns, items, onCreate, onUpdate, onDel
                 <button
                   onClick={handleAdd}
                   disabled={creating}
-                  className="text-blue-600 hover:text-blue-700 text-xs font-medium px-1"
+                  className="text-brand-600 hover:text-brand-700 text-xs font-medium px-1"
                 >
                   {creating ? '…' : '+'}
                 </button>

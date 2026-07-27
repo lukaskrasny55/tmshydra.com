@@ -103,7 +103,7 @@ export default function InspectionsListPage() {
           </div>
           <button
             onClick={() => setShowNewForm((v) => !v)}
-            className="px-5 py-2.5 rounded-lg bg-blue-600 text-white text-sm font-medium hover:bg-blue-700 transition"
+            className="px-5 py-2.5 rounded-lg bg-brand-600 text-white text-sm font-medium hover:bg-brand-700 transition"
           >
             + Nová zákazka
           </button>
@@ -118,7 +118,7 @@ export default function InspectionsListPage() {
                 value={newName}
                 onChange={(e) => setNewName(e.target.value)}
                 placeholder="napr. Ján Novák"
-                className="w-full px-3 py-2 border border-slate-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full px-3 py-2 border border-slate-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-brand-500"
               />
             </div>
             <button
@@ -135,7 +135,7 @@ export default function InspectionsListPage() {
           value={search}
           onChange={(e) => setSearch(e.target.value)}
           placeholder="Hľadať podľa mena zákazníka…"
-          className="w-full px-4 py-2.5 border border-slate-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="w-full px-4 py-2.5 border border-slate-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-brand-500"
         />
 
         {error && <div className="text-red-600 text-sm">{error}</div>}

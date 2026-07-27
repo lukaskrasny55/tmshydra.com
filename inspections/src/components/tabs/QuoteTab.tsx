@@ -216,7 +216,7 @@ export default function QuoteTab({ inspection, onChange }: Props) {
         ))}
         <button
           onClick={() => setShowNewForm((v) => !v)}
-          className="px-4 py-2 rounded-full text-sm font-medium bg-blue-50 text-blue-700 hover:bg-blue-100"
+          className="px-4 py-2 rounded-full text-sm font-medium bg-brand-50 text-brand-700 hover:bg-brand-100"
         >
           + Alternatíva
         </button>
@@ -230,7 +230,7 @@ export default function QuoteTab({ inspection, onChange }: Props) {
               autoFocus
               value={newLabel}
               onChange={(e) => setNewLabel(e.target.value)}
-              className="w-full px-3 py-2 border border-slate-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-3 py-2 border border-slate-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-brand-500"
             />
           </div>
           <button
@@ -260,13 +260,13 @@ export default function QuoteTab({ inspection, onChange }: Props) {
                   type="number"
                   defaultValue={active.discountPercent}
                   onBlur={(e) => handleDiscountBlur(e.target.value)}
-                  className="w-16 px-2 py-1 border border-slate-300 rounded text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-16 px-2 py-1 border border-slate-300 rounded text-sm focus:outline-none focus:ring-2 focus:ring-brand-500"
                 />
               </label>
               <button
                 onClick={handleGenerateFromChecklist}
                 disabled={generating}
-                className="text-xs font-medium text-blue-600 hover:text-blue-700 disabled:opacity-50"
+                className="text-xs font-medium text-brand-600 hover:text-brand-700 disabled:opacity-50"
               >
                 {generating ? 'Generujem…' : '↻ Generovať z checklistu'}
               </button>
@@ -297,7 +297,7 @@ export default function QuoteTab({ inspection, onChange }: Props) {
                   defaultValue={active.description ?? ''}
                   placeholder="napr. zo zateplením"
                   onBlur={(e) => handleDescriptionBlur(e.target.value)}
-                  className="w-full px-3 py-2 border border-slate-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full px-3 py-2 border border-slate-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-brand-500"
                 />
               </div>
               <div>
@@ -307,7 +307,7 @@ export default function QuoteTab({ inspection, onChange }: Props) {
                   type="date"
                   defaultValue={active.issuedDate ? active.issuedDate.slice(0, 10) : ''}
                   onBlur={(e) => handleDateBlur('issuedDate', e.target.value)}
-                  className="w-full px-3 py-2 border border-slate-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full px-3 py-2 border border-slate-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-brand-500"
                 />
               </div>
               <div>
@@ -317,7 +317,7 @@ export default function QuoteTab({ inspection, onChange }: Props) {
                   type="date"
                   defaultValue={active.validUntil ? active.validUntil.slice(0, 10) : ''}
                   onBlur={(e) => handleDateBlur('validUntil', e.target.value)}
-                  className="w-full px-3 py-2 border border-slate-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full px-3 py-2 border border-slate-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-brand-500"
                 />
               </div>
               <div>
@@ -327,7 +327,7 @@ export default function QuoteTab({ inspection, onChange }: Props) {
                   type="number"
                   defaultValue={active.warrantyYears ?? ''}
                   onBlur={(e) => handleWarrantyBlur(e.target.value)}
-                  className="w-full px-3 py-2 border border-slate-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full px-3 py-2 border border-slate-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-brand-500"
                 />
               </div>
               <div className="col-span-2">
@@ -336,7 +336,7 @@ export default function QuoteTab({ inspection, onChange }: Props) {
                   key={`${active.id}-composition`}
                   value={active.materialCompositionId ?? ''}
                   onChange={(e) => handleCompositionChange(e.target.value)}
-                  className="w-full px-3 py-2 border border-slate-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full px-3 py-2 border border-slate-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-brand-500"
                 >
                   <option value="">— žiadna —</option>
                   {compositions.map((c) => (

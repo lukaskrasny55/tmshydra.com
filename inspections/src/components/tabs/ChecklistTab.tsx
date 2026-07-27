@@ -85,7 +85,7 @@ export default function ChecklistTab({ inspection, onChange }: Props) {
               type="number"
               value={areaM2 ?? ''}
               onChange={(e) => handleAreaChange(e.target.value)}
-              className="w-full px-3 py-2.5 border border-slate-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-3 py-2.5 border border-slate-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-brand-500"
             />
           </div>
           <div>
@@ -93,7 +93,7 @@ export default function ChecklistTab({ inspection, onChange }: Props) {
             <select
               value={isInsulated === null ? '' : isInsulated ? 'yes' : 'no'}
               onChange={(e) => handleInsulatedChange(e.target.value)}
-              className="w-full px-3 py-2.5 border border-slate-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-3 py-2.5 border border-slate-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-brand-500"
             >
               <option value="">Neurčené</option>
               <option value="yes">Áno</option>
@@ -108,7 +108,7 @@ export default function ChecklistTab({ inspection, onChange }: Props) {
             value={description}
             onChange={(e) => handleDescriptionChange(e.target.value)}
             rows={3}
-            className="w-full px-3 py-2.5 border border-slate-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full px-3 py-2.5 border border-slate-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-brand-500"
           />
         </div>
       </section>

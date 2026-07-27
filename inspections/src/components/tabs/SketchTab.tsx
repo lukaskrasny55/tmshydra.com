@@ -51,7 +51,7 @@ export default function SketchTab({ inspection, onChange }: Props) {
     <div className="max-w-2xl space-y-4">
       <div className="flex items-center justify-between">
         <h2 className="text-sm font-semibold text-slate-700">Technický výkres</h2>
-        <label className="px-4 py-2.5 rounded-lg bg-blue-600 text-white text-sm font-medium hover:bg-blue-700 transition cursor-pointer">
+        <label className="px-4 py-2.5 rounded-lg bg-brand-600 text-white text-sm font-medium hover:bg-brand-700 transition cursor-pointer">
           {uploading ? 'Nahrávam…' : sketch ? 'Nahradiť súbor' : '+ Nahrať výkres'}
           <input
             ref={fileInputRef}
