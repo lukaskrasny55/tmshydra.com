@@ -18,7 +18,7 @@ export default async function handler(req: ApiRequest, res: ApiResponse) {
   }
 
   if (req.method === 'POST') {
-    const { name, layers, workStepsTemplate, warrantyYears } = req.body || {}
+    const { id, name, layers, workStepsTemplate, warrantyYears } = req.body || {}
 
     if (typeof name !== 'string' || !name.trim()) {
       return res.status(400).json({ error: 'Názov je povinný.' })
@@ -26,6 +26,7 @@ export default async function handler(req: ApiRequest, res: ApiResponse) {
 
     const item = await prisma.materialComposition.create({
       data: {
+        id: typeof id === 'string' && id ? id : undefined,
         name: name.trim(),
         layersJson: Array.isArray(layers) ? layers : [],
         workStepsTemplate: typeof workStepsTemplate === 'string' && workStepsTemplate.trim() ? workStepsTemplate.trim() : null,

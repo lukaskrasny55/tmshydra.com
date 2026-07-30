@@ -6,10 +6,42 @@ import {
   deleteQuoteAlternative,
   deleteQuoteLineItem,
   fetchMaterialCompositions,
+  fetchPriceList,
   updateQuoteAlternative,
   updateQuoteLineItem,
 } from '../../lib/api'
-import type { InspectionDetail, LineItemSection, MaterialComposition, QuoteAlternative, QuoteLineItem } from '../../types'
+import type { InspectionDetail, LineItemSection, MaterialComposition, PriceListItem, QuoteAlternative, QuoteLineItem } from '../../types'
+
+const GUTTER_ITEM_LABELS: Record<string, string> = {
+  haky: 'Háky',
+  zlab: 'Dodanie a montáž žľabového systému KJG (háky, žľaby a príslušenstvo)',
+  kotlik: 'Dodanie a montáž zberného kotlíka KJG',
+  cela: 'Čelá žľabu',
+  zvod: 'Dodanie a montáž zvodového systému KJG',
+  kolena: 'Kolená zvodu',
+  objimky: 'Objímky zvodu',
+  okap_plech: 'Dodanie a montáž odkvapového plechu z pozinkovaného plechu',
+  tmel: 'Tesniaci tmel',
+  rohy: 'Rohové prvky žľabu',
+}
+
+const GUTTER_ITEM_PRICE_KEYS: Record<string, string> = {
+  zlab: 'zlabovy_system_kjg',
+  kotlik: 'kotlik_zberny_kjg',
+  zvod: 'zvodova_rura_kjg_100',
+  okap_plech: 'odkvapovy_plech_pozink',
+}
+
+// Heuristic default when auto-generating a quote: pick a composition whose name matches the
+// checklist's "je strecha zateplená?" answer. Owner can still override via the dropdown below.
+function suggestCompositionId(compositions: MaterialComposition[], isInsulated: boolean | null): string | null {
+  if (isInsulated === null) return null
+  if (isInsulated) {
+    const insulated = compositions.filter((c) => /zateplen/i.test(c.name) && !/bez zateplenia/i.test(c.name))
+    return insulated.find((c) => !/spádovan/i.test(c.name))?.id ?? insulated[0]?.id ?? null
+  }
+  return compositions.find((c) => /bez zateplenia/i.test(c.name))?.id ?? null
+}
 
 interface Props {
   inspection: InspectionDetail
@@ -43,11 +75,15 @@ export default function QuoteTab({ inspection, onChange }: Props) {
   const [error, setError] = useState<string | null>(null)
   const [generating, setGenerating] = useState(false)
   const [compositions, setCompositions] = useState<MaterialComposition[]>([])
+  const [priceList, setPriceList] = useState<PriceListItem[]>([])
 
   useEffect(() => {
     fetchMaterialCompositions()
       .then(setCompositions)
       .catch(() => setCompositions([]))
+    fetchPriceList()
+      .then(setPriceList)
+      .catch(() => setPriceList([]))
   }, [])
 
   const active = alternatives.find((a) => a.id === activeId) ?? alternatives[0] ?? null
@@ -95,7 +131,7 @@ export default function QuoteTab({ inspection, onChange }: Props) {
     replaceAlternative({ ...active, description: updated.description })
   }
 
-  async function handleDateBlur(field: 'issuedDate' | 'validUntil', value: string) {
+  async function handleDateBlur(field: 'issuedDate' | 'validUntil' | 'realizationStartDate' | 'realizationEndDate', value: string) {
     if (!active) return
     const current = active[field] ? active[field]!.slice(0, 10) : ''
     if (value === current) return
@@ -125,18 +161,88 @@ export default function QuoteTab({ inspection, onChange }: Props) {
     setGenerating(true)
     setError(null)
     try {
-      const drafts: { description: string; plannedQty: number; unit: string; section: LineItemSection }[] = []
-      inspection.roofEdges.forEach((edge) => {
-        drafts.push({ description: `Hrana strechy – ${edge.label}`, plannedQty: Number(edge.lengthM), unit: 'bm', section: 'main' })
-      })
-      if (inspection.areaM2) {
-        drafts.push({ description: 'Hydroizolácia strechy – plocha', plannedQty: Number(inspection.areaM2), unit: 'm2', section: 'main' })
+      const priceMap = new Map(priceList.map((p) => [p.itemKey, Number(p.unitPrice)]))
+      const priceFor = (itemKey: string) => priceMap.get(itemKey) ?? 0
+
+      const drafts: {
+        description: string
+        plannedQty: number
+        unit: string
+        section: LineItemSection
+        unitPriceSnapshot: number
+        wastePercent: number
+      }[] = []
+
+      const areaM2 = inspection.areaM2 ? Number(inspection.areaM2) : 0
+      if (areaM2 > 0) {
+        drafts.push({
+          description: 'Dodanie a aplikovanie penetračného náteru LAK expres, čistenie a príprava strechy',
+          plannedQty: areaM2,
+          unit: 'm2',
+          section: 'main',
+          unitPriceSnapshot: priceFor('penetracny_nater_lak_expres'),
+          wastePercent: 0,
+        })
+        drafts.push({
+          description: 'Dodanie a aplikácia vrchnej hydroizolácie APAO (sanačná plocha, stratné podľa zložitosti strechy uprav)',
+          plannedQty: areaM2,
+          unit: 'm2',
+          section: 'main',
+          unitPriceSnapshot: priceFor('vrchna_hydroizolacia_apao'),
+          wastePercent: 10,
+        })
+        drafts.push({
+          description: 'Dodanie a aplikovanie odvetrávacích komínkov nového hydroizolačného systému',
+          plannedQty: Math.ceil(areaM2 / 50),
+          unit: 'ks',
+          section: 'main',
+          unitPriceSnapshot: priceFor('odvetravacie_kominky'),
+          wastePercent: 0,
+        })
       }
+
+      const edgeLengthTotal = inspection.roofEdges.reduce((sum, edge) => sum + Number(edge.lengthM), 0)
+      if (edgeLengthTotal > 0) {
+        drafts.push({
+          description: 'Dodanie a aplikovanie atikového klinu',
+          plannedQty: edgeLengthTotal,
+          unit: 'bm',
+          section: 'main',
+          unitPriceSnapshot: priceFor('atikovy_klin_puren_ak'),
+          wastePercent: 0,
+        })
+      }
+
       inspection.gutterSystemItems.forEach((item) => {
-        drafts.push({ description: item.itemType, plannedQty: Number(item.quantity), unit: item.unit, section: 'nad_ramec' })
+        const priceKey = GUTTER_ITEM_PRICE_KEYS[item.itemType]
+        drafts.push({
+          description: GUTTER_ITEM_LABELS[item.itemType] ?? item.itemType,
+          plannedQty: Number(item.quantity),
+          unit: item.unit,
+          section: 'nad_ramec',
+          unitPriceSnapshot: priceKey ? priceFor(priceKey) : 0,
+          wastePercent: 0,
+        })
       })
       inspection.drainDownspouts.forEach((d) => {
-        drafts.push({ description: `Zvod – ${d.label}`, plannedQty: Number(d.lengthM), unit: 'bm', section: 'nad_ramec' })
+        drafts.push({
+          description: `Dodanie a montáž zvodového systému KJG – ${d.label}`,
+          plannedQty: Number(d.lengthM),
+          unit: 'bm',
+          section: 'nad_ramec',
+          unitPriceSnapshot: priceFor('zvodova_rura_kjg_100'),
+          wastePercent: 0,
+        })
+      })
+      inspection.additionalServices.forEach((service) => {
+        drafts.push({
+          description: service.description,
+          plannedQty: 1,
+          unit: 'ks',
+          section: 'nad_ramec',
+          unitPriceSnapshot: 0,
+          wastePercent: 0,
+        })
       })
 
       let items = [...active.lineItems]
@@ -145,14 +251,25 @@ export default function QuoteTab({ inspection, onChange }: Props) {
           quoteAlternativeId: active.id,
           description: draft.description,
           plannedQty: draft.plannedQty,
-          unitPriceSnapshot: 0,
+          unitPriceSnapshot: draft.unitPriceSnapshot,
+          wastePercent: draft.wastePercent,
           unit: draft.unit,
           section: draft.section,
           source: 'auto_calculated',
         })
         items = [...items, created]
       }
-      replaceAlternative({ ...active, lineItems: items })
+
+      let nextAlternative: QuoteAlternative = { ...active, lineItems: items }
+      if (!active.materialCompositionId && inspection.isInsulated !== null) {
+        const suggestedId = suggestCompositionId(compositions, inspection.isInsulated)
+        if (suggestedId) {
+          const updated = await updateQuoteAlternative(active.id, { materialCompositionId: suggestedId })
+          const composition = compositions.find((c) => c.id === suggestedId) ?? null
+          nextAlternative = { ...nextAlternative, materialCompositionId: updated.materialCompositionId, materialComposition: composition }
+        }
+      }
+      replaceAlternative(nextAlternative)
     } catch (err) {
       setError((err as Error).message)
     } finally {
@@ -179,7 +296,7 @@ export default function QuoteTab({ inspection, onChange }: Props) {
         const numericKeys = ['plannedQty', 'previousQty', 'actualQty', 'unitPriceSnapshot', 'wastePercent', 'total']
         const patch = numericKeys.includes(key) ? { [key]: Number(value) } : { [key]: value }
         const updated = await updateQuoteLineItem(id, patch)
-        replaceAlternative({ ...active, lineItems: active.lineItems.map((li) => (li.id === id ? updated : li)) })
+        replaceAlternative({ ...active, lineItems: active.lineItems.map((li) => (li.id === id ? { ...li, ...updated } : li)) })
       },
       onDelete: async (id: string) => {
         await deleteQuoteLineItem(id)
@@ -327,6 +444,26 @@ export default function QuoteTab({ inspection, onChange }: Props) {
                   type="number"
                   defaultValue={active.warrantyYears ?? ''}
                   onBlur={(e) => handleWarrantyBlur(e.target.value)}
+                  className="w-full px-3 py-2 border border-slate-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-brand-500"
+                />
+              </div>
+              <div>
+                <label className="block text-xs font-medium text-slate-500 mb-1">Realizácia od</label>
+                <input
+                  key={`${active.id}-realization-start`}
+                  type="date"
+                  defaultValue={active.realizationStartDate ? active.realizationStartDate.slice(0, 10) : ''}
+                  onBlur={(e) => handleDateBlur('realizationStartDate', e.target.value)}
+                  className="w-full px-3 py-2 border border-slate-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-brand-500"
+                />
+              </div>
+              <div>
+                <label className="block text-xs font-medium text-slate-500 mb-1">Realizácia do</label>
+                <input
+                  key={`${active.id}-realization-end`}
+                  type="date"
+                  defaultValue={active.realizationEndDate ? active.realizationEndDate.slice(0, 10) : ''}
+                  onBlur={(e) => handleDateBlur('realizationEndDate', e.target.value)}
                   className="w-full px-3 py-2 border border-slate-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-brand-500"
                 />
               </div>

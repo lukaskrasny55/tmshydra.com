@@ -41,7 +41,7 @@ export default async function handler(req: ApiRequest, res: ApiResponse) {
   }
 
   if (req.method === 'POST') {
-    const { customerName, customerPhone, customerEmail, customerAddress } = req.body || {}
+    const { id, customerId, customerName, customerPhone, customerEmail, customerAddress } = req.body || {}
 
     if (typeof customerName !== 'string' || customerName.trim().length === 0) {
       return res.status(400).json({ error: 'Meno zákazníka je povinné.' })
@@ -49,6 +49,7 @@ export default async function handler(req: ApiRequest, res: ApiResponse) {
 
     const customer = await prisma.customer.create({
       data: {
+        id: typeof customerId === 'string' && customerId ? customerId : undefined,
         name: customerName.trim(),
         phone: typeof customerPhone === 'string' && customerPhone.trim() ? customerPhone.trim() : null,
         email: typeof customerEmail === 'string' && customerEmail.trim() ? customerEmail.trim() : null,
@@ -66,6 +67,7 @@ export default async function handler(req: ApiRequest, res: ApiResponse) {
 
     const inspection = await prisma.inspection.create({
       data: {
+        id: typeof id === 'string' && id ? id : undefined,
         customerId: customer.id,
         referenceNumber,
         status: 'draft',

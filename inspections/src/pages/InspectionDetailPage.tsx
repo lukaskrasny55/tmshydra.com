@@ -1,6 +1,8 @@
 import { useEffect, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { fetchInspection, fetchTechnicians, updateInspection } from '../lib/api'
+import { cacheSet } from '../lib/db'
+import SyncStatus from '../components/SyncStatus'
 import { STATUS_LABELS, type InspectionDetail, type InspectionStatus, type Technician } from '../types'
 import ContactTab from '../components/tabs/ContactTab'
 import ChecklistTab from '../components/tabs/ChecklistTab'
@@ -52,7 +54,15 @@ export default function InspectionDetailPage() {
   }, [])
 
   function handleInspectionChange(patch: Partial<InspectionDetail>) {
-    setInspection((prev) => (prev ? { ...prev, ...patch } : prev))
+    setInspection((prev) => {
+      if (!prev) return prev
+      const next = { ...prev, ...patch }
+      // Keep the offline cache current so a reload while still offline shows
+      // everything entered so far, not just what was last fetched from the
+      // network — every mutation in every tab flows through this one place.
+      cacheSet(`/api/inspections/${next.id}`, next)
+      return next
+    })
   }
 
   async function handleStatusChange(status: InspectionStatus) {
@@ -105,6 +115,7 @@ export default function InspectionDetailPage() {
           <div className="text-sm text-slate-500">{inspection.referenceNumber}</div>
         </div>
         <div className="flex items-center gap-3">
+          <SyncStatus />
           <select
             value={inspection.technicianId ?? ''}
             onChange={(e) => handleTechnicianChange(e.target.value)}

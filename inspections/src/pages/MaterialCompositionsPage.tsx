@@ -134,7 +134,7 @@ function CompositionCard({
     setStatus('saving')
     try {
       const updated = await updateMaterialComposition(item.id, patch)
-      onUpdated(updated)
+      onUpdated({ ...item, ...updated })
       setStatus('saved')
     } catch {
       setStatus('error')

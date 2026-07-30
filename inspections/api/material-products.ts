@@ -18,7 +18,7 @@ export default async function handler(req: ApiRequest, res: ApiResponse) {
   }
 
   if (req.method === 'POST') {
-    const { name, description } = req.body || {}
+    const { id, name, description } = req.body || {}
 
     if (typeof name !== 'string' || !name.trim()) {
       return res.status(400).json({ error: 'Názov je povinný.' })
@@ -28,7 +28,7 @@ export default async function handler(req: ApiRequest, res: ApiResponse) {
     }
 
     const item = await prisma.materialProduct.create({
-      data: { name: name.trim(), description: description.trim() },
+      data: { id: typeof id === 'string' && id ? id : undefined, name: name.trim(), description: description.trim() },
     })
 
     return res.status(201).json(item)

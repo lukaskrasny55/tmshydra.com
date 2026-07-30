@@ -20,7 +20,7 @@ export default async function handler(req: ApiRequest, res: ApiResponse) {
   }
 
   if (req.method === 'POST') {
-    const { itemKey, unit, unitPrice, category, validFrom } = req.body || {}
+    const { id, itemKey, unit, unitPrice, category, validFrom } = req.body || {}
 
     if (typeof itemKey !== 'string' || !itemKey.trim()) {
       return res.status(400).json({ error: 'Kľúč položky je povinný.' })
@@ -35,6 +35,7 @@ export default async function handler(req: ApiRequest, res: ApiResponse) {
 
     const item = await prisma.priceListItem.create({
       data: {
+        id: typeof id === 'string' && id ? id : undefined,
         itemKey: itemKey.trim(),
         unit: typeof unit === 'string' && unit.trim() ? unit.trim() : 'ks',
         unitPrice: price,

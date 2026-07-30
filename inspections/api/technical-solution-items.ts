@@ -13,7 +13,7 @@ interface ApiResponse extends ServerResponse {
 
 export default async function handler(req: ApiRequest, res: ApiResponse) {
   if (req.method === 'POST') {
-    const { inspectionId, itemKey, isChecked, valueText, notes } = req.body || {}
+    const { id, inspectionId, itemKey, isChecked, valueText, notes } = req.body || {}
 
     if (typeof inspectionId !== 'string' || !inspectionId) {
       return res.status(400).json({ error: 'Chýba inspectionId.' })
@@ -25,6 +25,7 @@ export default async function handler(req: ApiRequest, res: ApiResponse) {
     try {
       const item = await prisma.technicalSolutionItem.create({
         data: {
+          id: typeof id === 'string' && id ? id : undefined,
           inspectionId,
           itemKey: itemKey.trim(),
           isChecked: Boolean(isChecked),

@@ -13,7 +13,7 @@ interface ApiResponse extends ServerResponse {
 
 export default async function handler(req: ApiRequest, res: ApiResponse) {
   if (req.method === 'POST') {
-    const { inspectionId, url, caption } = req.body || {}
+    const { id, inspectionId, url, caption } = req.body || {}
 
     if (typeof inspectionId !== 'string' || !inspectionId) {
       return res.status(400).json({ error: 'Chýba inspectionId.' })
@@ -24,6 +24,7 @@ export default async function handler(req: ApiRequest, res: ApiResponse) {
 
     const photo = await prisma.inspectionPhoto.create({
       data: {
+        id: typeof id === 'string' && id ? id : undefined,
         inspectionId,
         url,
         caption: typeof caption === 'string' && caption.trim() ? caption.trim() : null,

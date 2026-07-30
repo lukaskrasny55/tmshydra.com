@@ -18,7 +18,7 @@ export default async function handler(req: ApiRequest, res: ApiResponse) {
   }
 
   if (req.method === 'POST') {
-    const { name, email } = req.body || {}
+    const { id, name, email } = req.body || {}
 
     if (typeof name !== 'string' || !name.trim()) {
       return res.status(400).json({ error: 'Meno je povinné.' })
@@ -27,6 +27,7 @@ export default async function handler(req: ApiRequest, res: ApiResponse) {
     try {
       const technician = await prisma.technician.create({
         data: {
+          id: typeof id === 'string' && id ? id : undefined,
           name: name.trim(),
           email: typeof email === 'string' && email.trim() ? email.trim() : null,
         },

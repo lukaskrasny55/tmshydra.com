@@ -1,5 +1,6 @@
 import { defineConfig, type Plugin, type ViteDevServer } from 'vite'
 import react from '@vitejs/plugin-react'
+import { VitePWA } from 'vite-plugin-pwa'
 import type { IncomingMessage, ServerResponse } from 'http'
 
 // Dev-only: routes /api/* requests to the local Vercel-style handler modules
@@ -77,7 +78,46 @@ function vercelApiDevMiddleware(): Plugin {
 }
 
 export default defineConfig({
-  plugins: [react(), vercelApiDevMiddleware()],
+  plugins: [
+    react(),
+    vercelApiDevMiddleware(),
+    VitePWA({
+      registerType: 'autoUpdate',
+      devOptions: { enabled: true },
+      includeAssets: ['icons/apple-touch-icon.png'],
+      manifest: {
+        name: 'TMS Hydra – Obhliadky',
+        short_name: 'Obhliadky',
+        description: 'Digitalizácia obhliadok a cenových ponúk pre TMS-HYDRA.',
+        theme_color: '#17191d',
+        background_color: '#f6f5f2',
+        display: 'standalone',
+        // Tablet-only app: no portrait lock — the checklist/ponuka tables are
+        // wide and are commonly used in landscape on a tablet.
+        orientation: 'any',
+        start_url: '/',
+        scope: '/',
+        icons: [
+          { src: '/icons/icon-192.png', sizes: '192x192', type: 'image/png', purpose: 'any' },
+          { src: '/icons/icon-512.png', sizes: '512x512', type: 'image/png', purpose: 'any' },
+          { src: '/icons/icon-maskable-512.png', sizes: '512x512', type: 'image/png', purpose: 'maskable' },
+        ],
+      },
+      workbox: {
+        globPatterns: ['**/*.{js,css,html,png,svg,ico}'],
+        navigateFallback: '/index.html',
+        navigateFallbackDenylist: [/^\/api\//],
+        runtimeCaching: [
+          {
+            // API calls are handled by src/lib/offlineFetch.ts (IndexedDB cache + outbox
+            // queue), not by workbox — always let them go straight to the network here.
+            urlPattern: /^\/api\//,
+            handler: 'NetworkOnly',
+          },
+        ],
+      },
+    }),
+  ],
   server: {
     port: 5174,
   },

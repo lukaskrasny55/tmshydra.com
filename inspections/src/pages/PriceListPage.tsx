@@ -56,7 +56,7 @@ export default function PriceListPage() {
               onUpdate={async (id, key, value) => {
                 const patch = key === 'unitPrice' ? { unitPrice: Number(value) || 0 } : { [key]: value }
                 const updated = await updatePriceListItem(id, patch)
-                setItems((prev) => prev.map((item) => (item.id === id ? updated : item)))
+                setItems((prev) => prev.map((item) => (item.id === id ? { ...item, ...updated } : item)))
               }}
               onDelete={async (id) => {
                 await deletePriceListItem(id)

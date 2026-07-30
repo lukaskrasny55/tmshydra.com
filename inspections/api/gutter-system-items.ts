@@ -13,7 +13,7 @@ interface ApiResponse extends ServerResponse {
 
 export default async function handler(req: ApiRequest, res: ApiResponse) {
   if (req.method === 'POST') {
-    const { inspectionId, itemType, quantity, unit } = req.body || {}
+    const { id, inspectionId, itemType, quantity, unit } = req.body || {}
 
     if (typeof inspectionId !== 'string' || !inspectionId) {
       return res.status(400).json({ error: 'Chýba inspectionId.' })
@@ -28,6 +28,7 @@ export default async function handler(req: ApiRequest, res: ApiResponse) {
 
     const item = await prisma.gutterSystemItem.create({
       data: {
+        id: typeof id === 'string' && id ? id : undefined,
         inspectionId,
         itemType: itemType.trim(),
         quantity: qty,

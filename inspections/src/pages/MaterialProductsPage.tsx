@@ -127,7 +127,7 @@ function ProductCard({
     setStatus('saving')
     try {
       const updated = await updateMaterialProduct(item.id, patch)
-      onUpdated(updated)
+      onUpdated({ ...item, ...updated })
       setStatus('saved')
     } catch {
       setStatus('error')

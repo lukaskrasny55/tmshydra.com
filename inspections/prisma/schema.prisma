@@ -272,6 +272,8 @@ model QuoteAlternative {
   issuedDate             DateTime? @map("issued_date")
   validUntil             DateTime? @map("valid_until")
   warrantyYears          Int?      @map("warranty_years")
+  realizationStartDate   DateTime? @map("realization_start_date")
+  realizationEndDate     DateTime? @map("realization_end_date")
   documentUrl            String?  @map("document_url")
   createdAt              DateTime @default(now()) @map("created_at")
   updatedAt              DateTime @updatedAt @map("updated_at")

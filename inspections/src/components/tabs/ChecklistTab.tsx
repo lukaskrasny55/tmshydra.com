@@ -37,10 +37,11 @@ export default function ChecklistTab({ inspection, onChange }: Props) {
   const [areaM2, setAreaM2] = useState(inspection.areaM2 ?? '')
   const [isInsulated, setIsInsulated] = useState<boolean | null>(inspection.isInsulated)
   const [description, setDescription] = useState(inspection.currentStateDescription ?? '')
+  const [inspectionDate, setInspectionDate] = useState(inspection.inspectionDate ? inspection.inspectionDate.slice(0, 10) : '')
   const [basicStatus, setBasicStatus] = useState<BasicSaveStatus>('idle')
   const timeoutRef = useRef<ReturnType<typeof setTimeout> | undefined>(undefined)
 
-  function scheduleBasicSave(patch: Partial<{ areaM2: number | null; isInsulated: boolean | null; currentStateDescription: string | null }>) {
+  function scheduleBasicSave(patch: Partial<{ areaM2: number | null; isInsulated: boolean | null; currentStateDescription: string | null; inspectionDate: string | null }>) {
     setBasicStatus('saving')
     if (timeoutRef.current) clearTimeout(timeoutRef.current)
     timeoutRef.current = setTimeout(async () => {
@@ -70,6 +71,11 @@ export default function ChecklistTab({ inspection, onChange }: Props) {
     scheduleBasicSave({ currentStateDescription: value || null })
   }
 
+  function handleInspectionDateChange(value: string) {
+    setInspectionDate(value)
+    scheduleBasicSave({ inspectionDate: value || null })
+  }
+
   return (
     <div className="space-y-6 max-w-3xl">
       <section className="bg-white border border-slate-200 rounded-lg p-6 space-y-4">
@@ -79,6 +85,15 @@ export default function ChecklistTab({ inspection, onChange }: Props) {
         </div>
 
         <div className="grid grid-cols-2 gap-4">
+          <div>
+            <label className="block text-sm font-medium text-slate-700 mb-1">Dátum obhliadky</label>
+            <input
+              type="date"
+              value={inspectionDate}
+              onChange={(e) => handleInspectionDateChange(e.target.value)}
+              className="w-full px-3 py-2.5 border border-slate-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-brand-500"
+            />
+          </div>
           <div>
             <label className="block text-sm font-medium text-slate-700 mb-1">Výmera strechy (m²)</label>
             <input
@@ -134,7 +149,7 @@ export default function ChecklistTab({ inspection, onChange }: Props) {
           onUpdate={async (id, key, value) => {
             const patch = key === 'lengthM' || key === 'atikaHeightCm' ? { [key]: value === '' ? null : Number(value) } : { [key]: value }
             const updated = await updateRoofEdge(id, patch)
-            onChange({ roofEdges: inspection.roofEdges.map((e) => (e.id === id ? updated : e)) })
+            onChange({ roofEdges: inspection.roofEdges.map((e) => (e.id === id ? { ...e, ...updated } : e)) })
           }}
           onDelete={async (id) => {
             await deleteRoofEdge(id)
@@ -165,7 +180,7 @@ export default function ChecklistTab({ inspection, onChange }: Props) {
           onUpdate={async (id, key, value) => {
             const patch = key === 'widthM' || key === 'heightM' ? { [key]: Number(value) || 0 } : { [key]: value }
             const updated = await updateRoofAreaSection(id, patch)
-            onChange({ roofAreaSections: inspection.roofAreaSections.map((e) => (e.id === id ? updated : e)) })
+            onChange({ roofAreaSections: inspection.roofAreaSections.map((e) => (e.id === id ? { ...e, ...updated } : e)) })
           }}
           onDelete={async (id) => {
             await deleteRoofAreaSection(id)
@@ -200,7 +215,7 @@ export default function ChecklistTab({ inspection, onChange }: Props) {
           onUpdate={async (id, key, value) => {
             const patch = key === 'quantity' ? { quantity: Number(value) || 0 } : { [key]: value }
             const updated = await updateGutterSystemItem(id, patch)
-            onChange({ gutterSystemItems: inspection.gutterSystemItems.map((e) => (e.id === id ? updated : e)) })
+            onChange({ gutterSystemItems: inspection.gutterSystemItems.map((e) => (e.id === id ? { ...e, ...updated } : e)) })
           }}
           onDelete={async (id) => {
             await deleteGutterSystemItem(id)
@@ -228,7 +243,7 @@ export default function ChecklistTab({ inspection, onChange }: Props) {
           onUpdate={async (id, key, value) => {
             const patch = key === 'lengthM' ? { lengthM: Number(value) || 0 } : { [key]: value }
             const updated = await updateDrainDownspout(id, patch)
-            onChange({ drainDownspouts: inspection.drainDownspouts.map((e) => (e.id === id ? updated : e)) })
+            onChange({ drainDownspouts: inspection.drainDownspouts.map((e) => (e.id === id ? { ...e, ...updated } : e)) })
           }}
           onDelete={async (id) => {
             await deleteDrainDownspout(id)
@@ -259,7 +274,7 @@ export default function ChecklistTab({ inspection, onChange }: Props) {
           }}
           onUpdate={async (id, key, value) => {
             const updated = await updateTechnicalSolutionItem(id, { [key]: value } as any)
-            onChange({ technicalSolutionItems: inspection.technicalSolutionItems.map((e) => (e.id === id ? updated : e)) })
+            onChange({ technicalSolutionItems: inspection.technicalSolutionItems.map((e) => (e.id === id ? { ...e, ...updated } : e)) })
           }}
           onDelete={async (id) => {
             await deleteTechnicalSolutionItem(id)
@@ -278,7 +293,7 @@ export default function ChecklistTab({ inspection, onChange }: Props) {
           }}
           onUpdate={async (id, data) => {
             const updated = await updateAdditionalService(id, data)
-            onChange({ additionalServices: inspection.additionalServices.map((e) => (e.id === id ? updated : e)) })
+            onChange({ additionalServices: inspection.additionalServices.map((e) => (e.id === id ? { ...e, ...updated } : e)) })
           }}
           onDelete={async (id) => {
             await deleteAdditionalService(id)

@@ -12,6 +12,7 @@ import type {
   InspectionStatus,
   MaterialComposition,
   MaterialProduct,
+  PlanEvent,
   PriceListItem,
   QuoteAlternative,
   QuoteLineItem,
@@ -20,54 +21,56 @@ import type {
   TechnicalSolutionItem,
   Technician,
 } from '../types'
+import { cacheGetWithFallback, cacheSet } from './db'
+import { newId } from './id'
+import { offlineDelete, offlineGet, offlineMutate } from './offlineFetch'
 
-async function postJSON<T>(url: string, body: unknown): Promise<T> {
-  const res = await fetch(url, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(body),
-  })
-  if (!res.ok) {
-    const errBody = await res.json().catch(() => ({}))
-    throw new Error(errBody.error || 'Nepodarilo sa uložiť záznam.')
-  }
-  return (await res.json()) as T
+async function postJSON<T>(url: string, body: Record<string, unknown>, buildOptimistic?: () => T | Promise<T>): Promise<T> {
+  return offlineMutate<T>('POST', url, body, buildOptimistic ?? (() => ({ ...body }) as T))
 }
 
-async function patchJSON<T>(url: string, body: unknown): Promise<T> {
-  const res = await fetch(url, {
-    method: 'PATCH',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(body),
-  })
-  if (!res.ok) {
-    const errBody = await res.json().catch(() => ({}))
-    throw new Error(errBody.error || 'Nepodarilo sa uložiť zmeny.')
-  }
-  return (await res.json()) as T
+async function patchJSON<T>(url: string, body: Record<string, unknown>, buildOptimistic?: () => T | Promise<T>): Promise<T> {
+  return offlineMutate<T>('PATCH', url, body, buildOptimistic ?? (() => ({ ...body }) as T))
 }
 
 async function deleteRequest(url: string): Promise<void> {
-  const res = await fetch(url, { method: 'DELETE' })
-  if (!res.ok && res.status !== 204) {
-    const errBody = await res.json().catch(() => ({}))
-    throw new Error(errBody.error || 'Nepodarilo sa vymazať záznam.')
-  }
+  const clientRecordId = url.split('?')[0].split('/').pop()
+  return offlineDelete(url, clientRecordId)
 }
 
 export async function fetchInspections(params: { status?: InspectionStatus; q?: string } = {}) {
   const search = new URLSearchParams()
   if (params.status) search.set('status', params.status)
   if (params.q) search.set('q', params.q)
-  const res = await fetch(`/api/inspections?${search.toString()}`)
-  if (!res.ok) throw new Error('Nepodarilo sa načítať zákazky.')
-  return (await res.json()) as InspectionListItem[]
+  return offlineGet<InspectionListItem[]>(`/api/inspections?${search.toString()}`, 'Nepodarilo sa načítať zákazky.')
+}
+
+export async function fetchPlan(params: { from: string; to: string }) {
+  const search = new URLSearchParams({ from: params.from, to: params.to })
+  return offlineGet<PlanEvent[]>(`/api/plan?${search.toString()}`, 'Nepodarilo sa načítať plán.')
 }
 
 export async function fetchInspection(id: string) {
-  const res = await fetch(`/api/inspections/${id}`)
-  if (!res.ok) throw new Error('Nepodarilo sa načítať obhliadku.')
-  return (await res.json()) as InspectionDetail
+  return offlineGet<InspectionDetail>(`/api/inspections/${id}`, 'Nepodarilo sa načítať obhliadku.')
+}
+
+/** Best-effort offline reference number: counts cached inspections from this
+ * year the same way the server does. Falls back to a timestamp-based number
+ * (same style already used elsewhere in this app) if nothing is cached yet.
+ * Real, gapless numbering only applies to inspections created while online —
+ * the server-side counter was always best-effort under concurrency too. */
+async function buildOfflineReferenceNumber(): Promise<string> {
+  const year = new Date().getFullYear()
+  try {
+    const cached = (await cacheGetWithFallback('/api/inspections?')) as InspectionListItem[] | undefined
+    if (cached) {
+      const countThisYear = cached.filter((i) => new Date(i.createdAt).getFullYear() === year).length
+      return `OBH-${String(countThisYear + 1).padStart(3, '0')}/${year}`
+    }
+  } catch {
+    // fall through to timestamp fallback
+  }
+  return `OBH-${Date.now()}`
 }
 
 export async function createInspection(data: {
@@ -76,16 +79,53 @@ export async function createInspection(data: {
   customerEmail?: string
   customerAddress?: string
 }) {
-  const res = await fetch('/api/inspections', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(data),
+  const id = newId()
+  const customerId = newId()
+  return postJSON<InspectionListItem>('/api/inspections', { id, customerId, ...data }, async () => {
+    const now = new Date().toISOString()
+    const customer = {
+      id: customerId,
+      name: data.customerName,
+      address: data.customerAddress ?? null,
+      siteAddress: null,
+      phone: data.customerPhone ?? null,
+      email: data.customerEmail ?? null,
+      buildingAdmin: null,
+      createdAt: now,
+      updatedAt: now,
+    }
+    const listItem: InspectionListItem = {
+      id,
+      referenceNumber: await buildOfflineReferenceNumber(),
+      status: 'draft',
+      inspectionDate: null,
+      areaM2: null,
+      createdAt: now,
+      updatedAt: now,
+      customer,
+    }
+    // Also seed the detail-page cache: creating an inspection while offline
+    // and immediately opening it (the normal flow) must work without a
+    // round trip — there's nothing on the server yet to fetch.
+    const detail: InspectionDetail = {
+      ...listItem,
+      currentStateDescription: null,
+      isInsulated: null,
+      technicianId: null,
+      technician: null,
+      photos: [],
+      sketch: null,
+      roofEdges: [],
+      roofAreaSections: [],
+      technicalSolutionItems: [],
+      drainDownspouts: [],
+      gutterSystemItems: [],
+      additionalServices: [],
+      quoteAlternatives: [],
+    }
+    await cacheSet(`/api/inspections/${id}`, detail)
+    return listItem
   })
-  if (!res.ok) {
-    const body = await res.json().catch(() => ({}))
-    throw new Error(body.error || 'Nepodarilo sa vytvoriť zákazku.')
-  }
-  return (await res.json()) as InspectionListItem
 }
 
 export async function updateCustomer(id: string, data: Partial<Pick<Customer, 'name' | 'address' | 'siteAddress' | 'phone' | 'email' | 'buildingAdmin'>>) {
@@ -107,7 +147,7 @@ export async function updateInspection(
 }
 
 export async function createRoofEdge(data: { inspectionId: string; label?: string; lengthM: number; atikaHeightCm?: number | null }) {
-  return postJSON<RoofEdge>('/api/roof-edges', data)
+  return postJSON<RoofEdge>('/api/roof-edges', { id: newId(), ...data })
 }
 export async function updateRoofEdge(id: string, data: Partial<{ label: string; lengthM: number; atikaHeightCm: number | null }>) {
   return patchJSON<RoofEdge>(`/api/roof-edges/${id}`, data)
@@ -117,7 +157,7 @@ export async function deleteRoofEdge(id: string) {
 }
 
 export async function createGutterSystemItem(data: { inspectionId: string; itemType: string; quantity: number; unit?: string }) {
-  return postJSON<GutterSystemItem>('/api/gutter-system-items', data)
+  return postJSON<GutterSystemItem>('/api/gutter-system-items', { id: newId(), ...data })
 }
 export async function updateGutterSystemItem(id: string, data: Partial<{ itemType: string; quantity: number; unit: string }>) {
   return patchJSON<GutterSystemItem>(`/api/gutter-system-items/${id}`, data)
@@ -127,7 +167,7 @@ export async function deleteGutterSystemItem(id: string) {
 }
 
 export async function createDrainDownspout(data: { inspectionId: string; label?: string; lengthM: number }) {
-  return postJSON<DrainDownspout>('/api/drain-downspouts', data)
+  return postJSON<DrainDownspout>('/api/drain-downspouts', { id: newId(), ...data })
 }
 export async function updateDrainDownspout(id: string, data: Partial<{ label: string; lengthM: number }>) {
   return patchJSON<DrainDownspout>(`/api/drain-downspouts/${id}`, data)
@@ -137,7 +177,7 @@ export async function deleteDrainDownspout(id: string) {
 }
 
 export async function createTechnicalSolutionItem(data: { inspectionId: string; itemKey: string; isChecked?: boolean; valueText?: string; notes?: string }) {
-  return postJSON<TechnicalSolutionItem>('/api/technical-solution-items', data)
+  return postJSON<TechnicalSolutionItem>('/api/technical-solution-items', { id: newId(), ...data })
 }
 export async function updateTechnicalSolutionItem(id: string, data: Partial<{ itemKey: string; isChecked: boolean; valueText: string | null; notes: string | null }>) {
   return patchJSON<TechnicalSolutionItem>(`/api/technical-solution-items/${id}`, data)
@@ -147,7 +187,21 @@ export async function deleteTechnicalSolutionItem(id: string) {
 }
 
 export async function createQuoteAlternative(data: { inspectionId: string; label: string }) {
-  return postJSON<QuoteAlternative>('/api/quote-alternatives', data)
+  return postJSON<QuoteAlternative>('/api/quote-alternatives', { id: newId(), ...data }, () => ({
+    id: newId(),
+    label: data.label,
+    description: null,
+    discountPercent: '0',
+    totalPrice: null,
+    issuedDate: null,
+    validUntil: null,
+    warrantyYears: null,
+    realizationStartDate: null,
+    realizationEndDate: null,
+    materialCompositionId: null,
+    materialComposition: null,
+    lineItems: [],
+  }))
 }
 export async function deleteQuoteAlternative(id: string) {
   return deleteRequest(`/api/quote-alternatives/${id}`)
@@ -161,10 +215,16 @@ export async function updateQuoteAlternative(
     issuedDate: string | null
     validUntil: string | null
     warrantyYears: number | null
+    realizationStartDate: string | null
+    realizationEndDate: string | null
     materialCompositionId: string | null
   }>,
 ) {
   return patchJSON<QuoteAlternative>(`/api/quote-alternatives/${id}`, data)
+}
+
+function computeLineItemTotal(plannedQty: number, unitPrice: number, wastePercent: number) {
+  return Math.round(plannedQty * unitPrice * (1 + wastePercent / 100) * 100) / 100
 }
 
 export async function createQuoteLineItem(data: {
@@ -177,7 +237,21 @@ export async function createQuoteLineItem(data: {
   section?: 'main' | 'nad_ramec'
   source?: 'auto_calculated' | 'manual'
 }) {
-  return postJSON<QuoteLineItem>('/api/quote-line-items', data)
+  const id = newId()
+  return postJSON<QuoteLineItem>('/api/quote-line-items', { id, ...data }, () => ({
+    id,
+    quoteAlternativeId: data.quoteAlternativeId,
+    description: data.description,
+    plannedQty: String(data.plannedQty ?? 0),
+    previousQty: null,
+    actualQty: null,
+    unit: data.unit ?? 'ks',
+    unitPriceSnapshot: String(data.unitPriceSnapshot ?? 0),
+    total: String(computeLineItemTotal(data.plannedQty ?? 0, data.unitPriceSnapshot ?? 0, data.wastePercent ?? 0)),
+    wastePercent: String(data.wastePercent ?? 0),
+    section: data.section ?? 'main',
+    source: data.source ?? 'manual',
+  }))
 }
 export async function updateQuoteLineItem(
   id: string,
@@ -190,7 +264,7 @@ export async function deleteQuoteLineItem(id: string) {
 }
 
 export async function createInspectionPhoto(data: { inspectionId: string; url: string; caption?: string }) {
-  return postJSON<InspectionPhoto>('/api/inspection-photos', data)
+  return postJSON<InspectionPhoto>('/api/inspection-photos', { id: newId(), ...data })
 }
 export async function updateInspectionPhoto(id: string, data: { caption: string | null }) {
   return patchJSON<InspectionPhoto>(`/api/inspection-photos/${id}`, data)
@@ -200,14 +274,14 @@ export async function deleteInspectionPhoto(id: string) {
 }
 
 export async function saveInspectionSketch(data: { inspectionId: string; fileUrl: string }) {
-  return postJSON<InspectionSketch>('/api/inspection-sketch', data)
+  return postJSON<InspectionSketch>('/api/inspection-sketch', { id: newId(), ...data })
 }
 export async function deleteInspectionSketch(inspectionId: string) {
   return deleteRequest(`/api/inspection-sketch?inspectionId=${inspectionId}`)
 }
 
 export async function createRoofAreaSection(data: { inspectionId: string; label?: string; widthM: number; heightM: number }) {
-  return postJSON<RoofAreaSection>('/api/roof-area-sections', data)
+  return postJSON<RoofAreaSection>('/api/roof-area-sections', { id: newId(), ...data })
 }
 export async function updateRoofAreaSection(id: string, data: Partial<{ label: string; widthM: number; heightM: number }>) {
   return patchJSON<RoofAreaSection>(`/api/roof-area-sections/${id}`, data)
@@ -217,7 +291,7 @@ export async function deleteRoofAreaSection(id: string) {
 }
 
 export async function createAdditionalService(data: { inspectionId: string; description: string; photoUrl?: string }) {
-  return postJSON<AdditionalService>('/api/additional-services', data)
+  return postJSON<AdditionalService>('/api/additional-services', { id: newId(), ...data })
 }
 export async function updateAdditionalService(id: string, data: Partial<{ description: string; photoUrl: string | null }>) {
   return patchJSON<AdditionalService>(`/api/additional-services/${id}`, data)
@@ -227,21 +301,17 @@ export async function deleteAdditionalService(id: string) {
 }
 
 export async function fetchCompanySettings() {
-  const res = await fetch('/api/company-settings')
-  if (!res.ok) throw new Error('Nepodarilo sa načítať firemné údaje.')
-  return (await res.json()) as CompanySettings | null
+  return offlineGet<CompanySettings | null>('/api/company-settings', 'Nepodarilo sa načítať firemné údaje.')
 }
 export async function updateCompanySettings(data: Partial<Omit<CompanySettings, 'id'>>) {
   return patchJSON<CompanySettings>('/api/company-settings', data)
 }
 
 export async function fetchPriceList() {
-  const res = await fetch('/api/price-list')
-  if (!res.ok) throw new Error('Nepodarilo sa načítať cenník.')
-  return (await res.json()) as PriceListItem[]
+  return offlineGet<PriceListItem[]>('/api/price-list', 'Nepodarilo sa načítať cenník.')
 }
 export async function createPriceListItem(data: { itemKey: string; unit?: string; unitPrice: number; category: 'material' | 'prace'; validFrom?: string }) {
-  return postJSON<PriceListItem>('/api/price-list', data)
+  return postJSON<PriceListItem>('/api/price-list', { id: newId(), ...data })
 }
 export async function updatePriceListItem(id: string, data: Partial<{ itemKey: string; unit: string; unitPrice: number; category: 'material' | 'prace'; validFrom: string }>) {
   return patchJSON<PriceListItem>(`/api/price-list/${id}`, data)
@@ -251,12 +321,10 @@ export async function deletePriceListItem(id: string) {
 }
 
 export async function fetchTechnicians() {
-  const res = await fetch('/api/technicians')
-  if (!res.ok) throw new Error('Nepodarilo sa načítať technikov.')
-  return (await res.json()) as Technician[]
+  return offlineGet<Technician[]>('/api/technicians', 'Nepodarilo sa načítať technikov.')
 }
 export async function createTechnician(data: { name: string; email?: string }) {
-  return postJSON<Technician>('/api/technicians', data)
+  return postJSON<Technician>('/api/technicians', { id: newId(), ...data })
 }
 export async function updateTechnician(id: string, data: Partial<{ name: string; email: string | null }>) {
   return patchJSON<Technician>(`/api/technicians/${id}`, data)
@@ -266,12 +334,10 @@ export async function deleteTechnician(id: string) {
 }
 
 export async function fetchMaterialCompositions() {
-  const res = await fetch('/api/material-compositions')
-  if (!res.ok) throw new Error('Nepodarilo sa načítať skladby.')
-  return (await res.json()) as MaterialComposition[]
+  return offlineGet<MaterialComposition[]>('/api/material-compositions', 'Nepodarilo sa načítať skladby.')
 }
 export async function createMaterialComposition(data: { name: string; layers?: string[]; workStepsTemplate?: string; warrantyYears?: number | null }) {
-  return postJSON<MaterialComposition>('/api/material-compositions', data)
+  return postJSON<MaterialComposition>('/api/material-compositions', { id: newId(), ...data })
 }
 export async function updateMaterialComposition(
   id: string,
@@ -284,12 +350,10 @@ export async function deleteMaterialComposition(id: string) {
 }
 
 export async function fetchMaterialProducts() {
-  const res = await fetch('/api/material-products')
-  if (!res.ok) throw new Error('Nepodarilo sa načítať produkty.')
-  return (await res.json()) as MaterialProduct[]
+  return offlineGet<MaterialProduct[]>('/api/material-products', 'Nepodarilo sa načítať produkty.')
 }
 export async function createMaterialProduct(data: { name: string; description: string }) {
-  return postJSON<MaterialProduct>('/api/material-products', data)
+  return postJSON<MaterialProduct>('/api/material-products', { id: newId(), ...data })
 }
 export async function updateMaterialProduct(id: string, data: Partial<{ name: string; description: string }>) {
   return patchJSON<MaterialProduct>(`/api/material-products/${id}`, data)
@@ -299,12 +363,10 @@ export async function deleteMaterialProduct(id: string) {
 }
 
 export async function fetchDocumentTemplates() {
-  const res = await fetch('/api/document-templates')
-  if (!res.ok) throw new Error('Nepodarilo sa načítať šablóny.')
-  return (await res.json()) as DocumentTemplate[]
+  return offlineGet<DocumentTemplate[]>('/api/document-templates', 'Nepodarilo sa načítať šablóny.')
 }
 export async function createDocumentTemplate(data: { key: string; title: string; content?: string }) {
-  return postJSON<DocumentTemplate>('/api/document-templates', data)
+  return postJSON<DocumentTemplate>('/api/document-templates', { id: newId(), ...data })
 }
 export async function updateDocumentTemplate(id: string, data: Partial<{ key: string; title: string; content: string }>) {
   return patchJSON<DocumentTemplate>(`/api/document-templates/${id}`, data)

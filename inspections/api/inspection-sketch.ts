@@ -13,7 +13,7 @@ interface ApiResponse extends ServerResponse {
 
 export default async function handler(req: ApiRequest, res: ApiResponse) {
   if (req.method === 'POST') {
-    const { inspectionId, fileUrl } = req.body || {}
+    const { id, inspectionId, fileUrl } = req.body || {}
 
     if (typeof inspectionId !== 'string' || !inspectionId) {
       return res.status(400).json({ error: 'Chýba inspectionId.' })
@@ -24,7 +24,7 @@ export default async function handler(req: ApiRequest, res: ApiResponse) {
 
     const sketch = await prisma.inspectionSketch.upsert({
       where: { inspectionId },
-      create: { inspectionId, fileUrl },
+      create: { id: typeof id === 'string' && id ? id : undefined, inspectionId, fileUrl },
       update: { fileUrl },
     })
 

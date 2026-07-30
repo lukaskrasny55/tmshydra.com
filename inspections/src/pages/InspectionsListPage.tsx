@@ -1,6 +1,8 @@
 import { useEffect, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { createInspection, fetchInspections } from '../lib/api'
+import { cacheGetWithFallback, cacheSet } from '../lib/db'
+import SyncStatus from '../components/SyncStatus'
 import { STATUS_LABELS, type InspectionListItem, type InspectionStatus } from '../types'
 
 const FILTERS: { label: string; value: InspectionStatus | 'all' }[] = [
@@ -46,6 +48,10 @@ export default function InspectionsListPage() {
     setCreating(true)
     try {
       const inspection = await createInspection({ customerName: newName.trim() })
+      // So the list still shows this zákazka if the user browses back while
+      // still offline, before it's had a chance to sync to the server.
+      const cachedList = ((await cacheGetWithFallback('/api/inspections?')) as InspectionListItem[] | undefined) ?? []
+      await cacheSet('/api/inspections?', [inspection, ...cachedList])
       navigate(`/inspections/${inspection.id}`)
     } catch (err) {
       setError((err as Error).message)
@@ -57,6 +63,12 @@ export default function InspectionsListPage() {
     <div className="min-h-screen bg-slate-50">
       <header className="bg-white border-b border-slate-200 px-6 py-4 flex items-center justify-between">
         <h1 className="text-xl font-semibold text-slate-900">TMS Hydra – Obhliadky</h1>
+        <div className="flex items-center gap-3">
+        <SyncStatus />
+        <div className="flex items-center gap-1">
+        <Link to="/plan" className="text-sm text-slate-500 hover:text-slate-700 px-3 py-1.5 rounded-md hover:bg-slate-100">
+          Plán
+        </Link>
         <details className="relative">
           <summary className="text-sm text-slate-500 hover:text-slate-700 cursor-pointer list-none px-3 py-1.5 rounded-md hover:bg-slate-100">
             Nastavenia ▾
@@ -82,6 +94,8 @@ export default function InspectionsListPage() {
             </Link>
           </div>
         </details>
+        </div>
+        </div>
       </header>
 
       <main className="max-w-5xl mx-auto p-6 space-y-4">

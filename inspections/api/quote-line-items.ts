@@ -18,7 +18,7 @@ function computeTotal(plannedQty: number, unitPrice: number, wastePercent: numbe
 
 export default async function handler(req: ApiRequest, res: ApiResponse) {
   if (req.method === 'POST') {
-    const { quoteAlternativeId, description, plannedQty, unitPriceSnapshot, wastePercent, unit, section, source } = req.body || {}
+    const { id, quoteAlternativeId, description, plannedQty, unitPriceSnapshot, wastePercent, unit, section, source } = req.body || {}
 
     if (typeof quoteAlternativeId !== 'string' || !quoteAlternativeId) {
       return res.status(400).json({ error: 'Chýba quoteAlternativeId.' })
@@ -38,6 +38,7 @@ export default async function handler(req: ApiRequest, res: ApiResponse) {
 
     const item = await prisma.quoteLineItem.create({
       data: {
+        id: typeof id === 'string' && id ? id : undefined,
         quoteAlternativeId,
         description: description.trim(),
         plannedQty: qty,

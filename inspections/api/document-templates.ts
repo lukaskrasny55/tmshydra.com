@@ -18,7 +18,7 @@ export default async function handler(req: ApiRequest, res: ApiResponse) {
   }
 
   if (req.method === 'POST') {
-    const { key, title, content } = req.body || {}
+    const { id, key, title, content } = req.body || {}
 
     if (typeof key !== 'string' || !key.trim()) {
       return res.status(400).json({ error: 'Kľúč je povinný.' })
@@ -30,6 +30,7 @@ export default async function handler(req: ApiRequest, res: ApiResponse) {
     try {
       const item = await prisma.documentTemplate.create({
         data: {
+          id: typeof id === 'string' && id ? id : undefined,
           key: key.trim(),
           title: title.trim(),
           content: typeof content === 'string' ? content : '',

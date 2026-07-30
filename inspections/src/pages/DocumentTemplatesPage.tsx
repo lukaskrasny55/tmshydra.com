@@ -126,7 +126,7 @@ function TemplateCard({
     setStatus('saving')
     try {
       const updated = await updateDocumentTemplate(item.id, patch)
-      onUpdated(updated)
+      onUpdated({ ...item, ...updated })
       setStatus('saved')
     } catch {
       setStatus('error')

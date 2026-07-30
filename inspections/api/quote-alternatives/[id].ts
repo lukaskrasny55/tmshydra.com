@@ -17,7 +17,17 @@ export default async function handler(req: ApiRequest, res: ApiResponse) {
   if (!id) return res.status(400).json({ error: 'Chýba id.' })
 
   if (req.method === 'PATCH') {
-    const { label, discountPercent, description, issuedDate, validUntil, warrantyYears, materialCompositionId } = req.body || {}
+    const {
+      label,
+      discountPercent,
+      description,
+      issuedDate,
+      validUntil,
+      warrantyYears,
+      materialCompositionId,
+      realizationStartDate,
+      realizationEndDate,
+    } = req.body || {}
     const data: Record<string, unknown> = {}
     if (label !== undefined) data.label = String(label).trim()
     if (discountPercent !== undefined) {
@@ -35,6 +45,12 @@ export default async function handler(req: ApiRequest, res: ApiResponse) {
     }
     if (materialCompositionId !== undefined) {
       data.materialCompositionId = materialCompositionId || null
+    }
+    if (realizationStartDate !== undefined) {
+      data.realizationStartDate = realizationStartDate ? new Date(realizationStartDate) : null
+    }
+    if (realizationEndDate !== undefined) {
+      data.realizationEndDate = realizationEndDate ? new Date(realizationEndDate) : null
     }
 
     try {

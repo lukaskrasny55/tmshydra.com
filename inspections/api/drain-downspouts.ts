@@ -13,7 +13,7 @@ interface ApiResponse extends ServerResponse {
 
 export default async function handler(req: ApiRequest, res: ApiResponse) {
   if (req.method === 'POST') {
-    const { inspectionId, label, lengthM } = req.body || {}
+    const { id, inspectionId, label, lengthM } = req.body || {}
 
     if (typeof inspectionId !== 'string' || !inspectionId) {
       return res.status(400).json({ error: 'Chýba inspectionId.' })
@@ -27,6 +27,7 @@ export default async function handler(req: ApiRequest, res: ApiResponse) {
 
     const item = await prisma.drainDownspout.create({
       data: {
+        id: typeof id === 'string' && id ? id : undefined,
         inspectionId,
         label: typeof label === 'string' && label.trim() ? label.trim() : `Zvod ${count + 1}`,
         lengthM: length,

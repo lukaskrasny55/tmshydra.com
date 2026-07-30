@@ -40,7 +40,7 @@ export default function PhotosTab({ inspection, onChange }: Props) {
     setBusyId(photo.id)
     try {
       const updated = await updateInspectionPhoto(photo.id, { caption: value || null })
-      onChange({ photos: photos.map((p) => (p.id === photo.id ? updated : p)) })
+      onChange({ photos: photos.map((p) => (p.id === photo.id ? { ...p, ...updated } : p)) })
     } catch (err) {
       setError((err as Error).message)
     } finally {

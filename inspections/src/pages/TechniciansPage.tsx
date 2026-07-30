@@ -46,7 +46,7 @@ export default function TechniciansPage() {
               }}
               onUpdate={async (id, key, value) => {
                 const updated = await updateTechnician(id, { [key]: value } as any)
-                setItems((prev) => prev.map((item) => (item.id === id ? updated : item)))
+                setItems((prev) => prev.map((item) => (item.id === id ? { ...item, ...updated } : item)))
               }}
               onDelete={async (id) => {
                 await deleteTechnician(id)
