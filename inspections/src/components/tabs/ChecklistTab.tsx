@@ -42,12 +42,20 @@ export default function ChecklistTab({ inspection, onChange }: Props) {
   const [basicStatus, setBasicStatus] = useState<BasicSaveStatus>('idle')
   const timeoutRef = useRef<ReturnType<typeof setTimeout> | undefined>(undefined)
 
-  function scheduleBasicSave(patch: Partial<{ areaM2: number | null; isInsulated: boolean | null; currentStateDescription: string | null; inspectionDate: string | null; inspectionTime: string | null }>) {
+  // Saves to the server AND propagates to the parent's `inspection` state via
+  // `onChange` on success — without this, other tabs (e.g. Ponuka's "Generovať
+  // z checklistu", which reads inspection.areaM2/isInsulated) would keep
+  // seeing stale values until a full page reload re-fetches the inspection.
+  function scheduleBasicSave(
+    apiPatch: Partial<{ areaM2: number | null; isInsulated: boolean | null; currentStateDescription: string | null; inspectionDate: string | null; inspectionTime: string | null }>,
+    uiPatch: Partial<InspectionDetail>,
+  ) {
     setBasicStatus('saving')
     if (timeoutRef.current) clearTimeout(timeoutRef.current)
     timeoutRef.current = setTimeout(async () => {
       try {
-        await updateInspection(inspection.id, patch)
+        await updateInspection(inspection.id, apiPatch)
+        onChange(uiPatch)
         setBasicStatus('saved')
       } catch {
         setBasicStatus('error')
@@ -58,28 +66,29 @@ export default function ChecklistTab({ inspection, onChange }: Props) {
   function handleAreaChange(value: string) {
     setAreaM2(value)
     const num = value === '' ? null : Number(value)
-    scheduleBasicSave({ areaM2: num === null || Number.isNaN(num) ? null : num })
+    const clean = num === null || Number.isNaN(num) ? null : num
+    scheduleBasicSave({ areaM2: clean }, { areaM2: clean === null ? null : String(clean) })
   }
 
   function handleInsulatedChange(value: string) {
     const val = value === 'yes' ? true : value === 'no' ? false : null
     setIsInsulated(val)
-    scheduleBasicSave({ isInsulated: val })
+    scheduleBasicSave({ isInsulated: val }, { isInsulated: val })
   }
 
   function handleDescriptionChange(value: string) {
     setDescription(value)
-    scheduleBasicSave({ currentStateDescription: value || null })
+    scheduleBasicSave({ currentStateDescription: value || null }, { currentStateDescription: value || null })
   }
 
   function handleInspectionDateChange(value: string) {
     setInspectionDate(value)
-    scheduleBasicSave({ inspectionDate: value || null })
+    scheduleBasicSave({ inspectionDate: value || null }, { inspectionDate: value || null })
   }
 
   function handleInspectionTimeChange(value: string) {
     setInspectionTime(value)
-    scheduleBasicSave({ inspectionTime: value || null })
+    scheduleBasicSave({ inspectionTime: value || null }, { inspectionTime: value || null })
   }
 
   return (

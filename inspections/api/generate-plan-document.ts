@@ -27,9 +27,14 @@ function param(value: string | string[] | undefined): string | undefined {
   return typeof value === 'string' ? value : undefined
 }
 
-function formatDate(iso: string): string {
-  const d = new Date(iso)
+function formatDate(dayKey: string): string {
+  const [year, month, day] = dayKey.split('-').map(Number)
+  const d = new Date(year, month - 1, day)
   return d.toLocaleDateString('sk-SK', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })
+}
+
+function toISODate(d: Date): string {
+  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`
 }
 
 export default async function handler(req: ApiRequest, res: ApiResponse) {
@@ -46,12 +51,23 @@ export default async function handler(req: ApiRequest, res: ApiResponse) {
   const range = { gte: new Date(from), lte: new Date(`${to}T23:59:59`) }
   const events = await fetchPlanEvents(range)
 
+  // A multi-day realizácia carries one PlanEvent with a start/end date — expand it
+  // across every day it spans so the PDF lists it on each day, matching the
+  // calendar view instead of only showing it on its first day.
   const eventsByDay = new Map<string, typeof events>()
   for (const ev of events) {
-    const dayKey = ev.date.slice(0, 10)
-    const bucket = eventsByDay.get(dayKey)
-    if (bucket) bucket.push(ev)
-    else eventsByDay.set(dayKey, [ev])
+    const start = new Date(ev.date)
+    start.setHours(0, 0, 0, 0)
+    const end = ev.endDate ? new Date(ev.endDate) : start
+    end.setHours(0, 0, 0, 0)
+    const cursor = new Date(start)
+    while (cursor <= end) {
+      const dayKey = toISODate(cursor)
+      const bucket = eventsByDay.get(dayKey)
+      if (bucket) bucket.push(ev)
+      else eventsByDay.set(dayKey, [ev])
+      cursor.setDate(cursor.getDate() + 1)
+    }
   }
   const sortedDays = [...eventsByDay.keys()].sort()
 
@@ -79,7 +95,7 @@ export default async function handler(req: ApiRequest, res: ApiResponse) {
   for (const dayKey of sortedDays) {
     const dayEvents = eventsByDay.get(dayKey)!
     doc.moveDown(0.5)
-    doc.font('Bold').fontSize(13).fillColor('#111827').text(formatDate(dayEvents[0].date), { underline: true })
+    doc.font('Bold').fontSize(13).fillColor('#111827').text(formatDate(dayKey), { underline: true })
     doc.font('Regular').moveDown(0.2)
 
     for (const ev of dayEvents) {
