@@ -151,6 +151,8 @@ export interface QuoteAlternative {
   warrantyYears: number | null
   realizationStartDate: string | null
   realizationEndDate: string | null
+  realizationStartTime: string | null
+  realizationEndTime: string | null
   materialCompositionId: string | null
   materialComposition: MaterialComposition | null
   lineItems: QuoteLineItem[]
@@ -161,6 +163,7 @@ export interface InspectionListItem {
   referenceNumber: string
   status: InspectionStatus
   inspectionDate: string | null
+  inspectionTime: string | null
   areaM2: string | null
   createdAt: string
   updatedAt: string
@@ -169,14 +172,29 @@ export interface InspectionListItem {
 
 export interface PlanEvent {
   id: string
-  type: 'obhliadka' | 'realizacia'
+  type: 'obhliadka' | 'realizacia' | 'ine'
   date: string
   endDate: string | null
-  inspectionId: string
-  referenceNumber: string
-  customerName: string
+  time: string | null
+  endTime: string | null
+  location: string | null
+  inspectionId: string | null
+  referenceNumber: string | null
+  customerName: string | null
   technicianName: string | null
   label: string | null
+  title: string | null
+  notes: string | null
+}
+
+export interface CalendarEvent {
+  id: string
+  title: string
+  date: string
+  startTime: string | null
+  endTime: string | null
+  location: string | null
+  notes: string | null
 }
 
 export interface InspectionDetail extends InspectionListItem {

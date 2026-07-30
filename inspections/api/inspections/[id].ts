@@ -46,6 +46,10 @@ export default async function handler(req: ApiRequest, res: ApiResponse) {
       data.inspectionDate = body.inspectionDate ? new Date(body.inspectionDate) : null
     }
 
+    if (body.inspectionTime !== undefined) {
+      data.inspectionTime = body.inspectionTime ? String(body.inspectionTime).trim() : null
+    }
+
     if (body.status !== undefined) {
       if (typeof body.status !== 'string' || !VALID_STATUSES.includes(body.status)) {
         return res.status(400).json({ error: 'Neplatný status.' })

@@ -17,13 +17,16 @@
     "docxtemplater-image-module-free": "^1.1.1",
     "idb": "^8.0.3",
     "image-size": "^2.0.2",
+    "pdfkit": "^0.19.1",
     "pizzip": "^3.1.7",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
-    "react-router-dom": "^7.0.0"
+    "react-router-dom": "^7.0.0",
+    "resend": "^6.18.1"
   },
   "devDependencies": {
     "@types/node": "^22.14.0",
+    "@types/pdfkit": "^0.17.6",
     "@types/react": "^19.0.0",
     "@types/react-dom": "^19.0.0",
     "@vitejs/plugin-react": "^5.0.0",

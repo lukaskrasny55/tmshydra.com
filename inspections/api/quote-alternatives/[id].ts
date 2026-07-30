@@ -27,6 +27,8 @@ export default async function handler(req: ApiRequest, res: ApiResponse) {
       materialCompositionId,
       realizationStartDate,
       realizationEndDate,
+      realizationStartTime,
+      realizationEndTime,
     } = req.body || {}
     const data: Record<string, unknown> = {}
     if (label !== undefined) data.label = String(label).trim()
@@ -51,6 +53,12 @@ export default async function handler(req: ApiRequest, res: ApiResponse) {
     }
     if (realizationEndDate !== undefined) {
       data.realizationEndDate = realizationEndDate ? new Date(realizationEndDate) : null
+    }
+    if (realizationStartTime !== undefined) {
+      data.realizationStartTime = realizationStartTime ? String(realizationStartTime).trim() : null
+    }
+    if (realizationEndTime !== undefined) {
+      data.realizationEndTime = realizationEndTime ? String(realizationEndTime).trim() : null
     }
 
     try {

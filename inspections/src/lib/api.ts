@@ -1,5 +1,6 @@
 import type {
   AdditionalService,
+  CalendarEvent,
   CompanySettings,
   Customer,
   DocumentTemplate,
@@ -99,6 +100,7 @@ export async function createInspection(data: {
       referenceNumber: await buildOfflineReferenceNumber(),
       status: 'draft',
       inspectionDate: null,
+      inspectionTime: null,
       areaM2: null,
       createdAt: now,
       updatedAt: now,
@@ -139,6 +141,7 @@ export async function updateInspection(
     isInsulated: boolean | null
     currentStateDescription: string | null
     inspectionDate: string | null
+    inspectionTime: string | null
     status: InspectionStatus
     technicianId: string | null
   }>,
@@ -198,6 +201,8 @@ export async function createQuoteAlternative(data: { inspectionId: string; label
     warrantyYears: null,
     realizationStartDate: null,
     realizationEndDate: null,
+    realizationStartTime: null,
+    realizationEndTime: null,
     materialCompositionId: null,
     materialComposition: null,
     lineItems: [],
@@ -217,6 +222,8 @@ export async function updateQuoteAlternative(
     warrantyYears: number | null
     realizationStartDate: string | null
     realizationEndDate: string | null
+    realizationStartTime: string | null
+    realizationEndTime: string | null
     materialCompositionId: string | null
   }>,
 ) {
@@ -373,4 +380,37 @@ export async function updateDocumentTemplate(id: string, data: Partial<{ key: st
 }
 export async function deleteDocumentTemplate(id: string) {
   return deleteRequest(`/api/document-templates/${id}`)
+}
+
+export async function fetchCalendarEvents(params: { from: string; to: string }) {
+  const search = new URLSearchParams({ from: params.from, to: params.to })
+  return offlineGet<CalendarEvent[]>(`/api/calendar-events?${search.toString()}`, 'Nepodarilo sa načítať udalosti kalendára.')
+}
+export async function createCalendarEvent(data: {
+  title: string
+  date: string
+  startTime?: string | null
+  endTime?: string | null
+  location?: string | null
+  notes?: string | null
+}) {
+  const id = newId()
+  return postJSON<CalendarEvent>('/api/calendar-events', { id, ...data }, () => ({
+    id,
+    title: data.title,
+    date: data.date,
+    startTime: data.startTime ?? null,
+    endTime: data.endTime ?? null,
+    location: data.location ?? null,
+    notes: data.notes ?? null,
+  }))
+}
+export async function updateCalendarEvent(
+  id: string,
+  data: Partial<{ title: string; date: string; startTime: string | null; endTime: string | null; location: string | null; notes: string | null }>,
+) {
+  return patchJSON<CalendarEvent>(`/api/calendar-events/${id}`, data)
+}
+export async function deleteCalendarEvent(id: string) {
+  return deleteRequest(`/api/calendar-events/${id}`)
 }

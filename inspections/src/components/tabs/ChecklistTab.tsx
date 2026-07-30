@@ -38,10 +38,11 @@ export default function ChecklistTab({ inspection, onChange }: Props) {
   const [isInsulated, setIsInsulated] = useState<boolean | null>(inspection.isInsulated)
   const [description, setDescription] = useState(inspection.currentStateDescription ?? '')
   const [inspectionDate, setInspectionDate] = useState(inspection.inspectionDate ? inspection.inspectionDate.slice(0, 10) : '')
+  const [inspectionTime, setInspectionTime] = useState(inspection.inspectionTime ?? '')
   const [basicStatus, setBasicStatus] = useState<BasicSaveStatus>('idle')
   const timeoutRef = useRef<ReturnType<typeof setTimeout> | undefined>(undefined)
 
-  function scheduleBasicSave(patch: Partial<{ areaM2: number | null; isInsulated: boolean | null; currentStateDescription: string | null; inspectionDate: string | null }>) {
+  function scheduleBasicSave(patch: Partial<{ areaM2: number | null; isInsulated: boolean | null; currentStateDescription: string | null; inspectionDate: string | null; inspectionTime: string | null }>) {
     setBasicStatus('saving')
     if (timeoutRef.current) clearTimeout(timeoutRef.current)
     timeoutRef.current = setTimeout(async () => {
@@ -76,6 +77,11 @@ export default function ChecklistTab({ inspection, onChange }: Props) {
     scheduleBasicSave({ inspectionDate: value || null })
   }
 
+  function handleInspectionTimeChange(value: string) {
+    setInspectionTime(value)
+    scheduleBasicSave({ inspectionTime: value || null })
+  }
+
   return (
     <div className="space-y-6 max-w-3xl">
       <section className="bg-white border border-slate-200 rounded-lg p-6 space-y-4">
@@ -91,6 +97,15 @@ export default function ChecklistTab({ inspection, onChange }: Props) {
               type="date"
               value={inspectionDate}
               onChange={(e) => handleInspectionDateChange(e.target.value)}
+              className="w-full px-3 py-2.5 border border-slate-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-brand-500"
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-slate-700 mb-1">Čas obhliadky</label>
+            <input
+              type="time"
+              value={inspectionTime}
+              onChange={(e) => handleInspectionTimeChange(e.target.value)}
               className="w-full px-3 py-2.5 border border-slate-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-brand-500"
             />
           </div>

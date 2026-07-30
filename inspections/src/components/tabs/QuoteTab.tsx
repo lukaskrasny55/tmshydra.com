@@ -139,6 +139,14 @@ export default function QuoteTab({ inspection, onChange }: Props) {
     replaceAlternative({ ...active, [field]: updated[field] })
   }
 
+  async function handleTimeBlur(field: 'realizationStartTime' | 'realizationEndTime', value: string) {
+    if (!active) return
+    const current = active[field] ?? ''
+    if (value === current) return
+    const updated = await updateQuoteAlternative(active.id, { [field]: value || null })
+    replaceAlternative({ ...active, [field]: updated[field] })
+  }
+
   async function handleWarrantyBlur(value: string) {
     if (!active) return
     const years = value === '' ? null : Number(value)
@@ -464,6 +472,26 @@ export default function QuoteTab({ inspection, onChange }: Props) {
                   type="date"
                   defaultValue={active.realizationEndDate ? active.realizationEndDate.slice(0, 10) : ''}
                   onBlur={(e) => handleDateBlur('realizationEndDate', e.target.value)}
+                  className="w-full px-3 py-2 border border-slate-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-brand-500"
+                />
+              </div>
+              <div>
+                <label className="block text-xs font-medium text-slate-500 mb-1">Čas realizácie od</label>
+                <input
+                  key={`${active.id}-realization-start-time`}
+                  type="time"
+                  defaultValue={active.realizationStartTime ?? ''}
+                  onBlur={(e) => handleTimeBlur('realizationStartTime', e.target.value)}
+                  className="w-full px-3 py-2 border border-slate-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-brand-500"
+                />
+              </div>
+              <div>
+                <label className="block text-xs font-medium text-slate-500 mb-1">Čas realizácie do</label>
+                <input
+                  key={`${active.id}-realization-end-time`}
+                  type="time"
+                  defaultValue={active.realizationEndTime ?? ''}
+                  onBlur={(e) => handleTimeBlur('realizationEndTime', e.target.value)}
                   className="w-full px-3 py-2 border border-slate-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-brand-500"
                 />
               </div>

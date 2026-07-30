@@ -1,6 +1,6 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-import { fetchPlan } from '../lib/api'
+import { createCalendarEvent, deleteCalendarEvent, fetchPlan } from '../lib/api'
 import type { PlanEvent } from '../types'
 
 type Mode = 'week' | 'month'
@@ -10,6 +10,18 @@ const MONTH_NAMES = [
   'január', 'február', 'marec', 'apríl', 'máj', 'jún',
   'júl', 'august', 'september', 'október', 'november', 'december',
 ]
+
+const TYPE_LABEL: Record<PlanEvent['type'], string> = {
+  obhliadka: 'Obhliadka',
+  realizacia: 'Realizácia',
+  ine: 'Iné',
+}
+
+const TYPE_BADGE: Record<PlanEvent['type'], string> = {
+  obhliadka: 'bg-slate-100 text-slate-700',
+  realizacia: 'bg-brand-100 text-brand-700',
+  ine: 'bg-amber-100 text-amber-700',
+}
 
 function toISODate(d: Date): string {
   return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`
@@ -56,6 +68,13 @@ function formatRangeLabel(mode: Mode, from: Date, to: Date): string {
   return `${fromLabel} – ${toLabel}`
 }
 
+// Plan events carry a composite id like "ine-<cuid>" — strip the "<type>-" prefix to get the underlying record id.
+function rawId(ev: PlanEvent): string {
+  return ev.id.slice(ev.type.length + 1)
+}
+
+const EMPTY_FORM = { title: '', date: '', startTime: '', endTime: '', location: '', notes: '' }
+
 export default function PlanPage() {
   const navigate = useNavigate()
   const [mode, setMode] = useState<Mode>('week')
@@ -64,9 +83,14 @@ export default function PlanPage() {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
 
+  const [showForm, setShowForm] = useState(false)
+  const [form, setForm] = useState(EMPTY_FORM)
+  const [formError, setFormError] = useState<string | null>(null)
+  const [submitting, setSubmitting] = useState(false)
+
   const { from, to } = useMemo(() => rangeForMode(mode, anchor), [mode, anchor])
 
-  useEffect(() => {
+  const loadEvents = useCallback(() => {
     let cancelled = false
     setLoading(true)
     setError(null)
@@ -84,6 +108,8 @@ export default function PlanPage() {
       cancelled = true
     }
   }, [from, to])
+
+  useEffect(() => loadEvents(), [loadEvents])
 
   const days = useMemo(() => {
     const list: Date[] = []
@@ -117,14 +143,51 @@ export default function PlanPage() {
   const summary = useMemo(() => {
     const obhliadky = events.filter((e) => e.type === 'obhliadka').length
     const realizacie = events.filter((e) => e.type === 'realizacia').length
-    return { obhliadky, realizacie }
+    const ine = events.filter((e) => e.type === 'ine').length
+    return { obhliadky, realizacie, ine }
   }, [events])
 
   function step(delta: number) {
     setAnchor((prev) => (mode === 'week' ? addDays(prev, delta * 7) : new Date(prev.getFullYear(), prev.getMonth() + delta, 1)))
   }
 
+  async function handleCreateEvent() {
+    setFormError(null)
+    if (!form.title.trim()) {
+      setFormError('Názov udalosti je povinný.')
+      return
+    }
+    if (!form.date) {
+      setFormError('Dátum je povinný.')
+      return
+    }
+    setSubmitting(true)
+    try {
+      await createCalendarEvent({
+        title: form.title.trim(),
+        date: form.date,
+        startTime: form.startTime || null,
+        endTime: form.endTime || null,
+        location: form.location.trim() || null,
+        notes: form.notes.trim() || null,
+      })
+      setForm(EMPTY_FORM)
+      setShowForm(false)
+      loadEvents()
+    } catch (err) {
+      setFormError(err instanceof Error ? err.message : 'Nepodarilo sa uložiť udalosť.')
+    } finally {
+      setSubmitting(false)
+    }
+  }
+
+  async function handleDeleteEvent(ev: PlanEvent) {
+    await deleteCalendarEvent(rawId(ev))
+    loadEvents()
+  }
+
   const todayKey = toISODate(new Date())
+  const pdfUrl = `/api/generate-plan-document?from=${toISODate(from)}&to=${toISODate(to)}`
 
   return (
     <div className="min-h-screen bg-slate-50">
@@ -135,7 +198,12 @@ export default function PlanPage() {
           </Link>
         </div>
         <h1 className="text-xl font-semibold text-slate-900">Plán</h1>
-        <div className="w-32" />
+        <a
+          href={pdfUrl}
+          className="text-sm font-medium text-brand-600 hover:text-brand-700 flex items-center gap-1"
+        >
+          ⬇ PDF
+        </a>
       </header>
 
       <main className="max-w-3xl mx-auto p-6 space-y-4">
@@ -192,6 +260,102 @@ export default function PlanPage() {
             <div className="text-2xl font-semibold text-slate-900">{summary.realizacie}</div>
             <div className="text-slate-500">realizácií v tomto období</div>
           </div>
+          <div className="flex-1 bg-white border border-slate-200 rounded-lg px-4 py-3">
+            <div className="text-2xl font-semibold text-slate-900">{summary.ine}</div>
+            <div className="text-slate-500">iných udalostí</div>
+          </div>
+        </div>
+
+        <div className="bg-white border border-slate-200 rounded-lg p-4">
+          {!showForm ? (
+            <button
+              onClick={() => setShowForm(true)}
+              className="text-sm font-medium text-brand-600 hover:text-brand-700"
+            >
+              + Iná udalosť
+            </button>
+          ) : (
+            <div className="space-y-3">
+              <div className="flex items-center justify-between">
+                <h3 className="text-sm font-semibold text-slate-700">Nová udalosť</h3>
+                <button
+                  onClick={() => {
+                    setShowForm(false)
+                    setForm(EMPTY_FORM)
+                    setFormError(null)
+                  }}
+                  className="text-xs text-slate-400 hover:text-slate-600"
+                >
+                  Zrušiť
+                </button>
+              </div>
+              <div className="grid grid-cols-2 gap-3">
+                <div className="col-span-2">
+                  <label className="block text-xs font-medium text-slate-500 mb-1">Názov</label>
+                  <input
+                    type="text"
+                    value={form.title}
+                    onChange={(e) => setForm((f) => ({ ...f, title: e.target.value }))}
+                    className="w-full px-3 py-2 border border-slate-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-brand-500"
+                    placeholder="napr. Nákup materiálu"
+                  />
+                </div>
+                <div>
+                  <label className="block text-xs font-medium text-slate-500 mb-1">Dátum</label>
+                  <input
+                    type="date"
+                    value={form.date}
+                    onChange={(e) => setForm((f) => ({ ...f, date: e.target.value }))}
+                    className="w-full px-3 py-2 border border-slate-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-brand-500"
+                  />
+                </div>
+                <div>
+                  <label className="block text-xs font-medium text-slate-500 mb-1">Miesto</label>
+                  <input
+                    type="text"
+                    value={form.location}
+                    onChange={(e) => setForm((f) => ({ ...f, location: e.target.value }))}
+                    className="w-full px-3 py-2 border border-slate-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-brand-500"
+                  />
+                </div>
+                <div>
+                  <label className="block text-xs font-medium text-slate-500 mb-1">Čas od</label>
+                  <input
+                    type="time"
+                    value={form.startTime}
+                    onChange={(e) => setForm((f) => ({ ...f, startTime: e.target.value }))}
+                    className="w-full px-3 py-2 border border-slate-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-brand-500"
+                  />
+                </div>
+                <div>
+                  <label className="block text-xs font-medium text-slate-500 mb-1">Čas do</label>
+                  <input
+                    type="time"
+                    value={form.endTime}
+                    onChange={(e) => setForm((f) => ({ ...f, endTime: e.target.value }))}
+                    className="w-full px-3 py-2 border border-slate-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-brand-500"
+                  />
+                </div>
+                <div className="col-span-2">
+                  <label className="block text-xs font-medium text-slate-500 mb-1">Poznámka</label>
+                  <textarea
+                    value={form.notes}
+                    onChange={(e) => setForm((f) => ({ ...f, notes: e.target.value }))}
+                    rows={2}
+                    className="w-full px-3 py-2 border border-slate-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-brand-500"
+                  />
+                </div>
+              </div>
+              {formError && <div className="text-red-600 text-xs">{formError}</div>}
+              <button
+                onClick={handleCreateEvent}
+                disabled={submitting}
+                className="px-4 py-2 rounded-md text-sm font-medium bg-slate-900 text-white hover:bg-slate-800 disabled:opacity-50"
+              >
+                {submitting ? 'Ukladám…' : 'Uložiť udalosť'}
+              </button>
+            </div>
+          )}
         </div>
 
         {error && <div className="text-red-600 text-sm">{error}</div>}
@@ -219,28 +383,46 @@ export default function PlanPage() {
                     <div className="px-4 py-3 text-sm text-slate-400">—</div>
                   ) : (
                     <div className="divide-y divide-slate-100">
-                      {dayEvents.map((ev) => (
-                        <button
-                          key={`${key}-${ev.id}`}
-                          onClick={() => navigate(`/inspections/${ev.inspectionId}`)}
-                          className="w-full text-left px-4 py-2.5 flex items-center justify-between gap-3 hover:bg-slate-50 transition"
-                        >
-                          <div className="flex items-center gap-2.5 min-w-0">
-                            <span
-                              className={`shrink-0 text-[11px] font-medium px-2 py-0.5 rounded-full ${
-                                ev.type === 'obhliadka' ? 'bg-slate-100 text-slate-700' : 'bg-brand-100 text-brand-700'
-                              }`}
-                            >
-                              {ev.type === 'obhliadka' ? 'Obhliadka' : `Realizácia${ev.label ? ` ${ev.label}` : ''}`}
-                            </span>
-                            <span className="truncate text-sm font-medium text-slate-900">{ev.customerName}</span>
-                            <span className="shrink-0 text-xs text-slate-400">{ev.referenceNumber}</span>
+                      {dayEvents.map((ev) => {
+                        const timeLabel = ev.time ? `${ev.time}${ev.endTime ? `–${ev.endTime}` : ''}` : null
+                        const title = ev.customerName || ev.title || ''
+                        const isCustom = ev.type === 'ine'
+                        return (
+                          <div
+                            key={`${key}-${ev.id}`}
+                            onClick={() => !isCustom && navigate(`/inspections/${ev.inspectionId}`)}
+                            className={`w-full text-left px-4 py-2.5 flex items-center justify-between gap-3 ${
+                              isCustom ? '' : 'cursor-pointer hover:bg-slate-50 transition'
+                            }`}
+                          >
+                            <div className="flex items-center gap-2.5 min-w-0 flex-wrap">
+                              <span className={`shrink-0 text-[11px] font-medium px-2 py-0.5 rounded-full ${TYPE_BADGE[ev.type]}`}>
+                                {TYPE_LABEL[ev.type]}
+                                {ev.type === 'realizacia' && ev.label ? ` ${ev.label}` : ''}
+                              </span>
+                              <span className="truncate text-sm font-medium text-slate-900">{title}</span>
+                              {timeLabel && <span className="shrink-0 text-xs text-slate-500">{timeLabel}</span>}
+                              {ev.location && <span className="shrink-0 text-xs text-slate-400">{ev.location}</span>}
+                              {ev.referenceNumber && <span className="shrink-0 text-xs text-slate-400">{ev.referenceNumber}</span>}
+                            </div>
+                            <div className="flex items-center gap-2 shrink-0">
+                              {ev.technicianName && <span className="text-xs text-slate-500">{ev.technicianName}</span>}
+                              {isCustom && (
+                                <button
+                                  onClick={(e) => {
+                                    e.stopPropagation()
+                                    handleDeleteEvent(ev)
+                                  }}
+                                  className="text-xs text-slate-400 hover:text-red-600"
+                                  title="Zmazať udalosť"
+                                >
+                                  ✕
+                                </button>
+                              )}
+                            </div>
                           </div>
-                          {ev.technicianName && (
-                            <span className="shrink-0 text-xs text-slate-500">{ev.technicianName}</span>
-                          )}
-                        </button>
-                      ))}
+                        )
+                      })}
                     </div>
                   )}
                 </div>
