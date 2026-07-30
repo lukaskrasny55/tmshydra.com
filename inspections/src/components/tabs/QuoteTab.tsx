@@ -74,6 +74,8 @@ export default function QuoteTab({ inspection, onChange }: Props) {
   const [creating, setCreating] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [generating, setGenerating] = useState(false)
+  const [sendingEmail, setSendingEmail] = useState(false)
+  const [emailStatus, setEmailStatus] = useState<string | null>(null)
   const [compositions, setCompositions] = useState<MaterialComposition[]>([])
   const [priceList, setPriceList] = useState<PriceListItem[]>([])
 
@@ -285,6 +287,26 @@ export default function QuoteTab({ inspection, onChange }: Props) {
     }
   }
 
+  async function handleSendQuoteEmail() {
+    if (!active) return
+    setSendingEmail(true)
+    setEmailStatus(null)
+    try {
+      const res = await fetch('/api/send-quote-email', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id: active.id }),
+      })
+      const data = await res.json()
+      if (!res.ok) throw new Error(data.error || 'Odoslanie zlyhalo.')
+      setEmailStatus('Ponuka bola odoslaná zákazníkovi emailom.')
+    } catch (err) {
+      setEmailStatus((err as Error).message)
+    } finally {
+      setSendingEmail(false)
+    }
+  }
+
   function makeSectionHandlers(section: LineItemSection) {
     if (!active) return null
     return {
@@ -324,6 +346,19 @@ export default function QuoteTab({ inspection, onChange }: Props) {
 
   const mainHandlers = makeSectionHandlers('main')
   const nadRamecHandlers = makeSectionHandlers('nad_ramec')
+
+  // Fields that would render as a blank line in the generated DOCX if left
+  // empty — surfaced before download/send so a gap gets noticed here, not
+  // after the customer already has the document in hand.
+  const missingFields: string[] = []
+  if (active) {
+    if (mainItems.length === 0 && nadRamecItems.length === 0) missingFields.push('žiadne položky ponuky')
+    if (!active.issuedDate) missingFields.push('dátum vystavenia')
+    if (!active.validUntil) missingFields.push('platnosť do')
+    if (active.warrantyYears === null) missingFields.push('záruka (roky)')
+    if (!active.materialCompositionId) missingFields.push('materiálová skladba (pre Návrh riešenia)')
+    if (!inspection.customer.email) missingFields.push('email zákazníka (pre odoslanie)')
+  }
 
   return (
     <div className="space-y-4 max-w-4xl">
@@ -407,11 +442,25 @@ export default function QuoteTab({ inspection, onChange }: Props) {
               >
                 ⬇ Návrh riešenia (DOCX)
               </a>
+              <button
+                onClick={handleSendQuoteEmail}
+                disabled={sendingEmail || !inspection.customer.email}
+                title={!inspection.customer.email ? 'Zákazník nemá vyplnený email (Kontakt tab)' : undefined}
+                className="text-xs font-medium text-brand-700 bg-brand-50 hover:bg-brand-100 px-3 py-1.5 rounded-md disabled:opacity-50"
+              >
+                {sendingEmail ? 'Odosielam…' : '✉ Odoslať zákazníkovi'}
+              </button>
               <button onClick={() => handleDeleteAlternative(active.id)} className="text-xs font-medium text-red-500 hover:text-red-700">
                 Vymazať alternatívu
               </button>
             </div>
           </div>
+          {emailStatus && <div className="text-xs text-slate-500 -mt-2">{emailStatus}</div>}
+          {missingFields.length > 0 && (
+            <div className="text-xs text-amber-700 bg-amber-50 border border-amber-100 rounded-md px-3 py-2 -mt-2">
+              ⚠ V dokumente budú prázdne polia — chýba: {missingFields.join(', ')}.
+            </div>
+          )}
 
           <section className="bg-white border border-slate-200 rounded-lg p-6">
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">

@@ -17,9 +17,15 @@ export default async function handler(req: ApiRequest, res: ApiResponse) {
   if (!id) return res.status(400).json({ error: 'Chýba id.' })
 
   if (req.method === 'PATCH') {
-    const { caption } = req.body || {}
+    const { caption, url } = req.body || {}
     const data: Record<string, unknown> = {}
     if (caption !== undefined) data.caption = typeof caption === 'string' && caption.trim() ? caption.trim() : null
+    if (url !== undefined) {
+      if (typeof url !== 'string' || !url.startsWith('data:')) {
+        return res.status(400).json({ error: 'Neplatný obsah fotky.' })
+      }
+      data.url = url
+    }
 
     try {
       const photo = await prisma.inspectionPhoto.update({ where: { id }, data })

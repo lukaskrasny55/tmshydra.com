@@ -170,6 +170,23 @@ export interface InspectionListItem {
   customer: Customer
 }
 
+export interface WorkSummaryItem {
+  id: string
+  label: string
+  customerName: string
+  referenceNumber: string
+  realizationEndDate: string | null
+  areaM2: number | null
+  revenue: number
+}
+
+export interface WorkSummary {
+  count: number
+  totalAreaM2: number
+  totalRevenue: number
+  items: WorkSummaryItem[]
+}
+
 export interface PlanEvent {
   id: string
   type: 'obhliadka' | 'realizacia' | 'ine'

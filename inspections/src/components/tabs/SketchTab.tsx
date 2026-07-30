@@ -1,6 +1,7 @@
 import { useRef, useState } from 'react'
 import { deleteInspectionSketch, saveInspectionSketch } from '../../lib/api'
 import { fileToStorableDataUrl } from '../../lib/image'
+import SketchCanvas from '../SketchCanvas'
 import type { InspectionDetail } from '../../types'
 
 interface Props {
@@ -14,6 +15,7 @@ export default function SketchTab({ inspection, onChange }: Props) {
   const [uploading, setUploading] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [deleting, setDeleting] = useState(false)
+  const [drawing, setDrawing] = useState(false)
 
   async function handleFileSelected(fileList: FileList | null) {
     const file = fileList?.[0]
@@ -30,6 +32,11 @@ export default function SketchTab({ inspection, onChange }: Props) {
       setUploading(false)
       if (fileInputRef.current) fileInputRef.current.value = ''
     }
+  }
+
+  async function handleDrawnSave(dataUrl: string) {
+    const saved = await saveInspectionSketch({ inspectionId: inspection.id, fileUrl: dataUrl })
+    onChange({ sketch: saved })
   }
 
   async function handleDelete() {
@@ -51,18 +58,26 @@ export default function SketchTab({ inspection, onChange }: Props) {
     <div className="max-w-2xl space-y-4">
       <div className="flex items-center justify-between">
         <h2 className="text-sm font-semibold text-slate-700">Technický výkres</h2>
-        <label className="px-4 py-2.5 rounded-lg bg-brand-600 text-white text-sm font-medium hover:bg-brand-700 transition cursor-pointer">
-          {uploading ? 'Nahrávam…' : sketch ? 'Nahradiť súbor' : '+ Nahrať výkres'}
-          <input
-            ref={fileInputRef}
-            type="file"
-            accept="image/*,application/pdf"
-            capture="environment"
-            disabled={uploading}
-            onChange={(e) => handleFileSelected(e.target.files)}
-            className="hidden"
-          />
-        </label>
+        <div className="flex items-center gap-2">
+          <button
+            onClick={() => setDrawing(true)}
+            className="px-4 py-2.5 rounded-lg bg-slate-700 text-white text-sm font-medium hover:bg-slate-600 transition"
+          >
+            ✎ Nakresliť výkres
+          </button>
+          <label className="px-4 py-2.5 rounded-lg bg-brand-600 text-white text-sm font-medium hover:bg-brand-700 transition cursor-pointer">
+            {uploading ? 'Nahrávam…' : sketch ? 'Nahradiť súbor' : '+ Nahrať výkres'}
+            <input
+              ref={fileInputRef}
+              type="file"
+              accept="image/*,application/pdf"
+              capture="environment"
+              disabled={uploading}
+              onChange={(e) => handleFileSelected(e.target.files)}
+              className="hidden"
+            />
+          </label>
+        </div>
       </div>
 
       {error && <div className="text-red-600 text-sm">{error}</div>}
@@ -83,6 +98,8 @@ export default function SketchTab({ inspection, onChange }: Props) {
           </button>
         </div>
       )}
+
+      {drawing && <SketchCanvas onSave={handleDrawnSave} onClose={() => setDrawing(false)} />}
     </div>
   )
 }

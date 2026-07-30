@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
-import { Link, useParams } from 'react-router-dom'
-import { fetchInspection, fetchTechnicians, updateInspection } from '../lib/api'
+import { Link, useNavigate, useParams } from 'react-router-dom'
+import { duplicateInspection, fetchInspection, fetchTechnicians, updateInspection } from '../lib/api'
 import { cacheSet } from '../lib/db'
 import SyncStatus from '../components/SyncStatus'
 import { STATUS_LABELS, type InspectionDetail, type InspectionStatus, type Technician } from '../types'
@@ -22,11 +22,13 @@ type TabKey = (typeof TABS)[number]['key']
 
 export default function InspectionDetailPage() {
   const { id } = useParams<{ id: string }>()
+  const navigate = useNavigate()
   const [inspection, setInspection] = useState<InspectionDetail | null>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const [activeTab, setActiveTab] = useState<TabKey>('contact')
   const [technicians, setTechnicians] = useState<Technician[]>([])
+  const [duplicating, setDuplicating] = useState(false)
 
   useEffect(() => {
     if (!id) return
@@ -63,6 +65,23 @@ export default function InspectionDetailPage() {
       cacheSet(`/api/inspections/${next.id}`, next)
       return next
     })
+  }
+
+  async function handleDuplicate() {
+    if (!inspection || duplicating) return
+    if (!navigator.onLine) {
+      setError('Duplikovanie potrebuje pripojenie na internet.')
+      return
+    }
+    setDuplicating(true)
+    try {
+      const created = await duplicateInspection(inspection.id)
+      navigate(`/inspections/${created.id}`)
+    } catch (err) {
+      setError((err as Error).message)
+    } finally {
+      setDuplicating(false)
+    }
   }
 
   async function handleStatusChange(status: InspectionStatus) {
@@ -116,6 +135,14 @@ export default function InspectionDetailPage() {
         </div>
         <div className="flex items-center gap-3">
           <SyncStatus />
+          <button
+            onClick={handleDuplicate}
+            disabled={duplicating}
+            title="Vytvorí novú obhliadku s rovnakými kontaktnými a checklist údajmi — užitočné pri viacerých rovnakých vchodoch/jednotkách"
+            className="text-xs font-medium px-3 py-1.5 rounded-full bg-slate-100 text-slate-700 hover:bg-slate-200 disabled:opacity-50"
+          >
+            {duplicating ? 'Duplikujem…' : '⧉ Duplikovať'}
+          </button>
           <select
             value={inspection.technicianId ?? ''}
             onChange={(e) => handleTechnicianChange(e.target.value)}
@@ -141,6 +168,12 @@ export default function InspectionDetailPage() {
           </select>
         </div>
       </header>
+
+      {error && (
+        <div className="max-w-5xl mx-auto px-6 pt-3">
+          <div className="bg-red-50 text-red-700 text-sm px-4 py-2 rounded-md">{error}</div>
+        </div>
+      )}
 
       <div className="max-w-5xl mx-auto flex">
         <nav className="w-48 shrink-0 border-r border-slate-200 bg-white min-h-[calc(100vh-73px)]">

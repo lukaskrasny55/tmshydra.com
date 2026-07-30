@@ -1,6 +1,7 @@
 import { useRef, useState } from 'react'
 import { createInspectionPhoto, deleteInspectionPhoto, updateInspectionPhoto } from '../../lib/api'
 import { fileToStorableDataUrl } from '../../lib/image'
+import PhotoAnnotator from '../PhotoAnnotator'
 import type { InspectionDetail, InspectionPhoto } from '../../types'
 
 interface Props {
@@ -14,6 +15,7 @@ export default function PhotosTab({ inspection, onChange }: Props) {
   const [uploading, setUploading] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [busyId, setBusyId] = useState<string | null>(null)
+  const [annotatingPhoto, setAnnotatingPhoto] = useState<InspectionPhoto | null>(null)
 
   async function handleFilesSelected(fileList: FileList | null) {
     if (!fileList || fileList.length === 0) return
@@ -46,6 +48,11 @@ export default function PhotosTab({ inspection, onChange }: Props) {
     } finally {
       setBusyId(null)
     }
+  }
+
+  async function handleSaveAnnotation(photo: InspectionPhoto, dataUrl: string) {
+    const updated = await updateInspectionPhoto(photo.id, { url: dataUrl })
+    onChange({ photos: photos.map((p) => (p.id === photo.id ? { ...p, ...updated } : p)) })
   }
 
   async function handleDelete(id: string) {
@@ -91,26 +98,42 @@ export default function PhotosTab({ inspection, onChange }: Props) {
           {photos.map((photo) => (
             <div key={photo.id} className="bg-white border border-slate-200 rounded-lg overflow-hidden">
               <img src={photo.url} alt={photo.caption ?? ''} className="w-full h-40 object-cover" />
-              <div className="p-2 flex items-center gap-2">
-                <input
-                  defaultValue={photo.caption ?? ''}
-                  placeholder="Popis fotky…"
-                  disabled={busyId === photo.id}
-                  onBlur={(e) => handleCaptionBlur(photo, e.target.value)}
-                  className="flex-1 min-w-0 px-2 py-1 text-xs border border-transparent hover:border-slate-200 focus:border-brand-400 rounded focus:outline-none"
-                />
+              <div className="p-2 space-y-1.5">
+                <div className="flex items-center gap-2">
+                  <input
+                    defaultValue={photo.caption ?? ''}
+                    placeholder="Popis fotky…"
+                    disabled={busyId === photo.id}
+                    onBlur={(e) => handleCaptionBlur(photo, e.target.value)}
+                    className="flex-1 min-w-0 px-2 py-1 text-xs border border-transparent hover:border-slate-200 focus:border-brand-400 rounded focus:outline-none"
+                  />
+                  <button
+                    onClick={() => handleDelete(photo.id)}
+                    disabled={busyId === photo.id}
+                    className="text-slate-400 hover:text-red-600 shrink-0"
+                    title="Vymazať"
+                  >
+                    ×
+                  </button>
+                </div>
                 <button
-                  onClick={() => handleDelete(photo.id)}
-                  disabled={busyId === photo.id}
-                  className="text-slate-400 hover:text-red-600 shrink-0"
-                  title="Vymazať"
+                  onClick={() => setAnnotatingPhoto(photo)}
+                  className="text-xs font-medium text-brand-600 hover:text-brand-700"
                 >
-                  ×
+                  ✎ Označiť na fotke
                 </button>
               </div>
             </div>
           ))}
         </div>
+      )}
+
+      {annotatingPhoto && (
+        <PhotoAnnotator
+          photoUrl={annotatingPhoto.url}
+          onSave={(dataUrl) => handleSaveAnnotation(annotatingPhoto, dataUrl)}
+          onClose={() => setAnnotatingPhoto(null)}
+        />
       )}
     </div>
   )

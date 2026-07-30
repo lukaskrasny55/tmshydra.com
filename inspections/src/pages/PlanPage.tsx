@@ -368,6 +368,10 @@ export default function PlanPage() {
               const key = toISODate(day)
               const dayEvents = eventsByDay.get(key) ?? []
               const isToday = key === todayKey
+              const technicianCounts = new Map<string, number>()
+              for (const ev of dayEvents) {
+                if (ev.technicianName) technicianCounts.set(ev.technicianName, (technicianCounts.get(ev.technicianName) ?? 0) + 1)
+              }
               return (
                 <div
                   key={key}
@@ -406,7 +410,21 @@ export default function PlanPage() {
                               {ev.referenceNumber && <span className="shrink-0 text-xs text-slate-400">{ev.referenceNumber}</span>}
                             </div>
                             <div className="flex items-center gap-2 shrink-0">
-                              {ev.technicianName && <span className="text-xs text-slate-500">{ev.technicianName}</span>}
+                              {ev.technicianName && (
+                                <span
+                                  className={`text-xs flex items-center gap-1 ${
+                                    (technicianCounts.get(ev.technicianName) ?? 0) > 1 ? 'text-amber-700 font-medium' : 'text-slate-500'
+                                  }`}
+                                  title={
+                                    (technicianCounts.get(ev.technicianName) ?? 0) > 1
+                                      ? `${ev.technicianName} má tento deň viac naplánovaných udalostí`
+                                      : undefined
+                                  }
+                                >
+                                  {(technicianCounts.get(ev.technicianName) ?? 0) > 1 && '⚠ '}
+                                  {ev.technicianName}
+                                </span>
+                              )}
                               {isCustom && (
                                 <button
                                   onClick={(e) => {

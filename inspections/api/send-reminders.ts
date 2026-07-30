@@ -233,6 +233,59 @@ export default async function handler(_req: IncomingMessage, res: ApiResponse) {
     }
   }
 
+  // Warranty expiry: unlike the day-before reminders above (fixed "tomorrow"
+  // window), this checks a rolling 30-day-out window against a *computed*
+  // date (realizationEndDate + warrantyYears) that Postgres can't filter on
+  // directly, so candidates are narrowed in SQL and the exact date math is
+  // done in JS — fine at this app's data volume.
+  const warrantyCandidates = await prisma.quoteAlternative.findMany({
+    where: {
+      warrantyReminderSentAt: null,
+      warrantyYears: { not: null },
+      realizationEndDate: { not: null },
+    },
+    include: { inspection: { include: { customer: true } } },
+  })
+
+  const today = new Date()
+  today.setHours(0, 0, 0, 0)
+  const thirtyDaysOut = new Date(today)
+  thirtyDaysOut.setDate(thirtyDaysOut.getDate() + 30)
+
+  for (const alt of warrantyCandidates) {
+    if (!alt.realizationEndDate || alt.warrantyYears === null) continue
+    const expiryDate = new Date(alt.realizationEndDate)
+    expiryDate.setFullYear(expiryDate.getFullYear() + alt.warrantyYears)
+    if (expiryDate < today || expiryDate > thirtyDaysOut) continue
+
+    if (!ownerEmail) {
+      results.push({ id: alt.id, status: 'skipped', reason: 'no owner email configured' })
+      continue
+    }
+
+    const ok = await sendEmail(resend, {
+      from: 'TMS Hydra <info@tmshydra.com>',
+      to: ownerEmail,
+      subject: `Blíži sa koniec záruky – ${alt.inspection.customer.name}`,
+      html: reminderEmail({
+        heading: `Záruka čoskoro končí – ${escapeHtml(alt.inspection.customer.name)}`,
+        dateLabel: formatDate(expiryDate),
+        timeLabel: null,
+        locationLabel: alt.inspection.customer.siteAddress || alt.inspection.customer.address,
+        extraLines: [
+          `<b>Referenčné číslo:</b> ${escapeHtml(alt.inspection.referenceNumber)}`,
+          `<b>Záruka:</b> ${alt.warrantyYears} ${alt.warrantyYears === 1 ? 'rok' : alt.warrantyYears < 5 ? 'roky' : 'rokov'} od realizácie`,
+        ],
+      }),
+    })
+    if (ok) {
+      await prisma.quoteAlternative.update({ where: { id: alt.id }, data: { warrantyReminderSentAt: new Date() } })
+      results.push({ id: alt.id, status: 'sent' })
+    } else {
+      results.push({ id: alt.id, status: 'failed', reason: 'owner send failed' })
+    }
+  }
+
   return res.status(200).json({
     range: { from: start.toISOString(), to: end.toISOString() },
     sent: results.filter((r) => r.status === 'sent').length,

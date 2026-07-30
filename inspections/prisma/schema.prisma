@@ -279,6 +279,7 @@ model QuoteAlternative {
   realizationStartTime   String?  @map("realization_start_time")
   realizationEndTime     String?  @map("realization_end_time")
   reminderSentAt         DateTime? @map("reminder_sent_at")
+  warrantyReminderSentAt DateTime? @map("warranty_reminder_sent_at")
   documentUrl            String?  @map("document_url")
   createdAt              DateTime @default(now()) @map("created_at")
   updatedAt              DateTime @updatedAt @map("updated_at")

@@ -15,6 +15,7 @@ import type {
   MaterialProduct,
   PlanEvent,
   PriceListItem,
+  WorkSummary,
   QuoteAlternative,
   QuoteLineItem,
   RoofAreaSection,
@@ -49,6 +50,11 @@ export async function fetchInspections(params: { status?: InspectionStatus; q?: 
 export async function fetchPlan(params: { from: string; to: string }) {
   const search = new URLSearchParams({ from: params.from, to: params.to })
   return offlineGet<PlanEvent[]>(`/api/plan?${search.toString()}`, 'Nepodarilo sa načítať plán.')
+}
+
+export async function fetchWorkSummary(params: { from: string; to: string }) {
+  const search = new URLSearchParams({ from: params.from, to: params.to })
+  return offlineGet<WorkSummary>(`/api/work-summary?${search.toString()}`, 'Nepodarilo sa načítať súhrn.')
 }
 
 export async function fetchInspection(id: string) {
@@ -128,6 +134,20 @@ export async function createInspection(data: {
     await cacheSet(`/api/inspections/${id}`, detail)
     return listItem
   })
+}
+
+// Duplicating reads a lot of server-side source data (roof edges, sections,
+// etc.) to copy, so unlike other creates this isn't queued for offline replay
+// — it requires a live connection, same as fetching data does.
+export async function duplicateInspection(sourceId: string): Promise<InspectionListItem> {
+  const res = await fetch('/api/inspections/duplicate', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ id: newId(), customerId: newId(), sourceId }),
+  })
+  const data = await res.json()
+  if (!res.ok) throw new Error(data.error || 'Nepodarilo sa duplikovať obhliadku.')
+  return data
 }
 
 export async function updateCustomer(id: string, data: Partial<Pick<Customer, 'name' | 'address' | 'siteAddress' | 'phone' | 'email' | 'buildingAdmin'>>) {
@@ -273,7 +293,7 @@ export async function deleteQuoteLineItem(id: string) {
 export async function createInspectionPhoto(data: { inspectionId: string; url: string; caption?: string }) {
   return postJSON<InspectionPhoto>('/api/inspection-photos', { id: newId(), ...data })
 }
-export async function updateInspectionPhoto(id: string, data: { caption: string | null }) {
+export async function updateInspectionPhoto(id: string, data: Partial<{ caption: string | null; url: string }>) {
   return patchJSON<InspectionPhoto>(`/api/inspection-photos/${id}`, data)
 }
 export async function deleteInspectionPhoto(id: string) {

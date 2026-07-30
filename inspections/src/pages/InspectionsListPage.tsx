@@ -69,6 +69,9 @@ export default function InspectionsListPage() {
         <Link to="/plan" className="text-sm text-slate-500 hover:text-slate-700 px-3 py-1.5 rounded-md hover:bg-slate-100">
           Plán
         </Link>
+        <Link to="/summary" className="text-sm text-slate-500 hover:text-slate-700 px-3 py-1.5 rounded-md hover:bg-slate-100">
+          Súhrn
+        </Link>
         <details className="relative">
           <summary className="text-sm text-slate-500 hover:text-slate-700 cursor-pointer list-none px-3 py-1.5 rounded-md hover:bg-slate-100">
             Nastavenia ▾
@@ -92,6 +95,15 @@ export default function InspectionsListPage() {
             <Link to="/settings/company" className="block px-4 py-2 text-sm text-slate-700 hover:bg-slate-50">
               Firemné údaje
             </Link>
+            <div className="border-t border-slate-100 my-1" />
+            <button
+              onClick={() => {
+                fetch('/api/auth/logout', { method: 'POST' }).finally(() => window.location.reload())
+              }}
+              className="block w-full text-left px-4 py-2 text-sm text-slate-700 hover:bg-slate-50"
+            >
+              Odhlásiť sa
+            </button>
           </div>
         </details>
         </div>

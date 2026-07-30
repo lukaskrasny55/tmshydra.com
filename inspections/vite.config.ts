@@ -2,6 +2,7 @@ import { defineConfig, type Plugin, type ViteDevServer } from 'vite'
 import react from '@vitejs/plugin-react'
 import { VitePWA } from 'vite-plugin-pwa'
 import type { IncomingMessage, ServerResponse } from 'http'
+import { isAuthEnabled, isAuthorized } from './lib/auth'
 
 // Dev-only: routes /api/* requests to the local Vercel-style handler modules
 // (Vercel itself serves them in preview/production; this just mirrors that
@@ -14,6 +15,14 @@ function vercelApiDevMiddleware(): Plugin {
         try {
           const url = new URL(req.url || '/', 'http://localhost')
           let pathname = url.pathname === '/' ? '/index' : url.pathname
+
+          if (isAuthEnabled() && !pathname.startsWith('/auth/') && !(await isAuthorized(req))) {
+            res.statusCode = 401
+            res.setHeader('Content-Type', 'application/json')
+            res.end(JSON.stringify({ error: 'Unauthorized' }))
+            return
+          }
+
           const modulePath = `/api${pathname}.ts`
 
           let mod
