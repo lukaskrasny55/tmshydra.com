@@ -3,7 +3,7 @@ import path from 'path'
 import { fileURLToPath } from 'url'
 import PizZip from 'pizzip'
 import Docxtemplater from 'docxtemplater'
-import { prisma } from './prisma'
+import { prisma } from './prisma.js'
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 const TEMPLATE_PATH = path.join(__dirname, '../templates/cenova-ponuka.docx')
@@ -66,7 +66,7 @@ export async function buildQuoteDocument(id: string) {
   const grandDiscountAmount = Math.round(grandSubtotal * (discountPercent / 100) * 100) / 100
   const grandTotal = Math.round((grandSubtotal - grandDiscountAmount) * 100) / 100
 
-  function mapItem(li: (typeof alternative.lineItems)[number]) {
+  function mapItem(li: (typeof mainItems)[number]) {
     return {
       popis: li.description,
       naplanovane: li.plannedQty !== null ? `${decimalToComma(li.plannedQty)}${li.unit}` : '',

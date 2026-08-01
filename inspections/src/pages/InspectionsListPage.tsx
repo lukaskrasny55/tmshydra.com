@@ -80,6 +80,9 @@ export default function InspectionsListPage() {
             <Link to="/settings/price-list" className="block px-4 py-2 text-sm text-slate-700 hover:bg-slate-50">
               Cenník
             </Link>
+            <Link to="/settings/checklist-catalog" className="block px-4 py-2 text-sm text-slate-700 hover:bg-slate-50">
+              Položky checklistu
+            </Link>
             <Link to="/settings/technicians" className="block px-4 py-2 text-sm text-slate-700 hover:bg-slate-50">
               Technici
             </Link>
@@ -98,7 +101,7 @@ export default function InspectionsListPage() {
             <div className="border-t border-slate-100 my-1" />
             <button
               onClick={() => {
-                fetch('/api/auth/logout', { method: 'POST' }).finally(() => window.location.reload())
+                fetch('/api/session-logout', { method: 'POST' }).finally(() => window.location.reload())
               }}
               className="block w-full text-left px-4 py-2 text-sm text-slate-700 hover:bg-slate-50"
             >

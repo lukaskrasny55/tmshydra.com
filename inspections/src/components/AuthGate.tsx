@@ -8,7 +8,7 @@ export default function AuthGate({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     let cancelled = false
-    fetch('/api/auth/check')
+    fetch('/api/session-check')
       .then((res) => res.json())
       .then((data: { authEnabled: boolean; authorized: boolean }) => {
         if (cancelled) return

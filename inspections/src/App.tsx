@@ -5,6 +5,7 @@ import PlanPage from './pages/PlanPage'
 import SummaryPage from './pages/SummaryPage'
 import CompanySettingsPage from './pages/CompanySettingsPage'
 import PriceListPage from './pages/PriceListPage'
+import ChecklistCatalogPage from './pages/ChecklistCatalogPage'
 import TechniciansPage from './pages/TechniciansPage'
 import MaterialCompositionsPage from './pages/MaterialCompositionsPage'
 import MaterialProductsPage from './pages/MaterialProductsPage'
@@ -23,6 +24,7 @@ export default function App() {
         <Route path="/summary" element={<SummaryPage />} />
         <Route path="/settings/company" element={<CompanySettingsPage />} />
         <Route path="/settings/price-list" element={<PriceListPage />} />
+        <Route path="/settings/checklist-catalog" element={<ChecklistCatalogPage />} />
         <Route path="/settings/technicians" element={<TechniciansPage />} />
         <Route path="/settings/material-compositions" element={<MaterialCompositionsPage />} />
         <Route path="/settings/material-products" element={<MaterialProductsPage />} />

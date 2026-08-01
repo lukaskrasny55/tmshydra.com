@@ -1,4 +1,4 @@
-import { prisma } from './prisma'
+import { prisma } from './prisma.js'
 
 export async function recomputeAlternativeTotal(quoteAlternativeId: string) {
   const agg = await prisma.quoteLineItem.aggregate({

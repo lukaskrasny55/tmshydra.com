@@ -55,9 +55,24 @@ export interface RoofAreaSection {
   areaM2: string
 }
 
+export type ChecklistItemCategory = 'material' | 'prace' | 'ine'
+export type ChecklistItemSource = 'system_default' | 'custom_added'
+
+export interface ChecklistItemCatalog {
+  id: string
+  name: string
+  unit: string
+  defaultUnitPrice: string
+  category: ChecklistItemCategory
+  isActive: boolean
+  source: ChecklistItemSource
+  createdAt: string
+}
+
 export interface TechnicalSolutionItem {
   id: string
-  itemKey: string
+  catalogItemId: string
+  catalogItem: ChecklistItemCatalog
   isChecked: boolean
   valueText: string | null
   notes: string | null

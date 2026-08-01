@@ -1,6 +1,9 @@
 import type {
   AdditionalService,
   CalendarEvent,
+  ChecklistItemCatalog,
+  ChecklistItemCategory,
+  ChecklistItemSource,
   CompanySettings,
   Customer,
   DocumentTemplate,
@@ -199,14 +202,24 @@ export async function deleteDrainDownspout(id: string) {
   return deleteRequest(`/api/drain-downspouts/${id}`)
 }
 
-export async function createTechnicalSolutionItem(data: { inspectionId: string; itemKey: string; isChecked?: boolean; valueText?: string; notes?: string }) {
+export async function createTechnicalSolutionItem(data: { inspectionId: string; catalogItemId: string; isChecked?: boolean; valueText?: string; notes?: string }) {
   return postJSON<TechnicalSolutionItem>('/api/technical-solution-items', { id: newId(), ...data })
 }
-export async function updateTechnicalSolutionItem(id: string, data: Partial<{ itemKey: string; isChecked: boolean; valueText: string | null; notes: string | null }>) {
+export async function updateTechnicalSolutionItem(id: string, data: Partial<{ isChecked: boolean; valueText: string | null; notes: string | null }>) {
   return patchJSON<TechnicalSolutionItem>(`/api/technical-solution-items/${id}`, data)
 }
 export async function deleteTechnicalSolutionItem(id: string) {
   return deleteRequest(`/api/technical-solution-items/${id}`)
+}
+
+export async function fetchChecklistItemCatalog(activeOnly = false) {
+  return offlineGet<ChecklistItemCatalog[]>(`/api/checklist-item-catalog${activeOnly ? '?active=true' : ''}`, 'Nepodarilo sa načítať položky checklistu.')
+}
+export async function createChecklistItemCatalog(data: { name: string; unit?: string; defaultUnitPrice: number; category: ChecklistItemCategory; source?: ChecklistItemSource }) {
+  return postJSON<ChecklistItemCatalog>('/api/checklist-item-catalog', { id: newId(), ...data })
+}
+export async function updateChecklistItemCatalog(id: string, data: Partial<{ name: string; unit: string; defaultUnitPrice: number; category: ChecklistItemCategory; isActive: boolean }>) {
+  return patchJSON<ChecklistItemCatalog>(`/api/checklist-item-catalog/${id}`, data)
 }
 
 export async function createQuoteAlternative(data: { inspectionId: string; label: string }) {

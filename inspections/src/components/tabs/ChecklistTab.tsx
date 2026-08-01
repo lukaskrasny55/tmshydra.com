@@ -1,26 +1,24 @@
 import { useRef, useState } from 'react'
 import EditableList from '../EditableList'
 import AdditionalServicesList from '../AdditionalServicesList'
+import TechnicalSolutionChecklist from '../TechnicalSolutionChecklist'
 import {
   createAdditionalService,
   createDrainDownspout,
   createGutterSystemItem,
   createRoofAreaSection,
   createRoofEdge,
-  createTechnicalSolutionItem,
   deleteAdditionalService,
   deleteDrainDownspout,
   deleteGutterSystemItem,
   deleteRoofAreaSection,
   deleteRoofEdge,
-  deleteTechnicalSolutionItem,
   updateAdditionalService,
   updateDrainDownspout,
   updateGutterSystemItem,
   updateInspection,
   updateRoofAreaSection,
   updateRoofEdge,
-  updateTechnicalSolutionItem,
 } from '../../lib/api'
 import type { InspectionDetail } from '../../types'
 
@@ -278,32 +276,10 @@ export default function ChecklistTab({ inspection, onChange }: Props) {
 
       <section className="bg-white border border-slate-200 rounded-lg p-6">
         <h2 className="text-sm font-semibold text-slate-700 mb-3">Technické riešenie</h2>
-        <EditableList
-          columns={[
-            { key: 'isChecked', label: 'Platí', type: 'checkbox' },
-            { key: 'itemKey', label: 'Položka', placeholder: 'napr. Mechanické kotvenie' },
-            { key: 'valueText', label: 'Hodnota' },
-            { key: 'notes', label: 'Poznámka' },
-          ]}
+        <TechnicalSolutionChecklist
+          inspectionId={inspection.id}
           items={inspection.technicalSolutionItems}
-          onCreate={async (draft) => {
-            const created = await createTechnicalSolutionItem({
-              inspectionId: inspection.id,
-              itemKey: String(draft.itemKey || ''),
-              isChecked: Boolean(draft.isChecked),
-              valueText: String(draft.valueText || ''),
-              notes: String(draft.notes || ''),
-            })
-            onChange({ technicalSolutionItems: [...inspection.technicalSolutionItems, created] })
-          }}
-          onUpdate={async (id, key, value) => {
-            const updated = await updateTechnicalSolutionItem(id, { [key]: value } as any)
-            onChange({ technicalSolutionItems: inspection.technicalSolutionItems.map((e) => (e.id === id ? { ...e, ...updated } : e)) })
-          }}
-          onDelete={async (id) => {
-            await deleteTechnicalSolutionItem(id)
-            onChange({ technicalSolutionItems: inspection.technicalSolutionItems.filter((e) => e.id !== id) })
-          }}
+          onChange={(technicalSolutionItems) => onChange({ technicalSolutionItems })}
         />
       </section>
 

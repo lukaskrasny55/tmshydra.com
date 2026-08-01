@@ -29,6 +29,17 @@ enum LineItemSource {
   manual
 }
 
+enum ChecklistItemCategory {
+  material
+  prace
+  ine
+}
+
+enum ChecklistItemSource {
+  system_default
+  custom_added
+}
+
 model Customer {
   id             String   @id @default(cuid())
   name           String
@@ -159,17 +170,37 @@ model InspectionSketch {
   @@map("inspection_sketch")
 }
 
+// Majiteľ si vie sám pridávať položky checklistu (single-tenant appka — žiadny
+// schvaľovací proces). Ceny sa do ponuky preberajú ako jednorazový snapshot
+// (quote_line_items.unit_price_snapshot), takže zmena default_unit_price tu
+// nikdy neovplyvní už vytvorené ponuky.
+model ChecklistItemCatalog {
+  id               String                @id @default(cuid())
+  name             String
+  unit             String
+  defaultUnitPrice Decimal               @map("default_unit_price") @db.Decimal(10, 2)
+  category         ChecklistItemCategory
+  isActive         Boolean               @default(true) @map("is_active")
+  source           ChecklistItemSource   @default(custom_added)
+  createdAt        DateTime              @default(now()) @map("created_at")
+
+  technicalSolutionItems TechnicalSolutionItem[]
+
+  @@map("checklist_item_catalog")
+}
+
 model TechnicalSolutionItem {
-  id           String   @id @default(cuid())
-  inspectionId String   @map("inspection_id")
-  itemKey      String   @map("item_key")
-  isChecked    Boolean  @default(false) @map("is_checked")
-  valueText    String?  @map("value_text")
-  notes        String?
+  id            String   @id @default(cuid())
+  inspectionId  String   @map("inspection_id")
+  catalogItemId String   @map("catalog_item_id")
+  isChecked     Boolean  @default(false) @map("is_checked")
+  valueText     String?  @map("value_text")
+  notes         String?
 
-  inspection   Inspection @relation(fields: [inspectionId], references: [id], onDelete: Cascade)
+  inspection    Inspection            @relation(fields: [inspectionId], references: [id], onDelete: Cascade)
+  catalogItem   ChecklistItemCatalog  @relation(fields: [catalogItemId], references: [id])
 
-  @@unique([inspectionId, itemKey])
+  @@unique([inspectionId, catalogItemId])
   @@map("technical_solution_items")
 }
 

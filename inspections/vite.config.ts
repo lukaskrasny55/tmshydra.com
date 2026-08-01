@@ -16,29 +16,41 @@ function vercelApiDevMiddleware(): Plugin {
           const url = new URL(req.url || '/', 'http://localhost')
           let pathname = url.pathname === '/' ? '/index' : url.pathname
 
-          if (isAuthEnabled() && !pathname.startsWith('/auth/') && !(await isAuthorized(req))) {
+          if (isAuthEnabled() && !pathname.startsWith('/session-') && !(await isAuthorized(req))) {
             res.statusCode = 401
             res.setHeader('Content-Type', 'application/json')
             res.end(JSON.stringify({ error: 'Unauthorized' }))
             return
           }
 
-          const modulePath = `/api${pathname}.ts`
+          // Handler modules live in api-handlers/, not api/ — the real api/
+          // directory holds only the single handler.ts catch-all function
+          // that production uses to stay under Vercel's per-deployment
+          // function-count limit (see api/handler.ts for why).
+          const modulePath = `/api-handlers${pathname}.ts`
 
           let mod
           try {
             mod = await server.ssrLoadModule(modulePath)
           } catch {
-            // Fall back to dynamic segment file, e.g. /api/inspections/abc -> /api/inspections/[id].ts
-            const segments = pathname.split('/').filter(Boolean)
-            if (segments.length === 0) return next()
-            const last = segments[segments.length - 1]
-            const dynamicPath = `/api/${segments.slice(0, -1).join('/')}/[id].ts`.replace('//', '/')
+            // Some resources (the ones with an `[id]` sibling route) keep their
+            // list/create handler at `<name>/index.ts` instead of `<name>.ts` —
+            // Node's production ESM loader can't resolve a bare `<name>` import
+            // when a same-named directory also exists, so those files were moved.
             try {
-              mod = await server.ssrLoadModule(dynamicPath)
-              ;(req as any)._dynamicParam = last
+              mod = await server.ssrLoadModule(`/api-handlers${pathname}/index.ts`)
             } catch {
-              return next()
+              // Fall back to dynamic segment file, e.g. /api/inspections/abc -> /api-handlers/inspections/[id].ts
+              const segments = pathname.split('/').filter(Boolean)
+              if (segments.length === 0) return next()
+              const last = segments[segments.length - 1]
+              const dynamicPath = `/api-handlers/${segments.slice(0, -1).join('/')}/[id].ts`.replace('//', '/')
+              try {
+                mod = await server.ssrLoadModule(dynamicPath)
+                ;(req as any)._dynamicParam = last
+              } catch {
+                return next()
+              }
             }
           }
 

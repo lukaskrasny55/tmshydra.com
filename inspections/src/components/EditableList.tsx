@@ -13,7 +13,10 @@ interface Props {
   items: Record<string, any>[]
   onCreate: (draft: Record<string, string | boolean>) => Promise<void>
   onUpdate: (id: string, key: string, value: string | boolean) => Promise<void>
-  onDelete: (id: string) => Promise<void>
+  // Omit to hide the delete column entirely — e.g. for catalogs where records
+  // must be deactivated (isActive) instead of removed, since other rows may
+  // already reference them.
+  onDelete?: (id: string) => Promise<void>
 }
 
 export default function EditableList({ columns, items, onCreate, onUpdate, onDelete }: Props) {
@@ -54,6 +57,7 @@ export default function EditableList({ columns, items, onCreate, onUpdate, onDel
   }
 
   async function handleDelete(id: string) {
+    if (!onDelete) return
     setBusyId(id)
     setError(null)
     try {
@@ -139,14 +143,16 @@ export default function EditableList({ columns, items, onCreate, onUpdate, onDel
                   </td>
                 ))}
                 <td>
-                  <button
-                    onClick={() => handleDelete(item.id)}
-                    disabled={busyId === item.id}
-                    className="text-slate-400 hover:text-red-600 px-1"
-                    title="Vymazať"
-                  >
-                    ×
-                  </button>
+                  {onDelete && (
+                    <button
+                      onClick={() => handleDelete(item.id)}
+                      disabled={busyId === item.id}
+                      className="text-slate-400 hover:text-red-600 px-1"
+                      title="Vymazať"
+                    >
+                      ×
+                    </button>
+                  )}
                 </td>
               </tr>
             ))}
