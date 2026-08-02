@@ -50,9 +50,7 @@ interface Props {
 
 const LINE_ITEM_COLUMNS = [
   { key: 'description', label: 'Popis', placeholder: 'Popis položky' },
-  { key: 'plannedQty', label: 'Naplánované', type: 'number' as const },
-  { key: 'previousQty', label: 'Predchádzajúci', type: 'number' as const },
-  { key: 'actualQty', label: 'Aktuálne', type: 'number' as const },
+  { key: 'plannedQty', label: 'Množstvo', type: 'number' as const },
   { key: 'unit', label: 'Jednotky', placeholder: 'bm / m2 / ks' },
   { key: 'unitPriceSnapshot', label: 'Jedn. cena (€)', type: 'number' as const },
   { key: 'wastePercent', label: 'Stratné (%)', type: 'number' as const },
@@ -323,7 +321,7 @@ export default function QuoteTab({ inspection, onChange }: Props) {
         replaceAlternative({ ...active, lineItems: [...active.lineItems, created] })
       },
       onUpdate: async (id: string, key: string, value: string | boolean) => {
-        const numericKeys = ['plannedQty', 'previousQty', 'actualQty', 'unitPriceSnapshot', 'wastePercent', 'total']
+        const numericKeys = ['plannedQty', 'unitPriceSnapshot', 'wastePercent', 'total']
         const patch = numericKeys.includes(key) ? { [key]: Number(value) } : { [key]: value }
         const updated = await updateQuoteLineItem(id, patch)
         replaceAlternative({ ...active, lineItems: active.lineItems.map((li) => (li.id === id ? { ...li, ...updated } : li)) })

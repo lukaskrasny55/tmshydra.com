@@ -328,8 +328,6 @@ model QuoteLineItem {
   quoteAlternativeId  String           @map("quote_alternative_id")
   description         String
   plannedQty          Decimal?         @map("planned_qty") @db.Decimal(10, 2)
-  previousQty         Decimal?         @map("previous_qty") @db.Decimal(10, 2)
-  actualQty           Decimal?         @map("actual_qty") @db.Decimal(10, 2)
   wastePercent        Decimal?         @map("waste_percent") @db.Decimal(5, 2)
   unit                String           @default("ks")
   unitPriceSnapshot    Decimal         @map("unit_price_snapshot") @db.Decimal(10, 2)

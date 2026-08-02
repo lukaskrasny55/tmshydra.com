@@ -283,8 +283,6 @@ export async function createQuoteLineItem(data: {
     quoteAlternativeId: data.quoteAlternativeId,
     description: data.description,
     plannedQty: String(data.plannedQty ?? 0),
-    previousQty: null,
-    actualQty: null,
     unit: data.unit ?? 'ks',
     unitPriceSnapshot: String(data.unitPriceSnapshot ?? 0),
     total: String(computeLineItemTotal(data.plannedQty ?? 0, data.unitPriceSnapshot ?? 0, data.wastePercent ?? 0)),

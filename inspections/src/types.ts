@@ -145,8 +145,6 @@ export interface QuoteLineItem {
   id: string
   description: string
   plannedQty: string | null
-  previousQty: string | null
-  actualQty: string | null
   wastePercent: string | null
   unit: string
   unitPriceSnapshot: string

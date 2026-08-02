@@ -70,8 +70,6 @@ export async function buildQuoteDocument(id: string) {
     return {
       popis: li.description,
       naplanovane: li.plannedQty !== null ? `${decimalToComma(li.plannedQty)}${li.unit}` : '',
-      predchadzajuci: li.previousQty !== null ? `${decimalToComma(li.previousQty)}${li.unit}` : '',
-      aktualne: li.actualQty !== null ? `${decimalToComma(li.actualQty)}${li.unit}` : '',
       celkom_mnozstvo: li.plannedQty !== null ? `${decimalToComma(li.plannedQty)}${li.unit}` : '',
       jednotkova_cena: formatPrice(li.unitPriceSnapshot),
       jednotky: li.unit,
