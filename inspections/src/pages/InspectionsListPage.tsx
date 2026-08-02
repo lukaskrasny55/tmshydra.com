@@ -77,11 +77,8 @@ export default function InspectionsListPage() {
             Nastavenia ▾
           </summary>
           <div className="absolute right-0 mt-1 w-56 bg-white border border-slate-200 rounded-lg shadow-lg py-1 z-10">
-            <Link to="/settings/price-list" className="block px-4 py-2 text-sm text-slate-700 hover:bg-slate-50">
-              Cenník
-            </Link>
-            <Link to="/settings/checklist-catalog" className="block px-4 py-2 text-sm text-slate-700 hover:bg-slate-50">
-              Položky checklistu
+            <Link to="/settings/katalog" className="block px-4 py-2 text-sm text-slate-700 hover:bg-slate-50">
+              Katalóg
             </Link>
             <Link to="/settings/technicians" className="block px-4 py-2 text-sm text-slate-700 hover:bg-slate-50">
               Technici
