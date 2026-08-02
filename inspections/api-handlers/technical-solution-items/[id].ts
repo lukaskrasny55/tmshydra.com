@@ -17,10 +17,18 @@ export default async function handler(req: ApiRequest, res: ApiResponse) {
   if (!id) return res.status(400).json({ error: 'Chýba id.' })
 
   if (req.method === 'PATCH') {
-    const { isChecked, valueText, notes } = req.body || {}
+    const { isChecked, valueNumber, notes } = req.body || {}
     const data: Record<string, unknown> = {}
     if (isChecked !== undefined) data.isChecked = Boolean(isChecked)
-    if (valueText !== undefined) data.valueText = typeof valueText === 'string' && valueText.trim() ? valueText.trim() : null
+    if (valueNumber !== undefined) {
+      if (valueNumber === null || valueNumber === '') {
+        data.valueNumber = null
+      } else {
+        const parsed = Number(valueNumber)
+        if (Number.isNaN(parsed)) return res.status(400).json({ error: 'Hodnota musí byť číslo.' })
+        data.valueNumber = parsed
+      }
+    }
     if (notes !== undefined) data.notes = typeof notes === 'string' && notes.trim() ? notes.trim() : null
 
     try {

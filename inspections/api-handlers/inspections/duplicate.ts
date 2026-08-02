@@ -99,7 +99,7 @@ export default async function handler(req: ApiRequest, res: ApiResponse) {
         create: source.technicalSolutionItems.map((t) => ({
           catalogItemId: t.catalogItemId,
           isChecked: t.isChecked,
-          valueText: t.valueText,
+          valueNumber: t.valueNumber,
           notes: t.notes,
         })),
       },

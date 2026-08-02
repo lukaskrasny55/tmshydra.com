@@ -87,7 +87,15 @@ export default async function handler(req: ApiRequest, res: ApiResponse) {
   const alternative = await prisma.quoteAlternative.findUnique({
     where: { id },
     include: {
-      inspection: { include: { customer: true, roofAreaSections: true, photos: true, sketch: true } },
+      inspection: {
+        include: {
+          customer: true,
+          roofAreaSections: true,
+          photos: true,
+          sketch: true,
+          technicalSolutionItems: { where: { isChecked: true }, include: { catalogItem: true } },
+        },
+      },
       materialComposition: { include: { featuredProduct: true } },
     },
   })
@@ -96,8 +104,16 @@ export default async function handler(req: ApiRequest, res: ApiResponse) {
     return res.status(404).json({ error: 'Cenová alternatíva nebola nájdená.' })
   }
 
-  const { customer, roofAreaSections, areaM2, currentStateDescription, photos, sketch } = alternative.inspection
+  const { customer, roofAreaSections, areaM2, currentStateDescription, photos, sketch, technicalSolutionItems } = alternative.inspection
   const composition = alternative.materialComposition
+
+  const technickeOpatrenia = technicalSolutionItems.map((t) => {
+    const parts = [t.catalogItem.name]
+    if (t.valueNumber !== null) parts.push(`${decimalToComma(t.valueNumber)} ${t.catalogItem.unit}`)
+    let riadok = parts.join(': ')
+    if (t.notes) riadok += ` — poznámka: ${t.notes}`
+    return { riadok }
+  })
 
   const imagePhotos = photos.filter((p) => p.url.startsWith('data:image'))
   const sketchIsImage = sketch?.fileUrl?.startsWith('data:image') ?? false
@@ -127,6 +143,7 @@ export default async function handler(req: ApiRequest, res: ApiResponse) {
         ? (composition.layersJson as unknown[]).map((polozka) => ({ polozka }))
         : [],
     postup_prac: composition?.workStepsTemplate ?? '',
+    technicke_opatrenia: technickeOpatrenia,
     technicky_produkt_nazov: composition?.featuredProduct?.name ?? '',
     technicky_produkt_popis: composition?.featuredProduct?.description ?? '',
     zaruka_roky: alternative.warrantyYears !== null ? String(alternative.warrantyYears) : '',

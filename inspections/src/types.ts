@@ -74,7 +74,7 @@ export interface TechnicalSolutionItem {
   catalogItemId: string
   catalogItem: ChecklistItemCatalog
   isChecked: boolean
-  valueText: string | null
+  valueNumber: string | null
   notes: string | null
 }
 

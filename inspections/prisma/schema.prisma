@@ -194,7 +194,7 @@ model TechnicalSolutionItem {
   inspectionId  String   @map("inspection_id")
   catalogItemId String   @map("catalog_item_id")
   isChecked     Boolean  @default(false) @map("is_checked")
-  valueText     String?  @map("value_text")
+  valueNumber   Decimal? @map("value_number") @db.Decimal(10, 2)
   notes         String?
 
   inspection    Inspection            @relation(fields: [inspectionId], references: [id], onDelete: Cascade)

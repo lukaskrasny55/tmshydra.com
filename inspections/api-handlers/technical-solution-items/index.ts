@@ -13,13 +13,18 @@ interface ApiResponse extends ServerResponse {
 
 export default async function handler(req: ApiRequest, res: ApiResponse) {
   if (req.method === 'POST') {
-    const { id, inspectionId, catalogItemId, isChecked, valueText, notes } = req.body || {}
+    const { id, inspectionId, catalogItemId, isChecked, valueNumber, notes } = req.body || {}
 
     if (typeof inspectionId !== 'string' || !inspectionId) {
       return res.status(400).json({ error: 'Chýba inspectionId.' })
     }
     if (typeof catalogItemId !== 'string' || !catalogItemId) {
       return res.status(400).json({ error: 'Chýba catalogItemId.' })
+    }
+    let parsedValue: number | null = null
+    if (valueNumber !== undefined && valueNumber !== null && valueNumber !== '') {
+      parsedValue = Number(valueNumber)
+      if (Number.isNaN(parsedValue)) return res.status(400).json({ error: 'Hodnota musí byť číslo.' })
     }
 
     try {
@@ -29,7 +34,7 @@ export default async function handler(req: ApiRequest, res: ApiResponse) {
           inspectionId,
           catalogItemId,
           isChecked: Boolean(isChecked),
-          valueText: typeof valueText === 'string' && valueText.trim() ? valueText.trim() : null,
+          valueNumber: parsedValue,
           notes: typeof notes === 'string' && notes.trim() ? notes.trim() : null,
         },
         include: { catalogItem: true },

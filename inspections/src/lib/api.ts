@@ -202,10 +202,10 @@ export async function deleteDrainDownspout(id: string) {
   return deleteRequest(`/api/drain-downspouts/${id}`)
 }
 
-export async function createTechnicalSolutionItem(data: { inspectionId: string; catalogItemId: string; isChecked?: boolean; valueText?: string; notes?: string }) {
+export async function createTechnicalSolutionItem(data: { inspectionId: string; catalogItemId: string; isChecked?: boolean; valueNumber?: number; notes?: string }) {
   return postJSON<TechnicalSolutionItem>('/api/technical-solution-items', { id: newId(), ...data })
 }
-export async function updateTechnicalSolutionItem(id: string, data: Partial<{ isChecked: boolean; valueText: string | null; notes: string | null }>) {
+export async function updateTechnicalSolutionItem(id: string, data: Partial<{ isChecked: boolean; valueNumber: number | null; notes: string | null }>) {
   return patchJSON<TechnicalSolutionItem>(`/api/technical-solution-items/${id}`, data)
 }
 export async function deleteTechnicalSolutionItem(id: string) {

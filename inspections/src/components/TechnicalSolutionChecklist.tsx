@@ -60,17 +60,39 @@ export default function TechnicalSolutionChecklist({ inspectionId, items, onChan
     }
   }
 
-  async function handleFieldBlur(catalogItem: ChecklistItemCatalog, field: 'valueText' | 'notes', value: string) {
+  async function handleValueBlur(catalogItem: ChecklistItemCatalog, value: string) {
     const existing = itemFor(catalogItem.id)
-    if (existing && (existing[field] ?? '') === value) return
+    if (existing && (existing.valueNumber ?? '') === value) return
+    const parsed = value === '' ? undefined : Number(value)
+    if (parsed !== undefined && Number.isNaN(parsed)) return
     setBusyCatalogId(catalogItem.id)
     setError(null)
     try {
       if (existing) {
-        const updated = await updateTechnicalSolutionItem(existing.id, { [field]: value || null })
+        const updated = await updateTechnicalSolutionItem(existing.id, { valueNumber: parsed ?? null })
         onChange(items.map((i) => (i.id === existing.id ? { ...i, ...updated } : i)))
       } else {
-        const created = await createTechnicalSolutionItem({ inspectionId, catalogItemId: catalogItem.id, isChecked: false, [field]: value })
+        const created = await createTechnicalSolutionItem({ inspectionId, catalogItemId: catalogItem.id, isChecked: false, valueNumber: parsed })
+        onChange([...items, { ...created, catalogItem }])
+      }
+    } catch (err) {
+      setError((err as Error).message)
+    } finally {
+      setBusyCatalogId(null)
+    }
+  }
+
+  async function handleNotesBlur(catalogItem: ChecklistItemCatalog, value: string) {
+    const existing = itemFor(catalogItem.id)
+    if (existing && (existing.notes ?? '') === value) return
+    setBusyCatalogId(catalogItem.id)
+    setError(null)
+    try {
+      if (existing) {
+        const updated = await updateTechnicalSolutionItem(existing.id, { notes: value || null })
+        onChange(items.map((i) => (i.id === existing.id ? { ...i, ...updated } : i)))
+      } else {
+        const created = await createTechnicalSolutionItem({ inspectionId, catalogItemId: catalogItem.id, isChecked: false, notes: value })
         onChange([...items, { ...created, catalogItem }])
       }
     } catch (err) {
@@ -117,16 +139,20 @@ export default function TechnicalSolutionChecklist({ inspectionId, items, onChan
                   {catalogItem.unit} · {catalogItem.defaultUnitPrice} € {!catalogItem.isActive && '· neaktívna'}
                 </span>
               </div>
-              <input
-                defaultValue={item?.valueText ?? ''}
-                onBlur={(e) => handleFieldBlur(catalogItem, 'valueText', e.target.value)}
-                disabled={busy}
-                placeholder="Hodnota"
-                className="w-full px-2 py-1 border border-transparent hover:border-slate-200 focus:border-brand-400 rounded text-sm focus:outline-none bg-white"
-              />
+              <div className="flex items-center gap-1">
+                <input
+                  type="number"
+                  defaultValue={item?.valueNumber ?? ''}
+                  onBlur={(e) => handleValueBlur(catalogItem, e.target.value)}
+                  disabled={busy}
+                  placeholder="Hodnota"
+                  className="w-32 px-2 py-1 border border-transparent hover:border-slate-200 focus:border-brand-400 rounded text-sm focus:outline-none bg-white"
+                />
+                <span className="text-xs text-slate-400">{catalogItem.unit}</span>
+              </div>
               <input
                 defaultValue={item?.notes ?? ''}
-                onBlur={(e) => handleFieldBlur(catalogItem, 'notes', e.target.value)}
+                onBlur={(e) => handleNotesBlur(catalogItem, e.target.value)}
                 disabled={busy}
                 placeholder="Poznámka"
                 className="w-full px-2 py-1 border border-transparent hover:border-slate-200 focus:border-brand-400 rounded text-sm focus:outline-none bg-white"
