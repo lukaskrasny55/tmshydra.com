@@ -72,6 +72,9 @@ export default function InspectionsListPage() {
         <Link to="/summary" className="text-sm text-slate-500 hover:text-slate-700 px-3 py-1.5 rounded-md hover:bg-slate-100">
           Súhrn
         </Link>
+        <Link to="/navod" className="text-sm text-slate-500 hover:text-slate-700 px-3 py-1.5 rounded-md hover:bg-slate-100">
+          Návod
+        </Link>
         <details className="relative">
           <summary className="text-sm text-slate-500 hover:text-slate-700 cursor-pointer list-none px-3 py-1.5 rounded-md hover:bg-slate-100">
             Nastavenia ▾

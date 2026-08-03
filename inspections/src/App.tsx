@@ -9,6 +9,7 @@ import TechniciansPage from './pages/TechniciansPage'
 import MaterialCompositionsPage from './pages/MaterialCompositionsPage'
 import MaterialProductsPage from './pages/MaterialProductsPage'
 import DocumentTemplatesPage from './pages/DocumentTemplatesPage'
+import NavodPage from './pages/NavodPage'
 import TabletGuard from './components/TabletGuard'
 import AuthGate from './components/AuthGate'
 
@@ -21,6 +22,7 @@ export default function App() {
         <Route path="/inspections/:id" element={<InspectionDetailPage />} />
         <Route path="/plan" element={<PlanPage />} />
         <Route path="/summary" element={<SummaryPage />} />
+        <Route path="/navod" element={<NavodPage />} />
         <Route path="/settings/company" element={<CompanySettingsPage />} />
         <Route path="/settings/katalog" element={<KatalogPage />} />
         <Route path="/settings/price-list" element={<Navigate to="/settings/katalog?view=checklist" replace />} />
