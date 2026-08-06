@@ -5,6 +5,8 @@ import {
   Users,
   Award,
   MapPin,
+  Facebook,
+  Instagram,
 } from 'lucide-react';
 
 const stats: [string, any][] = [
@@ -68,6 +70,27 @@ export const Hero: React.FC = () => {
               Bezplatná obhliadka
               <ArrowRight className="w-5 h-5" />
             </button>
+          </div>
+
+          <div className="flex items-center gap-3 mt-6">
+            <a
+              href="https://www.facebook.com/TMS.hydra.s.o.s"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="TMS-HYDRA na Facebooku"
+              className="w-9 h-9 flex items-center justify-center rounded-full bg-white/10 border border-white/20 backdrop-blur-sm hover:bg-white/20 transition"
+            >
+              <Facebook className="w-4 h-4" />
+            </a>
+            <a
+              href="https://www.instagram.com/tms_hydra/"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="TMS-HYDRA na Instagrame"
+              className="w-9 h-9 flex items-center justify-center rounded-full bg-white/10 border border-white/20 backdrop-blur-sm hover:bg-white/20 transition"
+            >
+              <Instagram className="w-4 h-4" />
+            </a>
           </div>
 
           <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4 mt-10 items-stretch">
