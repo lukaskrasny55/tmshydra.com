@@ -5,6 +5,7 @@ import { Navbar } from './components/Navbar';
 import { Hero } from './components/Hero';
 import { FeaturedProjects } from './components/FeaturedProjects';
 import { Testimonials } from './components/Testimonials';
+import { FAQ } from './components/FAQ';
 import { Calculator } from './components/Calculator';
 import { BookingCalendar } from './components/BookingCalendar';
 import { CityLinks } from './components/CityLinks';
@@ -70,6 +71,7 @@ const HomePage: React.FC = () => (
     <Hero />
     <FeaturedProjects />
     <Testimonials />
+    <FAQ />
     <Calculator />
     <BookingCalendar />
     <CityLinks />
