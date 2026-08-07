@@ -1,8 +1,12 @@
 
 import React, { useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { Menu, X } from 'lucide-react';
+import { Menu, X, Phone } from 'lucide-react';
 import { ROUTE_PATHS } from '../routePaths';
+import { trackConversion } from './GoogleAds';
+
+const PHONE_NUMBER = '+421911551354';
+const PHONE_DISPLAY = '+421 911 551 354';
 
 interface NavbarProps {
   showCalculator?: boolean;
@@ -63,6 +67,14 @@ export const Navbar: React.FC<NavbarProps> = ({ showCalculator = true }) => {
                 {item.label}
               </Link>
             ))}
+            <a
+              href={`tel:${PHONE_NUMBER}`}
+              onClick={() => trackConversion('call')}
+              className="flex items-center gap-2 text-[13px] font-bold text-slate-600 hover:text-blue-600 transition-colors whitespace-nowrap"
+            >
+              <Phone className="w-4 h-4" />
+              {PHONE_DISPLAY}
+            </a>
             {showCalculator && (
               <button
                 onClick={scrollToCalculator}
@@ -101,6 +113,14 @@ export const Navbar: React.FC<NavbarProps> = ({ showCalculator = true }) => {
                 {item.label}
               </Link>
             ))}
+            <a
+              href={`tel:${PHONE_NUMBER}`}
+              onClick={() => { trackConversion('call'); closeMenu(); }}
+              className="flex items-center justify-center gap-2 text-lg font-bold py-5 px-6 rounded-2xl text-slate-600 hover:bg-slate-50"
+            >
+              <Phone className="w-5 h-5" />
+              {PHONE_DISPLAY}
+            </a>
             {showCalculator && (
               <button
                 onClick={scrollToCalculator}

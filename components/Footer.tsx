@@ -1,7 +1,12 @@
 
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { Phone, Mail, Facebook, Instagram } from 'lucide-react';
 import { ROUTE_PATHS } from '../routePaths';
+import { trackConversion } from './GoogleAds';
+
+const PHONE_NUMBER = '+421911551354';
+const PHONE_DISPLAY = '+421 911 551 354';
 
 export const Footer: React.FC = () => {
   return (
@@ -21,9 +26,48 @@ export const Footer: React.FC = () => {
                 />
               </Link>
             </div>
-            <p className="text-sm leading-relaxed max-w-xs">
+            <p className="text-sm leading-relaxed max-w-xs mb-6">
               Sme vaším spoľahlivým partnerom v oblasti hydroizolácie a zatepľovania plochých striech. Kvalita a precíznosť sú u nás na prvom mieste.
             </p>
+
+            <div className="space-y-3 mb-6">
+              <a
+                href={`tel:${PHONE_NUMBER}`}
+                onClick={() => trackConversion('call')}
+                className="flex items-center gap-3 text-sm font-bold text-white hover:text-blue-400 transition-colors"
+              >
+                <Phone className="w-4 h-4 text-blue-400" />
+                {PHONE_DISPLAY}
+              </a>
+              <a
+                href="mailto:info@tmshydra.com"
+                className="flex items-center gap-3 text-sm hover:text-blue-400 transition-colors"
+              >
+                <Mail className="w-4 h-4 text-blue-400" />
+                info@tmshydra.com
+              </a>
+            </div>
+
+            <div className="flex items-center gap-3">
+              <a
+                href="https://www.facebook.com/TMS.hydra.s.o.s"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="TMS-HYDRA na Facebooku"
+                className="w-9 h-9 flex items-center justify-center rounded-full bg-white/10 border border-white/20 hover:bg-white/20 transition"
+              >
+                <Facebook className="w-4 h-4" />
+              </a>
+              <a
+                href="https://www.instagram.com/tms_hydra/"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="TMS-HYDRA na Instagrame"
+                className="w-9 h-9 flex items-center justify-center rounded-full bg-white/10 border border-white/20 hover:bg-white/20 transition"
+              >
+                <Instagram className="w-4 h-4" />
+              </a>
+            </div>
           </div>
 
           <div>

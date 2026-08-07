@@ -1,4 +1,6 @@
 import React from 'react';
+import { BookingCalendar } from '../BookingCalendar';
+import { trackConversion } from '../GoogleAds';
 
 export const ContactPage: React.FC = () => {
   return (
@@ -133,6 +135,7 @@ export const ContactPage: React.FC = () => {
 
                 <a
                   href="tel:+421911551354"
+                  onClick={() => trackConversion('call')}
                   className="text-4xl font-black text-slate-800 hover:text-blue-600 transition"
                 >
                   +421 911 551 354
@@ -171,6 +174,7 @@ export const ContactPage: React.FC = () => {
 
                 <a
                   href="tel:+421911551354"
+                  onClick={() => trackConversion('call')}
                   className="text-4xl font-black text-slate-800 hover:text-blue-600 transition"
                 >
                   +421 911 551 354
@@ -182,6 +186,8 @@ export const ContactPage: React.FC = () => {
           </div>
         </div>
       </section>
+
+      <BookingCalendar />
     </div>
   );
 };

@@ -31,7 +31,7 @@ export const GoogleAds: React.FC = () => {
   return null;
 };
 
-export const trackConversion = (eventName: 'form' | 'booking') => {
+export const trackConversion = (eventName: 'form' | 'booking' | 'call') => {
   // Mirrors the gate in GoogleAds/GoogleAnalytics: gtag is only ever defined
   // once consent is accepted, but we check consent explicitly too so this
   // never fires a conversion if consent was accepted then later revoked
