@@ -52,6 +52,11 @@ const seoData: Record<string, { title: string; description: string; keywords: st
     description: 'Orientačná cena hydroizolácie plochej strechy od 15 €/m². PVC, TPO a EPDM fólie, záruka až 15 rokov, bezplatná obhliadka po celom Slovensku. Zavolajte alebo si dohodnite termín online.',
     keywords: 'hydroizolácia plochej strechy cena, cena za m2, cenník hydroizolácie strechy, TMS HYDRA',
   },
+  'sos-landing': {
+    title: 'Zateká vám strecha? Havarijná oprava do 48 hodín | TMS HYDRA',
+    description: 'Strecha vám zateká? Zasiahneme do 48 hodín, strechu provizórne zabezpečíme a pripravíme trvalé riešenie. SOS havarijný tím TMS-HYDRA, bezplatná obhliadka po celom Slovensku.',
+    keywords: 'oprava zatekajúcej strechy, havarijná oprava strechy, zateká strecha, SOS strecha, TMS HYDRA',
+  },
   'privacy-policy': {
     title: 'Ochrana osobných údajov a cookies | TMS HYDRA',
     description: 'Zásady spracovania osobných údajov (GDPR) a používania súborov cookie na webe spoločnosti TMS HYDRA.',

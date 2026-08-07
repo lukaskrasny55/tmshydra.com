@@ -18,6 +18,7 @@ const mainPagePriorities = {
   [ROUTE_PATHS.projects]: '0.8',
   [ROUTE_PATHS.contact]: '0.8',
   [ROUTE_PATHS.priceLanding]: '0.9',
+  [ROUTE_PATHS.sosLanding]: '0.9',
   [ROUTE_PATHS.otherServices]: '0.7',
   [ROUTE_PATHS.tech]: '0.7',
   [ROUTE_PATHS.faq]: '0.7',

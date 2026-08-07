@@ -1,6 +1,8 @@
 
 import React from 'react';
+import { Link } from 'react-router-dom';
 import { Search, ClipboardList, HardHat, Wrench, PhoneCall, Zap } from 'lucide-react';
+import { ROUTE_PATHS } from '../routePaths';
 
 export const ProcessSection: React.FC = () => {
   const materials = [
@@ -111,9 +113,12 @@ export const ProcessSection: React.FC = () => {
                 Urgentné zabezpečenie plochej strechy do 48 hodín zásahovým tímom.
               </p>
             </div>
-            <div className="bg-slate-900/40 backdrop-blur-sm text-white py-4 rounded-2xl font-black text-center text-sm flex items-center justify-center gap-2 border border-white/5">
+            <Link
+              to={ROUTE_PATHS.sosLanding}
+              className="bg-slate-900/40 backdrop-blur-sm text-white py-4 rounded-2xl font-black text-center text-sm flex items-center justify-center gap-2 border border-white/5 hover:bg-slate-900/60 transition-colors"
+            >
                TMS EMERGENCY TEAM <Zap className="w-4 h-4 text-blue-500" />
-            </div>
+            </Link>
           </div>
         </div>
       </div>

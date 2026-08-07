@@ -30,6 +30,7 @@ const faqItems = [
     question: 'Strecha mi zateká, čo mám robiť?',
     answer:
       'V prvom rade nás kontaktujte – v prípade havarijného stavu vieme zasiahnuť do 48 hodín a strechu provizórne zabezpečiť, aby sa škoda nezväčšovala. Následne pripravíme trvalé riešenie problému. Neodporúčame čakať, pretože vlhkosť postupne poškodzuje aj konštrukciu pod krytinou.',
+    link: { label: 'Zistite viac o havarijnom zásahu', path: ROUTE_PATHS.sosLanding },
   },
   {
     question: 'Je obhliadka strechy naozaj zadarmo a bez záväzkov?',
