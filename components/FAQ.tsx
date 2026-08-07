@@ -1,12 +1,15 @@
 import React, { useState } from 'react';
 import { Helmet } from 'react-helmet-async';
-import { ChevronDown } from 'lucide-react';
+import { Link } from 'react-router-dom';
+import { ChevronDown, ArrowRight } from 'lucide-react';
+import { ROUTE_PATHS } from '../routePaths';
 
 const faqItems = [
   {
     question: 'Koľko stojí hydroizolácia plochej strechy?',
     answer:
       'Cena sa vždy odvíja od stavu pôvodnej strechy, zvolenej fólie a veľkosti plochy – orientačne sa pohybuje od 15 do vyše 100 €/m² podľa rozsahu prác. Presné číslo vám vieme povedať až po bezplatnej obhliadke, kde zmeriame strechu, posúdime jej stav a navrhneme riešenie, ktoré sedí na váš rozpočet aj potreby.',
+    link: { label: 'Pozrite si orientačný cenník', path: ROUTE_PATHS.priceLanding },
   },
   {
     question: 'Aký je rozdiel medzi PVC, TPO a EPDM fóliou?',
@@ -102,7 +105,16 @@ export const FAQ: React.FC = () => {
                 </button>
                 {isOpen && (
                   <div className="px-6 pb-5 text-slate-600 text-sm leading-relaxed">
-                    {item.answer}
+                    <p>{item.answer}</p>
+                    {item.link && (
+                      <Link
+                        to={item.link.path}
+                        className="inline-flex items-center gap-1 mt-3 text-blue-600 font-bold hover:text-blue-700"
+                      >
+                        {item.link.label}
+                        <ArrowRight className="w-4 h-4" />
+                      </Link>
+                    )}
                   </div>
                 )}
               </div>

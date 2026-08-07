@@ -1,13 +1,16 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import {
   CheckCircle2,
   ShieldCheck,
   Zap,
-  Droplets
+  Droplets,
+  ArrowRight
 } from 'lucide-react';
 
 import { HeroSection } from '../HeroSection';
 import { ProcessSection } from '../ProcessSection';
+import { ROUTE_PATHS } from '../../routePaths';
 
 interface Props {
   onBack: () => void;
@@ -75,6 +78,16 @@ export const ServicesPage: React.FC<Props> = ({
             </div>
           ))}
 
+        </div>
+
+        <div className="mt-16 text-center">
+          <Link
+            to={ROUTE_PATHS.priceLanding}
+            className="inline-flex items-center gap-2 bg-blue-600 text-white px-8 py-4 rounded-xl font-bold hover:bg-blue-700 transition-all shadow-lg"
+          >
+            Zistite orientačnú cenu
+            <ArrowRight className="w-5 h-5" />
+          </Link>
         </div>
 
       </div>
