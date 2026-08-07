@@ -105,7 +105,7 @@ export const ContactPage: React.FC = () => {
             <div className="space-y-8">
 
               {/* TELEFÓN */}
-              <div className="bg-slate-50 rounded-[2.5rem] p-10 border border-slate-200 shadow-sm">
+              <div className="bg-slate-50 rounded-[2.5rem] p-6 sm:p-10 border border-slate-200 shadow-sm">
                 <div className="flex items-center gap-5 mb-8">
 
                   <div className="w-20 h-20 rounded-2xl bg-slate-100 flex items-center justify-center">
@@ -144,7 +144,7 @@ export const ContactPage: React.FC = () => {
               </div>
 
               {/* KONTAKTNÝ FORMULÁR */}
-              <div className="bg-slate-50 rounded-[2.5rem] p-10 border border-slate-200 shadow-sm">
+              <div className="bg-slate-50 rounded-[2.5rem] p-6 sm:p-10 border border-slate-200 shadow-sm">
                 <p className="text-sm font-black uppercase tracking-[0.3em] text-blue-600 mb-3">
                   Napíšte nám
                 </p>
