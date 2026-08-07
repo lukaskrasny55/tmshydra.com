@@ -42,6 +42,11 @@ const seoData: Record<string, { title: string; description: string; keywords: st
     description: 'Kontaktujte TMS-HYDRA pre bezplatnú obhliadku alebo cenovú ponuku na hydroizoláciu a zateplenie plochej strechy. Palárikovo, pôsobíme po celom Slovensku.',
     keywords: 'kontakt, TMS HYDRA',
   },
+  faq: {
+    title: 'Časté otázky o hydroizolácii a zateplení striech | TMS HYDRA',
+    description: 'Koľko stojí hydroizolácia plochej strechy, aký je rozdiel medzi PVC, TPO a EPDM fóliou, ako dlho trvá rekonštrukcia a akú záruku poskytujeme. Odpovede na najčastejšie otázky.',
+    keywords: 'časté otázky, cena hydroizolácie strechy, PVC TPO EPDM, záruka na strechu, TMS HYDRA',
+  },
   'privacy-policy': {
     title: 'Ochrana osobných údajov a cookies | TMS HYDRA',
     description: 'Zásady spracovania osobných údajov (GDPR) a používania súborov cookie na webe spoločnosti TMS HYDRA.',

@@ -5,7 +5,6 @@ import { Navbar } from './components/Navbar';
 import { Hero } from './components/Hero';
 import { FeaturedProjects } from './components/FeaturedProjects';
 import { Testimonials } from './components/Testimonials';
-import { FAQ } from './components/FAQ';
 import { Calculator } from './components/Calculator';
 import { BookingCalendar } from './components/BookingCalendar';
 import { CityLinks } from './components/CityLinks';
@@ -54,6 +53,12 @@ const ContactPage = lazy(() =>
   }))
 );
 
+const FAQPage = lazy(() =>
+  import('./components/pages/FAQPage').then(module => ({
+    default: module.FAQPage
+  }))
+);
+
 const PrivacyPolicyPage = lazy(() =>
   import('./components/pages/PrivacyPolicyPage').then(module => ({
     default: module.PrivacyPolicyPage
@@ -71,7 +76,6 @@ const HomePage: React.FC = () => (
     <Hero />
     <FeaturedProjects />
     <Testimonials />
-    <FAQ />
     <Calculator />
     <BookingCalendar />
     <CityLinks />
@@ -131,6 +135,7 @@ const MainSite: React.FC = () => {
         <Route path="realizacie" element={<ProjectsPage onBack={goHome} />} />
         <Route path="technologie" element={<TechPage onBack={goHome} />} />
         <Route path="kontakt" element={<ContactPage />} />
+        <Route path="caste-otazky" element={<FAQPage />} />
         <Route path="ochrana-osobnych-udajov" element={<PrivacyPolicyPage />} />
         <Route path="obchodne-podmienky" element={<TermsPage />} />
         <Route path="*" element={<HomePage />} />

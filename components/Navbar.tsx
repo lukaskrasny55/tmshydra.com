@@ -23,6 +23,7 @@ export const Navbar: React.FC<NavbarProps> = ({ showCalculator = true }) => {
     { label: 'Ostatné služby', path: ROUTE_PATHS.otherServices },
     { label: 'Realizácie', path: ROUTE_PATHS.projects },
     { label: 'Technológie', path: ROUTE_PATHS.tech },
+    { label: 'Časté otázky', path: ROUTE_PATHS.faq },
     { label: 'Kontakt', path: ROUTE_PATHS.contact },
   ];
 
