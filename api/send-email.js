@@ -126,7 +126,7 @@ function companyInquiryEmail({ name, email, message }) {
   return {
     subject: `Nový dopyt z webu – ${forHeader(name)}`,
     html: wrapEmail(`
-      <h2 style="color:${BRAND.heading};margin-bottom:16px;">Nový dopyt z kalkulačky</h2>
+      <h2 style="color:${BRAND.heading};margin-bottom:16px;">Nový dopyt z webu</h2>
       <p><b>Meno:</b> ${name}</p>
       <p><b>Email:</b> ${email}</p>
       <p><b>Správa:</b><br>${message}</p>
