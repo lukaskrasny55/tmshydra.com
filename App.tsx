@@ -4,6 +4,7 @@ import { Routes, Route, Outlet, useLocation, useNavigate } from 'react-router-do
 import { Navbar } from './components/Navbar';
 import { Hero } from './components/Hero';
 import { FeaturedProjects } from './components/FeaturedProjects';
+import { Testimonials } from './components/Testimonials';
 import { Calculator } from './components/Calculator';
 import { BookingCalendar } from './components/BookingCalendar';
 import { CityLinks } from './components/CityLinks';
@@ -68,6 +69,7 @@ const HomePage: React.FC = () => (
   <main className="w-full overflow-x-hidden">
     <Hero />
     <FeaturedProjects />
+    <Testimonials />
     <Calculator />
     <BookingCalendar />
     <CityLinks />

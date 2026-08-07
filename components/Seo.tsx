@@ -1,5 +1,6 @@
 import React from 'react';
 import { Helmet } from 'react-helmet-async';
+import { PATH_BY_SLUG } from '../routePaths';
 
 interface SeoProps {
   slug: string;
@@ -13,7 +14,7 @@ const seoData: Record<string, { title: string; description: string; keywords: st
   },
   services: {
     title: 'Naše služby | TMS HYDRA',
-    description: 'Kompletné služby pre ploché strechy.',
+    description: 'Hydroizolácia, zateplenie a rekonštrukcia plochých striech – PVC, TPO a EPDM fólie, servis a SOS havarijný zásah do 48 hodín. Bezplatná obhliadka po celom Slovensku.',
     keywords: 'hydroizolácie, servis striech',
   },
   about: {
@@ -38,7 +39,7 @@ const seoData: Record<string, { title: string; description: string; keywords: st
   },
   contact: {
     title: 'Kontakt | TMS HYDRA',
-    description: 'Kontaktujte nás pre cenovú ponuku.',
+    description: 'Kontaktujte TMS-HYDRA pre bezplatnú obhliadku alebo cenovú ponuku na hydroizoláciu a zateplenie plochej strechy. Palárikovo, pôsobíme po celom Slovensku.',
     keywords: 'kontakt, TMS HYDRA',
   },
   'privacy-policy': {
@@ -55,13 +56,17 @@ const seoData: Record<string, { title: string; description: string; keywords: st
 
 const localBusinessSchema = {
   '@context': 'https://schema.org',
-  '@type': 'LocalBusiness',
-  name: 'TMS HYDRA',
+  '@type': 'RoofingContractor',
+  name: 'TMS-HYDRA s. r. o.',
   image: 'https://www.tmshydra.com/logo1.png',
   url: 'https://www.tmshydra.com',
   telephone: '+421911551354',
+  priceRange: '€€',
   address: {
     '@type': 'PostalAddress',
+    streetAddress: 'Krížna 79',
+    addressLocality: 'Palárikovo',
+    postalCode: '94111',
     addressCountry: 'SK',
   },
   description: 'Hydroizolácie a zateplenie plochých striech po celom Slovensku.',
@@ -71,6 +76,15 @@ const localBusinessSchema = {
     'Zateplenie plochých striech',
     'Rekonštrukcie striech',
   ],
+  sameAs: [
+    'https://www.facebook.com/TMS.hydra.s.o.s',
+    'https://www.instagram.com/tms_hydra/',
+  ],
+  aggregateRating: {
+    '@type': 'AggregateRating',
+    ratingValue: '5.0',
+    reviewCount: '8',
+  },
 };
 
 export const Seo: React.FC<SeoProps> = ({ slug }) => {
@@ -80,11 +94,28 @@ export const Seo: React.FC<SeoProps> = ({ slug }) => {
     return null;
   }
 
+  const path = PATH_BY_SLUG[slug] ?? '/';
+  const url = `https://www.tmshydra.com${path === '/' ? '' : path}`;
+
   return (
     <Helmet>
       <title>{data.title}</title>
       <meta name="description" content={data.description} />
       <meta name="keywords" content={data.keywords} />
+
+      <meta property="og:type" content="website" />
+      <meta property="og:site_name" content="TMS-HYDRA" />
+      <meta property="og:title" content={data.title} />
+      <meta property="og:description" content={data.description} />
+      <meta property="og:url" content={url} />
+      <meta property="og:image" content="https://www.tmshydra.com/logo1.png" />
+      <meta property="og:locale" content="sk_SK" />
+
+      <meta name="twitter:card" content="summary_large_image" />
+      <meta name="twitter:title" content={data.title} />
+      <meta name="twitter:description" content={data.description} />
+      <meta name="twitter:image" content="https://www.tmshydra.com/logo1.png" />
+
       <script type="application/ld+json" id="local-business-schema">
         {JSON.stringify(localBusinessSchema)}
       </script>

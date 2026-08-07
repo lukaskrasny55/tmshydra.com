@@ -25,3 +25,7 @@ const SLUG_BY_PATH: Record<string, string> = {
 
 export const getSlugForPath = (pathname: string): string =>
   SLUG_BY_PATH[pathname] ?? 'home';
+
+export const PATH_BY_SLUG: Record<string, string> = Object.fromEntries(
+  Object.entries(SLUG_BY_PATH).map(([path, slug]) => [slug, path])
+);
