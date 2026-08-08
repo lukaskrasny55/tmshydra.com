@@ -9,18 +9,21 @@ const featured = [
     location: 'Bratislava',
     description: 'Kompletná rekonštrukcia hydroizolácie.',
     image: '/vh1.jpg',
+    slug: 'villa-hascak-bratislava',
   },
   {
     title: 'Panelová strecha',
     location: 'Bratislava - Petržalka',
     description: 'Obnova strechy bytového domu na sídlisku.',
     image: '/pz1.jpg',
+    slug: 'panelova-strecha-petrzalka',
   },
   {
     title: 'Zelená strecha',
     location: 'Belgicko',
     description: 'Prémiová TPO fólia na administratívnom objekte.',
     image: '/b1.jpg',
+    slug: 'zelena-strecha-belgicko',
   },
 ];
 
@@ -44,7 +47,7 @@ export const FeaturedProjects: React.FC = () => {
           {featured.map((p) => (
             <Link
               key={p.title}
-              to={ROUTE_PATHS.projects}
+              to={`${ROUTE_PATHS.projects}/${p.slug}`}
               className="bg-white rounded-[2.5rem] shadow-lg overflow-hidden hover:shadow-2xl hover:-translate-y-1 transition-all block border border-slate-100"
             >
               <img

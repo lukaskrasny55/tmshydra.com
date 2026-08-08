@@ -69,7 +69,7 @@ const seoData: Record<string, { title: string; description: string; keywords: st
   },
 };
 
-const localBusinessSchema = {
+export const localBusinessSchema = {
   '@context': 'https://schema.org',
   '@type': 'RoofingContractor',
   name: 'TMS-HYDRA s. r. o.',

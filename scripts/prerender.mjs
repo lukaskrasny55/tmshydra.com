@@ -9,6 +9,7 @@ import { fileURLToPath, pathToFileURL } from 'node:url';
 import path from 'node:path';
 import { ROUTE_PATHS } from '../routePaths.ts';
 import { cityData, serviceNames } from '../data/cities.js';
+import { projects } from '../data/projects.ts';
 
 const rootDir = path.join(path.dirname(fileURLToPath(import.meta.url)), '..');
 const distDir = path.join(rootDir, 'dist');
@@ -23,6 +24,7 @@ const urls = [
   ...Object.keys(serviceNames).flatMap((service) =>
     Object.keys(cityData).map((city) => `/sluzby/${service}/${city}`)
   ),
+  ...projects.map((p) => `${ROUTE_PATHS.projects}/${p.slug}`),
 ];
 
 // React 19 (via react-helmet-async's <Helmet>) hoists <title>/<meta>/<link>

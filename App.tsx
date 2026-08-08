@@ -41,6 +41,12 @@ const ProjectsPage = lazy(() =>
   }))
 );
 
+const ProjectDetailPage = lazy(() =>
+  import('./components/pages/ProjectDetailPage').then(module => ({
+    default: module.ProjectDetailPage
+  }))
+);
+
 const TechPage = lazy(() =>
   import('./components/pages/TechPage').then(module => ({
     default: module.TechPage
@@ -106,9 +112,15 @@ const Layout: React.FC = () => {
     }
   }, [location.pathname, location.hash]);
 
+  // Individual realizácia pages supply their own <Helmet> (title/description/
+  // OG/Twitter/schema) since they're dynamic and not part of the static
+  // seoData map in components/Seo.tsx — skip the generic one here so the two
+  // don't fight over the <title>/meta tags.
+  const isProjectDetail = location.pathname.startsWith(`${ROUTE_PATHS.projects}/`);
+
   return (
     <div className="min-h-screen flex flex-col overflow-x-hidden">
-      <Seo slug={getSlugForPath(location.pathname)} />
+      {!isProjectDetail && <Seo slug={getSlugForPath(location.pathname)} />}
       <GoogleAds />
       <GoogleAnalytics />
 
@@ -145,6 +157,7 @@ const MainSite: React.FC = () => {
           element={<OtherServicesPage onBack={goHome} onNavigateToContact={goContact} />}
         />
         <Route path="realizacie" element={<ProjectsPage onBack={goHome} />} />
+        <Route path="realizacie/:slug" element={<ProjectDetailPage />} />
         <Route path="technologie" element={<TechPage onBack={goHome} />} />
         <Route path="kontakt" element={<ContactPage />} />
         <Route path="caste-otazky" element={<FAQPage />} />
