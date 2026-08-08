@@ -48,6 +48,7 @@ export const ProjectDetailPage: React.FC = () => {
       <Helmet>
         <title>{title}</title>
         <meta name="description" content={project.metaDescription} />
+        <link rel="canonical" href={url} />
 
         <meta property="og:type" content="website" />
         <meta property="og:site_name" content="TMS-HYDRA" />
@@ -129,6 +130,7 @@ export const ProjectDetailPage: React.FC = () => {
               <img
                 src={img}
                 alt={`${project.title} – ${project.location} (foto ${i + 1}/${project.gallery.length})`}
+                loading="lazy"
                 className="w-full h-full object-cover hover:opacity-90 transition-opacity"
               />
             </button>
@@ -190,6 +192,7 @@ export const ProjectDetailPage: React.FC = () => {
                   <img
                     src={p.gallery[0]}
                     alt={`${p.title} – ${p.location}`}
+                    loading="lazy"
                     className="h-48 w-full object-cover"
                   />
                   <div className="p-6">

@@ -8,21 +8,21 @@ const featured = [
     title: 'Villa Hasčák',
     location: 'Bratislava',
     description: 'Kompletná rekonštrukcia hydroizolácie.',
-    image: '/vh1.jpg',
+    image: '/vh1.webp',
     slug: 'villa-hascak-bratislava',
   },
   {
     title: 'Panelová strecha',
     location: 'Bratislava - Petržalka',
     description: 'Obnova strechy bytového domu na sídlisku.',
-    image: '/pz1.jpg',
+    image: '/pz1.webp',
     slug: 'panelova-strecha-petrzalka',
   },
   {
     title: 'Zelená strecha',
     location: 'Belgicko',
     description: 'Prémiová TPO fólia na administratívnom objekte.',
-    image: '/b1.jpg',
+    image: '/b1.webp',
     slug: 'zelena-strecha-belgicko',
   },
 ];
@@ -53,6 +53,7 @@ export const FeaturedProjects: React.FC = () => {
               <img
                 src={p.image}
                 alt={`${p.title} – ${p.location}`}
+                loading="lazy"
                 className="h-56 w-full object-cover"
               />
               <div className="p-6">

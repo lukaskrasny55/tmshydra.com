@@ -47,6 +47,12 @@ const ProjectDetailPage = lazy(() =>
   }))
 );
 
+const NotFoundPage = lazy(() =>
+  import('./components/pages/NotFoundPage').then(module => ({
+    default: module.NotFoundPage
+  }))
+);
+
 const TechPage = lazy(() =>
   import('./components/pages/TechPage').then(module => ({
     default: module.TechPage
@@ -112,15 +118,15 @@ const Layout: React.FC = () => {
     }
   }, [location.pathname, location.hash]);
 
-  // Individual realizácia pages supply their own <Helmet> (title/description/
-  // OG/Twitter/schema) since they're dynamic and not part of the static
-  // seoData map in components/Seo.tsx — skip the generic one here so the two
-  // don't fight over the <title>/meta tags.
-  const isProjectDetail = location.pathname.startsWith(`${ROUTE_PATHS.projects}/`);
+  // Only exact static routes use the generic seoData-driven <Seo>. Dynamic
+  // realizácia pages and unknown/404 paths render their own <Helmet> (with
+  // their own title/description, and noindex for 404s) — skip the generic
+  // one here so the two don't fight over the <title>/meta tags.
+  const isKnownStaticRoute = (Object.values(ROUTE_PATHS) as string[]).includes(location.pathname);
 
   return (
     <div className="min-h-screen flex flex-col overflow-x-hidden">
-      {!isProjectDetail && <Seo slug={getSlugForPath(location.pathname)} />}
+      {isKnownStaticRoute && <Seo slug={getSlugForPath(location.pathname)} />}
       <GoogleAds />
       <GoogleAnalytics />
 
@@ -165,7 +171,7 @@ const MainSite: React.FC = () => {
         <Route path="oprava-zatekajucej-strechy" element={<SosLandingPage />} />
         <Route path="ochrana-osobnych-udajov" element={<PrivacyPolicyPage />} />
         <Route path="obchodne-podmienky" element={<TermsPage />} />
-        <Route path="*" element={<HomePage />} />
+        <Route path="*" element={<NotFoundPage />} />
       </Route>
     </Routes>
   );

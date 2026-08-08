@@ -30,6 +30,7 @@ export const ProjectsPage: React.FC<Props> = () => {
             <img
               src={p.gallery[0]}
               alt={`${p.title} – ${p.location}`}
+              loading="lazy"
               className="h-64 w-full object-cover"
             />
 

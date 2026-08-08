@@ -117,6 +117,7 @@ export const Seo: React.FC<SeoProps> = ({ slug }) => {
       <title>{data.title}</title>
       <meta name="description" content={data.description} />
       <meta name="keywords" content={data.keywords} />
+      <link rel="canonical" href={url} />
 
       <meta property="og:type" content="website" />
       <meta property="og:site_name" content="TMS-HYDRA" />

@@ -44,6 +44,8 @@ export const SeoCityPage: React.FC = () => {
       `Naša spoločnosť TMS HYDRA poskytuje profesionálne služby ${serviceName.toLowerCase()} v meste ${formattedCity}.`
   };
 
+  const canonicalUrl = `https://www.tmshydra.com/sluzby/${service}/${city}`;
+
   const structuredData = {
     "@context": "https://schema.org",
     "@type": "Service",
@@ -71,6 +73,7 @@ export const SeoCityPage: React.FC = () => {
           name="description"
           content={pageData.meta_description}
         />
+        <link rel="canonical" href={canonicalUrl} />
 
         <script type="application/ld+json">
           {JSON.stringify(structuredData)}
