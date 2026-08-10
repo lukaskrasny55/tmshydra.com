@@ -70,6 +70,7 @@ import technicalSolutionItemsId from '../api-handlers/technical-solution-items/[
 import technicians from '../api-handlers/technicians/index.js'
 import techniciansId from '../api-handlers/technicians/[id].js'
 import workSummary from '../api-handlers/work-summary.js'
+import webInquiry from '../api-handlers/web-inquiry.js'
 
 interface ApiRequest extends IncomingMessage {
   query: Record<string, string | string[] | undefined>
@@ -115,6 +116,7 @@ const STATIC_ROUTES: Record<string, Handler> = {
   'technical-solution-items': technicalSolutionItems,
   technicians: technicians,
   'work-summary': workSummary,
+  'web-inquiry': webInquiry,
 }
 
 // Dynamic `[id]` routes, keyed by the parent path (path minus the trailing id segment).

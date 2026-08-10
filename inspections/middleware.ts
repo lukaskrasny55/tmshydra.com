@@ -24,6 +24,15 @@ export default async function middleware(request: Request) {
     if (cronSecret && authHeader === `Bearer ${cronSecret}`) return
   }
 
+  // tmshydra.com forwards leads here server-to-server (no browser session
+  // exists for that call) — same shared-secret pattern as the cron above,
+  // just its own secret so the two can be rotated independently.
+  if (url.pathname === '/api/web-inquiry') {
+    const webhookSecret = process.env.WEBSITE_WEBHOOK_SECRET
+    const authHeader = request.headers.get('authorization')
+    if (webhookSecret && authHeader === `Bearer ${webhookSecret}`) return
+  }
+
   const fakeReq = { headers: { cookie: request.headers.get('cookie') ?? undefined } } as unknown as Parameters<typeof isAuthorized>[0]
   if (await isAuthorized(fakeReq)) return
 
