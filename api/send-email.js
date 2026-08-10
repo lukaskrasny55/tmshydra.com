@@ -122,6 +122,44 @@ function wrapEmail(innerHtml) {
   return `<div style="font-family: Arial, Helvetica, sans-serif; color:#1e293b; max-width:560px; margin:0 auto;">${innerHtml}</div>`;
 }
 
+// Best-effort: forward the lead to the internal obhliadky/inspections app so
+// it shows up in its planner too, without the customer having to be re-typed
+// in by hand. This must never affect the response to the website visitor —
+// any failure (app down, env vars missing, timeout) is swallowed silently.
+// Uses raw (non-HTML-escaped) field values since this is data, not an email.
+async function notifyInspectionsApp({ name, email, phone, address, message, date, time }) {
+  const url = process.env.INSPECTIONS_WEBHOOK_URL;
+  const secret = process.env.INSPECTIONS_WEBHOOK_SECRET;
+  if (!url || !secret) return;
+
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), 5000);
+  try {
+    await fetch(`${url.replace(/\/$/, '')}/api/web-inquiry`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${secret}`,
+      },
+      body: JSON.stringify({
+        name,
+        email,
+        phone,
+        address,
+        message,
+        date,
+        time,
+        source: date ? 'booking' : 'web',
+      }),
+      signal: controller.signal,
+    });
+  } catch (err) {
+    // Intentionally ignored — see comment above.
+  } finally {
+    clearTimeout(timeout);
+  }
+}
+
 function companyInquiryEmail({ name, email, message }) {
   return {
     subject: `Nový dopyt z webu – ${forHeader(name)}`,
@@ -243,6 +281,17 @@ export default async function handler(req, res) {
       subject: customerEmail.subject,
       html: customerEmail.html,
     });
+
+    // Fire-and-forget: never let this affect the success response above.
+    notifyInspectionsApp({
+      name: name.trim(),
+      email: validatedEmail,
+      phone: isBooking ? phone.trim() : undefined,
+      address: isBooking ? address.trim() : undefined,
+      message: message.trim(),
+      date: isBooking ? date.trim() : undefined,
+      time: isBooking ? time.trim() : undefined,
+    }).catch(() => {});
 
     return res.status(200).json({ success: true });
   } catch (err) {
