@@ -79,6 +79,7 @@ export const Footer: React.FC = () => {
               <li><Link to={ROUTE_PATHS.projects} className="hover:text-blue-400 transition-colors">Realizácie</Link></li>
               <li><Link to={ROUTE_PATHS.tech} className="hover:text-blue-400 transition-colors">Technológie</Link></li>
               <li><Link to={ROUTE_PATHS.faq} className="hover:text-blue-400 transition-colors">Časté otázky</Link></li>
+              <li><Link to={ROUTE_PATHS.blog} className="hover:text-blue-400 transition-colors">Poradňa</Link></li>
               <li><Link to={ROUTE_PATHS.sosLanding} className="hover:text-blue-400 transition-colors">Zateká strecha? SOS zásah</Link></li>
               <li><Link to={ROUTE_PATHS.contact} className="hover:text-blue-400 transition-colors">Kontakt</Link></li>
             </ul>

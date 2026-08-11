@@ -96,6 +96,18 @@ const TermsPage = lazy(() =>
   }))
 );
 
+const BlogPage = lazy(() =>
+  import('./components/pages/BlogPage').then(module => ({
+    default: module.BlogPage
+  }))
+);
+
+const BlogPostPage = lazy(() =>
+  import('./components/pages/BlogPostPage').then(module => ({
+    default: module.BlogPostPage
+  }))
+);
+
 const HomePage: React.FC = () => (
   <main className="w-full overflow-x-hidden">
     <Hero />
@@ -169,6 +181,8 @@ const MainSite: React.FC = () => {
         <Route path="technologie" element={<TechPage onBack={goHome} />} />
         <Route path="kontakt" element={<ContactPage />} />
         <Route path="caste-otazky" element={<FAQPage />} />
+        <Route path="blog" element={<BlogPage />} />
+        <Route path="blog/:slug" element={<BlogPostPage />} />
         <Route path="hydroizolacia-plochej-strechy-cena" element={<PriceLandingPage />} />
         <Route path="oprava-zatekajucej-strechy" element={<SosLandingPage />} />
         <Route path="ochrana-osobnych-udajov" element={<PrivacyPolicyPage />} />

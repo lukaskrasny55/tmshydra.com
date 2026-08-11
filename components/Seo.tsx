@@ -47,6 +47,11 @@ const seoData: Record<string, { title: string; description: string; keywords: st
     description: 'Koľko stojí hydroizolácia plochej strechy, aký je rozdiel medzi PVC, TPO a EPDM fóliou, ako dlho trvá rekonštrukcia a akú záruku poskytujeme. Odpovede na najčastejšie otázky.',
     keywords: 'časté otázky, cena hydroizolácie strechy, PVC TPO EPDM, záruka na strechu, TMS HYDRA',
   },
+  blog: {
+    title: 'Poradňa - hydroizolácia a údržba plochých striech | TMS HYDRA',
+    description: 'Praktické rady o hydroizolácii, údržbe a rekonštrukcii plochých striech - ako často kontrolovať strechu, rozdiely medzi PVC, TPO a EPDM fóliou a ďalšie témy.',
+    keywords: 'poradňa hydroizolácia, údržba plochej strechy, blog strechy, TMS HYDRA',
+  },
   'price-landing': {
     title: 'Hydroizolácia plochej strechy – cena, cenník a bezplatná obhliadka | TMS HYDRA',
     description: 'Orientačná cena hydroizolácie plochej strechy od 15 €/m². PVC, TPO a EPDM fólie, záruka až 15 rokov, bezplatná obhliadka po celom Slovensku. Zavolajte alebo si dohodnite termín online.',

@@ -24,6 +24,7 @@ export const Navbar: React.FC<NavbarProps> = ({ showCalculator = true }) => {
     { label: 'Realizácie', path: ROUTE_PATHS.projects },
     { label: 'Technológie', path: ROUTE_PATHS.tech },
     { label: 'Časté otázky', path: ROUTE_PATHS.faq },
+    { label: 'Poradňa', path: ROUTE_PATHS.blog },
     { label: 'Kontakt', path: ROUTE_PATHS.contact },
   ];
 

@@ -9,6 +9,7 @@ import path from 'node:path';
 import { cityData, serviceNames } from '../data/cities.js';
 import { ROUTE_PATHS } from '../routePaths.ts';
 import { projects } from '../data/projects.ts';
+import { blogPosts } from '../data/blog.ts';
 
 const baseUrl = 'https://www.tmshydra.com';
 
@@ -40,6 +41,10 @@ for (const service of Object.keys(serviceNames)) {
 
 for (const project of projects) {
   urls.push({ loc: `${baseUrl}${ROUTE_PATHS.projects}/${project.slug}`, priority: '0.6' });
+}
+
+for (const post of blogPosts) {
+  urls.push({ loc: `${baseUrl}${ROUTE_PATHS.blog}/${post.slug}`, priority: '0.6' });
 }
 
 const xml = `<?xml version="1.0" encoding="UTF-8"?>

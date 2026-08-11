@@ -9,6 +9,29 @@ import GoogleAnalytics from './GoogleAnalytics';
 import { trackConversion } from './GoogleAds';
 import { CookieConsent } from './CookieConsent';
 import { MobileCallBar } from './MobileCallBar';
+import { projects } from '../data/projects';
+
+// Real realizácie genuinely located in/near each city — verified against
+// actual municipality/district data, not guessed. Only cities with a
+// confirmed nearby project are listed; the rest simply don't show this
+// section rather than imply a false local presence.
+const NEARBY_PROJECT_SLUGS: Record<string, string[]> = {
+  bratislava: [
+    'villa-hascak-bratislava',
+    'zateplena-plechova-strecha-bratislava',
+    'panelova-strecha-petrzalka',
+    'biela-strecha-senec',
+    'biela-lepenka-pezinok',
+  ],
+  trencin: ['rekonstrukcia-bytovky-trencin', 'bytovy-dom-dubnica'],
+  'nove-zamky': [
+    'oprava-strechy-nove-zamky',
+    'strecha-na-kluc-nove-zamky',
+    'bytovka-562-besenov',
+    'novostavba-kolta',
+    'strecha-rodinneho-domu-nesvady',
+  ],
+};
 
 interface PageContent {
   title: string;
@@ -69,7 +92,22 @@ export const SeoCityPage: React.FC = () => {
       question: 'Poskytujete obhliadku zdarma?',
       answer: `Áno. TMS HYDRA poskytuje bezplatné obhliadky a odborné poradenstvo pre ploché strechy v meste ${formattedCity} a okolí.`,
     },
+    {
+      question: 'Aký je rozdiel medzi PVC, TPO a EPDM fóliou?',
+      answer: 'PVC fólia je najrozšírenejšia hydroizolácia s dobrým pomerom ceny a výkonu, jednoducho sa zvára horúcim vzduchom a bežne vydrží 25-30 rokov. TPO fólia je modernejšia alternatíva bez zmäkčovadiel, ktorá menej krehne časom a čoraz častejšie sa používa pri novostavbách. EPDM je syntetický kaučuk s najvyššou elasticitou a životnosťou presahujúcou 50 rokov, spoje sa lepia namiesto zvárania. Vhodný materiál odporučíme podľa typu strechy a rozpočtu priamo pri obhliadke.',
+    },
+    {
+      question: 'Čo presne zahŕňa záruka na hydroizoláciu?',
+      answer: 'Záruka sa vzťahuje na vodotesnosť hydroizolačnej vrstvy a kvalitu vykonaných prác - bežne až 15 rokov v závislosti od zvoleného materiálu a typu realizácie. Presný rozsah a dĺžku záruky uvádzame v cenovej ponuke po obhliadke, spolu s odporúčaním na pravidelnú kontrolu strechy.',
+    },
+    {
+      question: 'Ako prebieha proces od obhliadky po odovzdanie strechy?',
+      answer: `Najprv príde technik na bezplatnú obhliadku strechy priamo v ${formattedCity} a okolí, kde zhodnotí stav a navrhne riešenie. Nasleduje cenová ponuka s presným rozsahom prác a materiálom. Po odsúhlasení nasleduje samotná realizácia a na záver kontrola vodotesnosti a odovzdanie hotového diela.`,
+    },
   ];
+
+  const nearbyProjectSlugs = city ? NEARBY_PROJECT_SLUGS[city] || [] : [];
+  const nearbyProjects = projects.filter((proj) => nearbyProjectSlugs.includes(proj.slug));
 
   const structuredData = {
     "@context": "https://schema.org",
@@ -240,6 +278,40 @@ export const SeoCityPage: React.FC = () => {
                   </div>
                 ))}
               </div>
+
+              {nearbyProjects.length > 0 && (
+                <div className="mt-16 not-prose">
+                  <h3 className="text-2xl font-black text-slate-900 uppercase tracking-tight mb-8">
+                    Realizácie v okolí {formattedCity}
+                  </h3>
+
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    {nearbyProjects.map((proj) => (
+                      <Link
+                        key={proj.slug}
+                        to={`/realizacie/${proj.slug}`}
+                        className="group bg-slate-50 rounded-2xl overflow-hidden border border-slate-100 hover:border-blue-200 transition-all flex flex-col"
+                      >
+                        {proj.gallery[0] && (
+                          <img
+                            src={proj.gallery[0]}
+                            alt={proj.title}
+                            loading="lazy"
+                            className="w-full h-48 object-cover group-hover:scale-105 transition-transform"
+                          />
+                        )}
+                        <div className="p-5">
+                          <p className="text-xs font-bold text-blue-600 uppercase tracking-widest mb-1">
+                            {proj.location}
+                          </p>
+                          <p className="font-black text-slate-900 mb-1">{proj.title}</p>
+                          <p className="text-slate-500 text-sm">{proj.description}</p>
+                        </div>
+                      </Link>
+                    ))}
+                  </div>
+                </div>
+              )}
 
               <div className="mt-16 not-prose">
                 <h3 className="text-2xl font-black text-slate-900 uppercase tracking-tight mb-8">
