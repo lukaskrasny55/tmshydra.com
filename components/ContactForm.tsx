@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
-import { User, Mail, MessageSquare, Send, CheckCircle } from 'lucide-react';
+import { User, Mail, Phone, MessageSquare, Send, CheckCircle } from 'lucide-react';
 import { trackConversion } from './GoogleAds';
 
 export const ContactForm: React.FC = () => {
-  const [form, setForm] = useState({ name: '', email: '', message: '' });
+  const [form, setForm] = useState({ name: '', email: '', phone: '', message: '' });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
 
@@ -18,6 +18,7 @@ export const ContactForm: React.FC = () => {
         body: JSON.stringify({
           name: form.name,
           email: form.email,
+          phone: form.phone,
           message: form.message,
         }),
       });
@@ -68,6 +69,16 @@ export const ContactForm: React.FC = () => {
           placeholder="E-mail"
           value={form.email}
           onChange={(e) => setForm({ ...form, email: e.target.value })}
+          className="w-full pl-12 pr-4 py-3.5 rounded-xl border-2 border-slate-200 bg-white focus:border-blue-500 focus:ring-0 outline-none transition-all"
+        />
+      </div>
+      <div className="relative">
+        <Phone className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 w-5 h-5" />
+        <input
+          type="tel"
+          placeholder="Telefón (nepovinné, pre rýchlejšiu odpoveď)"
+          value={form.phone}
+          onChange={(e) => setForm({ ...form, phone: e.target.value })}
           className="w-full pl-12 pr-4 py-3.5 rounded-xl border-2 border-slate-200 bg-white focus:border-blue-500 focus:ring-0 outline-none transition-all"
         />
       </div>

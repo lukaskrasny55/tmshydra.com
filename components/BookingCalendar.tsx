@@ -173,7 +173,16 @@ if (response.ok) {
                   <div className="flex justify-end mt-12">
                     <button
                       disabled={!booking.date || !booking.time}
-                      onClick={() => setStep(2)}
+                      onClick={() => {
+                        // Plain GA funnel event (not an Ads conversion) so we
+                        // can see the drop-off between "picked a slot" and
+                        // "actually submitted contact details", without
+                        // polluting the real booking conversion count.
+                        if (typeof window !== 'undefined' && typeof (window as any).gtag === 'function') {
+                          (window as any).gtag('event', 'booking_step1_completed');
+                        }
+                        setStep(2);
+                      }}
                       className="bg-slate-900 text-white px-10 py-4 rounded-xl font-bold disabled:opacity-20 transition-all hover:bg-slate-800"
                     >
                       Pokračovať k údajom
@@ -224,11 +233,14 @@ if (response.ok) {
                       <input
                         required
                         type="text"
-                        placeholder="Adresa obhliadky (mesto, ulica)"
+                        placeholder="Mesto / obec"
                         value={booking.address}
                         onChange={(e) => setBooking({ ...booking, address: e.target.value })}
                         className="w-full pl-12 pr-4 py-4 rounded-xl border-2 border-slate-100 focus:border-blue-500 focus:ring-0 outline-none transition-all"
                       />
+                      <p className="mt-2 ml-1 text-xs text-slate-400">
+                        Stačí mesto alebo obec, presnú adresu doriešime telefonicky pri potvrdení termínu.
+                      </p>
                     </div>
                     <div className="relative">
                       <textarea

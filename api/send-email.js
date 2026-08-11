@@ -160,13 +160,14 @@ async function notifyInspectionsApp({ name, email, phone, address, message, date
   }
 }
 
-function companyInquiryEmail({ name, email, message }) {
+function companyInquiryEmail({ name, email, phone, message }) {
   return {
     subject: `Nový dopyt z webu – ${forHeader(name)}`,
     html: wrapEmail(`
       <h2 style="color:${BRAND.heading};margin-bottom:16px;">Nový dopyt z webu</h2>
       <p><b>Meno:</b> ${name}</p>
       <p><b>Email:</b> ${email}</p>
+      ${phone ? `<p><b>Telefón:</b> ${phone}</p>` : ''}
       <p><b>Správa:</b><br>${message}</p>
       <hr style="border:none;border-top:1px solid #e2e8f0;margin:24px 0;">
       <p style="color:${BRAND.muted};font-size:12px">Odoslané z formulára na tmshydra.com</p>
@@ -250,11 +251,12 @@ export default async function handler(req, res) {
 
   // Every field is HTML-escaped before it touches an email body, so request
   // input can never inject markup/scripts into the outgoing HTML.
+  const hasPhone = typeof phone === 'string' && phone.trim().length > 0;
   const safe = {
     name: escapeHtml(name.trim()),
     email: escapeHtml(validatedEmail),
     message: escapeHtml(message.trim()),
-    phone: isBooking ? escapeHtml(phone.trim()) : undefined,
+    phone: hasPhone ? escapeHtml(phone.trim()) : undefined,
     address: isBooking ? escapeHtml(address.trim()) : undefined,
     date: isBooking ? escapeHtml(formatDate(date.trim())) : undefined,
     time: isBooking ? escapeHtml(time.trim()) : undefined,
@@ -286,7 +288,7 @@ export default async function handler(req, res) {
     notifyInspectionsApp({
       name: name.trim(),
       email: validatedEmail,
-      phone: isBooking ? phone.trim() : undefined,
+      phone: hasPhone ? phone.trim() : undefined,
       address: isBooking ? address.trim() : undefined,
       message: message.trim(),
       date: isBooking ? date.trim() : undefined,
