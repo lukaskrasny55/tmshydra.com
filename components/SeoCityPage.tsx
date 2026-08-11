@@ -1,8 +1,14 @@
 import React from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { CheckCircle2, ArrowRight, MapPin, Phone, Calculator } from 'lucide-react';
+import { CheckCircle2, ArrowRight, MapPin, Phone, Calculator, Quote } from 'lucide-react';
 import { Helmet } from 'react-helmet-async';
 import { cityData, serviceNames } from '../data/cities.js';
+import { GOOGLE_REVIEWS_URL, GOOGLE_REVIEWS_RATING, GOOGLE_REVIEWS_COUNT_LABEL, reviews } from '../data/reviews.js';
+import { Stars } from './Testimonials';
+import GoogleAnalytics from './GoogleAnalytics';
+import { trackConversion } from './GoogleAds';
+import { CookieConsent } from './CookieConsent';
+import { MobileCallBar } from './MobileCallBar';
 
 interface PageContent {
   title: string;
@@ -67,6 +73,14 @@ export const SeoCityPage: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-white">
+      {/* This route sits outside <Layout> (see App.tsx), so it never picked
+          up analytics/tracking or the cookie banner that every other page
+          gets automatically — these SEO landing pages were completely
+          invisible to Google Ads/Analytics regardless of the Consent Mode
+          fix in GoogleAnalytics.tsx. Mounted directly here instead. */}
+      <GoogleAnalytics />
+      <CookieConsent />
+      <MobileCallBar />
       <Helmet>
         <title>{pageData.meta_title}</title>
         <meta
@@ -100,6 +114,17 @@ export const SeoCityPage: React.FC = () => {
           <p className="text-slate-400 text-xl max-w-2xl font-medium leading-relaxed">
             {pageData.meta_description}
           </p>
+
+          <a
+            href={GOOGLE_REVIEWS_URL}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="mt-6 inline-flex items-center gap-2 bg-white/10 backdrop-blur-md border border-white/20 px-4 py-2.5 rounded-xl hover:bg-white/20 transition-all"
+          >
+            <Stars />
+            <span className="font-black text-white">{GOOGLE_REVIEWS_RATING}</span>
+            <span className="text-slate-300 text-sm">{GOOGLE_REVIEWS_COUNT_LABEL}</span>
+          </a>
 
           <div className="mt-10 flex flex-wrap gap-4">
             <Link
@@ -161,6 +186,29 @@ export const SeoCityPage: React.FC = () => {
                     </span>
                   </div>
                 ))}
+              </div>
+
+              <div className="mt-16 not-prose">
+                <h3 className="text-2xl font-black text-slate-900 uppercase tracking-tight mb-8">
+                  Čo o nás hovoria zákazníci
+                </h3>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  {reviews.slice(0, 2).map((r) => (
+                    <div
+                      key={r.name}
+                      className="bg-slate-50 rounded-2xl p-6 border border-slate-100 flex flex-col"
+                    >
+                      <Quote className="w-6 h-6 text-blue-200 mb-3" />
+                      <Stars />
+                      <p className="text-slate-600 text-sm leading-relaxed my-3 flex-1">
+                        {r.text}
+                      </p>
+                      <p className="font-bold text-slate-900 text-sm">{r.name}</p>
+                      <p className="text-xs text-slate-400 uppercase tracking-wide">Google recenzia</p>
+                    </div>
+                  ))}
+                </div>
               </div>
 
               <div className="mt-16">
@@ -226,6 +274,7 @@ export const SeoCityPage: React.FC = () => {
 
               <a
                 href="tel:+421911551354"
+                onClick={() => trackConversion('call')}
                 className="flex items-center gap-4 p-4 bg-white/5 rounded-2xl border border-white/10 hover:bg-white/10 transition-all mb-4"
               >
                 <div className="p-3 bg-blue-600 rounded-xl">

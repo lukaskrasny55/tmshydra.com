@@ -14,117 +14,115 @@ export const cityData = {
   nitra: {
     title: 'Hydroizolácie plochých striech Nitra',
     description:
-      'Profesionálne hydroizolácie plochých striech v Nitre a okolí. PVC fólie, rekonštrukcie striech, zateplenie a servis strešných systémov.',
+      'Profesionálne hydroizolácie plochých striech v Nitre a okolí. PVC fólie, rekonštrukcie striech, zateplenie a servis strešných systémov. Obhliadku strechy vám urobíme bezplatne.',
   },
 
   'nove-zamky': {
     title: 'Hydroizolácie plochých striech Nové Zámky',
     description:
-      'Realizujeme hydroizolácie plochých striech v Nových Zámkoch a okolí. Moderné PVC fólie, zateplenie a rekonštrukcie striech.',
+      'Realizujeme hydroizolácie plochých striech v Nových Zámkoch a okolí. Moderné PVC fólie, zateplenie a rekonštrukcie striech s bezplatnou obhliadkou vopred.',
   },
 
   trnava: {
     title: 'Hydroizolácie plochých striech Trnava',
     description:
-      'TMS HYDRA zabezpečuje profesionálne hydroizolácie plochých striech v Trnave. Kvalitné materiály a dlhoročné skúsenosti.',
+      'TMS HYDRA zabezpečuje profesionálne hydroizolácie plochých striech v Trnave. Kvalitné materiály, dlhoročné skúsenosti a bezplatná obhliadka pred cenovou ponukou.',
   },
-
 
   bratislava: {
     title: 'Hydroizolácie plochých striech Bratislava',
     description:
-      'Profesionálne hydroizolácie plochých striech v Bratislave a okolí. PVC fólie, rekonštrukcie striech, zateplenie a servis strešných systémov.',
+      'Profesionálne hydroizolácie plochých striech v Bratislave a okolí. PVC fólie, rekonštrukcie striech, zateplenie a servis strešných systémov s bezplatnou obhliadkou.',
   },
 
   trencin: {
     title: 'Hydroizolácie plochých striech Trenčín',
     description:
-      'Realizujeme hydroizolácie plochých striech v Trenčíne a okolí. Moderné PVC fólie, zateplenie a rekonštrukcie striech.',
+      'Realizujeme hydroizolácie plochých striech v Trenčíne a okolí. Moderné PVC fólie, zateplenie a rekonštrukcie striech s bezplatnou obhliadkou pred realizáciou.',
   },
 
   zilina: {
     title: 'Hydroizolácie plochých striech Žilina',
     description:
-      'Profesionálne hydroizolácie plochých striech v Žiline a okolí. PVC fólie, rekonštrukcie striech a zateplenie plochých striech.',
+      'Profesionálne hydroizolácie plochých striech v Žiline a okolí. PVC fólie, rekonštrukcie striech a zateplenie plochých striech s bezplatnou obhliadkou.',
   },
 
   'banska-bystrica': {
     title: 'Hydroizolácie plochých striech Banská Bystrica',
     description:
-      'TMS HYDRA zabezpečuje hydroizolácie plochých striech v Banskej Bystrici. Kvalitné materiály a profesionálna realizácia.',
+      'TMS HYDRA zabezpečuje hydroizolácie plochých striech v Banskej Bystrici. Kvalitné materiály, profesionálna realizácia a bezplatná obhliadka vopred.',
   },
 
   martin: {
     title: 'Hydroizolácie plochých striech Martin',
     description:
-      'Profesionálne hydroizolácie a rekonštrukcie plochých striech v Martine a okolí.',
+      'Profesionálne hydroizolácie a rekonštrukcie plochých striech v Martine a okolí. Obhliadku strechy a cenovú ponuku pripravíme bezplatne.',
   },
 
   prievidza: {
     title: 'Hydroizolácie plochých striech Prievidza',
     description:
-      'Kompletné hydroizolácie plochých striech v Prievidzi. PVC fólie, opravy a zateplenie striech.',
+      'Kompletné hydroizolácie plochých striech v Prievidzi. PVC fólie, opravy a zateplenie striech s bezplatnou obhliadkou pred realizáciou.',
   },
 
   komarno: {
     title: 'Hydroizolácie plochých striech Komárno',
     description:
-      'Realizujeme profesionálne hydroizolácie plochých striech v Komárne a okolí.',
+      'Realizujeme profesionálne hydroizolácie plochých striech v Komárne a okolí, vrátane bezplatnej obhliadky a cenovej ponuky vopred.',
   },
 
   levice: {
     title: 'Hydroizolácie plochých striech Levice',
     description:
-      'TMS HYDRA poskytuje hydroizolácie plochých striech v Leviciach s dôrazom na kvalitu a životnosť.',
+      'TMS HYDRA poskytuje hydroizolácie plochých striech v Leviciach s dôrazom na kvalitu a životnosť. Obhliadka strechy je vždy bezplatná.',
   },
 
   topolcany: {
     title: 'Hydroizolácie plochých striech Topoľčany',
     description:
-      'Profesionálne hydroizolácie a rekonštrukcie plochých striech v Topoľčanoch.',
+      'Profesionálne hydroizolácie a rekonštrukcie plochých striech v Topoľčanoch, s bezplatnou obhliadkou a cenovou ponukou vopred.',
   },
 
-   sala: {
-    title: 'Hydroizolácie plochých striech Sala',
+  sala: {
+    title: 'Hydroizolácie plochých striech Šaľa',
     description:
-      'Kompletné hydroizolačné služby pre ploché strechy vo Sali a okolí.',
+      'Kompletné hydroizolačné služby pre ploché strechy v Šali a okolí. PVC fólie, rekonštrukcie a zateplenie s bezplatnou obhliadkou vopred.',
   },
 
-   galanta: {
+  galanta: {
     title: 'Hydroizolácie plochých striech Galanta',
     description:
-      'Kompletné hydroizolačné služby pre ploché strechy vo Galante a okolí.',
+      'Kompletné hydroizolačné služby pre ploché strechy v Galante a okolí. PVC fólie, rekonštrukcie a zateplenie s bezplatnou obhliadkou vopred.',
   },
 
-   surany: {
-    title: 'Hydroizolácie plochých striech suranoch',
+  surany: {
+    title: 'Hydroizolácie plochých striech Šurany',
     description:
-      'Kompletné hydroizolačné služby pre ploché strechy vo suranoch a okolí.',
+      'Kompletné hydroizolačné služby pre ploché strechy v Šuranoch a okolí. PVC fólie, rekonštrukcie a zateplenie s bezplatnou obhliadkou vopred.',
   },
 
-   zvolen: {
+  zvolen: {
     title: 'Hydroizolácie plochých striech Zvolen',
     description:
-      'Kompletné hydroizolačné služby pre ploché strechy vo Zvolene a okolí.',
+      'Kompletné hydroizolačné služby pre ploché strechy vo Zvolene a okolí. PVC fólie, rekonštrukcie a zateplenie s bezplatnou obhliadkou vopred.',
   },
 
-   sladkovicovo: {
-    title: 'Hydroizolácie plochých striech sladkovicovo',
+  sladkovicovo: {
+    title: 'Hydroizolácie plochých striech Sládkovičovo',
     description:
-      'Kompletné hydroizolačné služby pre ploché strechy vo sladkovicove a okolí.',
+      'Kompletné hydroizolačné služby pre ploché strechy v Sládkovičove a okolí. PVC fólie, rekonštrukcie a zateplenie s bezplatnou obhliadkou vopred.',
   },
 
-   'dunajska-streda': {
-    title: 'Hydroizolácie plochých striech dunajskej strede',
+  'dunajska-streda': {
+    title: 'Hydroizolácie plochých striech Dunajská Streda',
     description:
-      'Kompletné hydroizolačné služby pre ploché strechy vo dunajskej strede a okolí.',
+      'Kompletné hydroizolačné služby pre ploché strechy v Dunajskej Strede a okolí. PVC fólie, rekonštrukcie a zateplenie s bezplatnou obhliadkou vopred.',
   },
 
-   samorin: {
-    title: 'Hydroizolácie plochých striech samorine',
+  samorin: {
+    title: 'Hydroizolácie plochých striech Šamorín',
     description:
-      'Kompletné hydroizolačné služby pre ploché strechy vo samorine a okolí.',
+      'Kompletné hydroizolačné služby pre ploché strechy v Šamoríne a okolí. PVC fólie, rekonštrukcie a zateplenie s bezplatnou obhliadkou vopred.',
   },
-
 
 };

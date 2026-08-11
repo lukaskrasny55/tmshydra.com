@@ -1,24 +1,8 @@
 import React from 'react';
 import { Star, Quote } from 'lucide-react';
+import { GOOGLE_REVIEWS_URL, GOOGLE_REVIEWS_RATING, GOOGLE_REVIEWS_COUNT_LABEL, reviews } from '../data/reviews.js';
 
-const GOOGLE_REVIEWS_URL = 'https://www.google.com/maps/search/?api=1&query=TMS-Hydra+s.r.o.+Pal%C3%A1rikovo';
-
-const reviews = [
-  {
-    name: 'Gábor Pandi',
-    text: 'Pána Solnokyho a jeho tím môžem len odporučiť. Na obhliadku prišiel veľmi rýchlo, dohodli sme sa na detailoch, a to aj v priebehu realizácie. Odporučil profesionálne riešenie. Perfektná komunikácia, pracovali čisto a profesionálne. Všetko prebehlo tak, ako sme sa dohodli, a včas podľa dohody.',
-  },
-  {
-    name: 'Hektor Siegel',
-    text: 'Potrebovali sme riešiť poškodenú krytinu na streche garáže. Komunikácia bola bezproblémová, prišli na čas a presne vedeli, kde je problém. Všetko prebehlo podľa dohody a strecha je teraz bez problémov. Určite odporúčam.',
-  },
-  {
-    name: 'Martina Šuhajdová',
-    text: 'Som maximálne spokojná, môžem len doporučiť!',
-  },
-];
-
-const Stars: React.FC = () => (
+export const Stars: React.FC = () => (
   <div className="flex gap-0.5">
     {Array.from({ length: 5 }).map((_, i) => (
       <Star key={i} className="w-4 h-4 fill-blue-500 text-blue-500" />
@@ -44,8 +28,8 @@ export const Testimonials: React.FC = () => {
             className="inline-flex items-center gap-2 bg-white px-5 py-3 rounded-2xl shadow-sm border border-slate-200 hover:shadow-md transition"
           >
             <Stars />
-            <span className="font-black text-slate-900">5,0</span>
-            <span className="text-slate-500 text-sm">z 8 Google recenzií</span>
+            <span className="font-black text-slate-900">{GOOGLE_REVIEWS_RATING}</span>
+            <span className="text-slate-500 text-sm">{GOOGLE_REVIEWS_COUNT_LABEL}</span>
           </a>
         </div>
 

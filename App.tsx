@@ -16,6 +16,7 @@ import { Seo } from './components/Seo';
 import { GoogleAds } from './components/GoogleAds';
 import { SeoCityPage } from './components/SeoCityPage';
 import GoogleAnalytics from './components/GoogleAnalytics';
+import { MobileCallBar } from './components/MobileCallBar';
 
 const AboutPage = lazy(() =>
   import('./components/pages/AboutPage').then(module => ({
@@ -140,6 +141,7 @@ const Layout: React.FC = () => {
 
       <Footer />
       <CookieConsent />
+      <MobileCallBar />
     </div>
   );
 };

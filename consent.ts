@@ -13,11 +13,28 @@ export function getStoredConsent(): ConsentValue | null {
   return value === 'accepted' || value === 'rejected' ? value : null;
 }
 
+// Pushes the visitor's choice into Google's Consent Mode v2 signals. Safe to
+// call before gtag.js has finished loading — gtag() just queues onto
+// window.dataLayer, and Google applies the update once the tag is ready.
+export function pushConsentToGtag(value: ConsentValue | null): void {
+  if (typeof window === 'undefined' || typeof (window as any).gtag !== 'function') {
+    return;
+  }
+  const state = value === 'accepted' ? 'granted' : 'denied';
+  (window as any).gtag('consent', 'update', {
+    ad_storage: state,
+    ad_user_data: state,
+    ad_personalization: state,
+    analytics_storage: state,
+  });
+}
+
 export function setStoredConsent(value: ConsentValue): void {
   if (typeof window === 'undefined') {
     return;
   }
   window.localStorage.setItem(STORAGE_KEY, value);
+  pushConsentToGtag(value);
   window.dispatchEvent(new Event(CONSENT_EVENT));
 }
 
