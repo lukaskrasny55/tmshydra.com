@@ -14,7 +14,7 @@ export const cityData = {
   nitra: {
     title: 'Hydroizolácie plochých striech Nitra',
     description:
-      'Profesionálne hydroizolácie plochých striech v Nitre a okolí. PVC fólie, rekonštrukcie striech, zateplenie a servis strešných systémov. Obhliadku strechy vám urobíme bezplatne.',
+      'Profesionálne hydroizolácie plochých striech v Nitre a okolí. PVC fólie, rekonštrukcie, zateplenie a servis. Obhliadka strechy vždy bezplatne.',
   },
 
   'nove-zamky': {
@@ -26,13 +26,13 @@ export const cityData = {
   trnava: {
     title: 'Hydroizolácie plochých striech Trnava',
     description:
-      'TMS HYDRA zabezpečuje profesionálne hydroizolácie plochých striech v Trnave. Kvalitné materiály, dlhoročné skúsenosti a bezplatná obhliadka pred cenovou ponukou.',
+      'TMS HYDRA zabezpečuje profesionálne hydroizolácie plochých striech v Trnave. Kvalitné materiály, dlhoročné skúsenosti, bezplatná obhliadka.',
   },
 
   bratislava: {
     title: 'Hydroizolácie plochých striech Bratislava',
     description:
-      'Profesionálne hydroizolácie plochých striech v Bratislave a okolí. PVC fólie, rekonštrukcie striech, zateplenie a servis strešných systémov s bezplatnou obhliadkou.',
+      'Profesionálne hydroizolácie plochých striech v Bratislave a okolí. PVC fólie, rekonštrukcie, zateplenie a servis. Obhliadka strechy vždy bezplatne.',
   },
 
   trencin: {

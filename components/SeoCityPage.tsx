@@ -51,6 +51,25 @@ export const SeoCityPage: React.FC = () => {
   };
 
   const canonicalUrl = `https://www.tmshydra.com/sluzby/${service}/${city}`;
+  const ogImage = 'https://www.tmshydra.com/logo1.png';
+
+  // Kept as data (not just JSX) so the FAQPage schema below stays word-for-word
+  // identical to what actually renders further down the page — Google
+  // requires that match for the FAQ rich-result to be eligible at all.
+  const faqItems = [
+    {
+      question: `Koľko stojí hydroizolácia plochej strechy v meste ${formattedCity}?`,
+      answer: 'Cena závisí od veľkosti strechy, typu materiálu a rozsahu rekonštrukcie. Kontaktujte TMS HYDRA pre bezplatnú obhliadku a cenovú ponuku.',
+    },
+    {
+      question: 'Ako dlho trvá realizácia?',
+      answer: 'Väčšina realizácií trvá niekoľko dní v závislosti od rozsahu prác, počasia a typu strešného systému.',
+    },
+    {
+      question: 'Poskytujete obhliadku zdarma?',
+      answer: `Áno. TMS HYDRA poskytuje bezplatné obhliadky a odborné poradenstvo pre ploché strechy v meste ${formattedCity} a okolí.`,
+    },
+  ];
 
   const structuredData = {
     "@context": "https://schema.org",
@@ -63,12 +82,30 @@ export const SeoCityPage: React.FC = () => {
         "@type": "PostalAddress",
         "addressLocality": formattedCity,
         "addressCountry": "SK"
+      },
+      "aggregateRating": {
+        "@type": "AggregateRating",
+        "ratingValue": "5.0",
+        "reviewCount": "8"
       }
     },
     "areaServed": {
       "@type": "City",
       "name": formattedCity
     }
+  };
+
+  const faqStructuredData = {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": faqItems.map((item) => ({
+      "@type": "Question",
+      "name": item.question,
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": item.answer,
+      },
+    })),
   };
 
   return (
@@ -89,8 +126,24 @@ export const SeoCityPage: React.FC = () => {
         />
         <link rel="canonical" href={canonicalUrl} />
 
+        <meta property="og:type" content="website" />
+        <meta property="og:site_name" content="TMS-HYDRA" />
+        <meta property="og:title" content={pageData.meta_title} />
+        <meta property="og:description" content={pageData.meta_description} />
+        <meta property="og:url" content={canonicalUrl} />
+        <meta property="og:image" content={ogImage} />
+        <meta property="og:locale" content="sk_SK" />
+
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content={pageData.meta_title} />
+        <meta name="twitter:description" content={pageData.meta_description} />
+        <meta name="twitter:image" content={ogImage} />
+
         <script type="application/ld+json">
           {JSON.stringify(structuredData)}
+        </script>
+        <script type="application/ld+json">
+          {JSON.stringify(faqStructuredData)}
         </script>
       </Helmet>
 
@@ -218,38 +271,17 @@ export const SeoCityPage: React.FC = () => {
 
   <div className="space-y-6">
 
-    <div className="p-6 bg-slate-50 rounded-2xl border border-slate-100">
-      <h4 className="font-black text-lg mb-3">
-        Koľko stojí hydroizolácia plochej strechy v meste {formattedCity}?
-      </h4>
+    {faqItems.map((item) => (
+      <div key={item.question} className="p-6 bg-slate-50 rounded-2xl border border-slate-100">
+        <h4 className="font-black text-lg mb-3">
+          {item.question}
+        </h4>
 
-      <p className="text-slate-600 leading-relaxed">
-        Cena závisí od veľkosti strechy, typu materiálu a rozsahu rekonštrukcie.
-        Kontaktujte TMS HYDRA pre bezplatnú obhliadku a cenovú ponuku.
-      </p>
-    </div>
-
-    <div className="p-6 bg-slate-50 rounded-2xl border border-slate-100">
-      <h4 className="font-black text-lg mb-3">
-        Ako dlho trvá realizácia?
-      </h4>
-
-      <p className="text-slate-600 leading-relaxed">
-        Väčšina realizácií trvá niekoľko dní v závislosti od rozsahu prác,
-        počasia a typu strešného systému.
-      </p>
-    </div>
-
-    <div className="p-6 bg-slate-50 rounded-2xl border border-slate-100">
-      <h4 className="font-black text-lg mb-3">
-        Poskytujete obhliadku zdarma?
-      </h4>
-
-      <p className="text-slate-600 leading-relaxed">
-        Áno. TMS HYDRA poskytuje bezplatné obhliadky a odborné poradenstvo
-        pre ploché strechy v meste {formattedCity} a okolí.
-      </p>
-    </div>
+        <p className="text-slate-600 leading-relaxed">
+          {item.answer}
+        </p>
+      </div>
+    ))}
 
   </div>
 
