@@ -94,10 +94,11 @@ function validate(body) {
     errors.push('Správa môže mať najviac 2000 znakov.');
   }
 
+  if (typeof phone !== 'string' || phone.trim().length === 0) {
+    errors.push('Telefón je povinný.');
+  }
+
   if (type === 'booking') {
-    if (typeof phone !== 'string' || phone.trim().length === 0) {
-      errors.push('Telefón je povinný pre rezerváciu.');
-    }
     if (typeof address !== 'string' || address.trim().length === 0) {
       errors.push('Adresa je povinná pre rezerváciu.');
     }

@@ -75,8 +75,9 @@ export const ContactForm: React.FC = () => {
       <div className="relative">
         <Phone className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 w-5 h-5" />
         <input
+          required
           type="tel"
-          placeholder="Telefón (nepovinné, pre rýchlejšiu odpoveď)"
+          placeholder="Telefón"
           value={form.phone}
           onChange={(e) => setForm({ ...form, phone: e.target.value })}
           className="w-full pl-12 pr-4 py-3.5 rounded-xl border-2 border-slate-200 bg-white focus:border-blue-500 focus:ring-0 outline-none transition-all"

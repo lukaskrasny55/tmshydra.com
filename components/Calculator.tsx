@@ -70,12 +70,11 @@ export const Calculator: React.FC = () => {
         body: JSON.stringify({
           name: leadForm.name,
           email: leadForm.email,
-          message: `
+          phone: leadForm.phone,
+          message: `Dopyt na cenovú ponuku z kalkulačky.
 Typ objektu: ${buildingType}
 Plocha: ${area} m²
-Systém: ${selectedSystem}
-Telefón: ${leadForm.phone}
-          `
+Systém: ${selectedSystem}`
         })
       });
 
@@ -261,6 +260,7 @@ Telefón: ${leadForm.phone}
                     />
 
                     <input
+                      required
                       type="tel"
                       placeholder="Telefón"
                       value={leadForm.phone}
