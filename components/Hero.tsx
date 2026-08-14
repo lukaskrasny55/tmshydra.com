@@ -37,14 +37,13 @@ export const Hero: React.FC = () => {
 
       <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
         <div className="max-w-2xl">
-          <h1 className="text-4xl md:text-5xl lg:text-6xl font-black uppercase leading-tight">
-            Vaša strecha,
-            <span className="text-blue-500 block">naša zodpovednosť.</span>
+          <h1 className="text-3xl sm:text-4xl lg:text-5xl font-black leading-tight">
+            Hydroizolácia a zateplenie plochých striech
           </h1>
 
-          <p className="mt-6 text-slate-200 text-lg max-w-xl">
-            Špecialisti na hydroizoláciu a zateplenie plochých striech.
-            Prinášame kvalitu, ktorá vydrží generácie.
+          <p className="mt-5 text-slate-200 text-base sm:text-lg max-w-xl">
+            Komplexné riešenia plochých striech pre rodinné domy, bytové a priemyselné objekty.
+            Realizujeme hydroizolácie, zateplenie a opravy.
           </p>
 
           <div className="flex flex-col sm:flex-row gap-4 mt-8">
@@ -56,7 +55,7 @@ export const Hero: React.FC = () => {
               }
               className="bg-white/10 border border-white/20 px-8 py-4 rounded-xl font-bold hover:bg-white/20 transition backdrop-blur-sm"
             >
-              Vypočítať cenu
+              Vypočítať orientačnú cenu
             </button>
 
             <button
@@ -71,6 +70,10 @@ export const Hero: React.FC = () => {
               <ArrowRight className="w-5 h-5" />
             </button>
           </div>
+
+          <p className="mt-4 text-slate-400 text-sm italic">
+            Vaša strecha, naša zodpovednosť.
+          </p>
 
           <div className="flex items-center gap-3 mt-6">
             <a
