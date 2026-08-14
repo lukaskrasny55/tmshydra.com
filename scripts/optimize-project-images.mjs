@@ -64,6 +64,13 @@ for (const webpRelPath of webpPaths) {
   // hero images, so cap the width — several source photos come straight off a
   // camera at 3000px+ and stay oversized even after WebP compression alone.
   await sharp(inputPath)
+    // Explicit, argument-less .rotate() reads the source's EXIF Orientation
+    // tag, applies the corresponding rotation, then strips the tag — sharp's
+    // documented way to guarantee correct orientation. Relying on any
+    // implicit/default auto-orientation is not reliable (see sharp issue
+    // #3422) and is what caused photos to come out sideways after this
+    // script started resizing them.
+    .rotate()
     .resize({ width: 1920, withoutEnlargement: true })
     .webp({ quality: 55 })
     .toFile(outputPath);
