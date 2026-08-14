@@ -24,3 +24,7 @@ dist-ssr
 *.sw?
 .vercel
 .env*
+
+# Nepatrí do tohto repozitára (samostatný projekt/appka žijúca vo vlastnom repu)
+inspections/
+.claude/
