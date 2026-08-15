@@ -25,4 +25,16 @@ export const trackConversion = (eventName: 'form' | 'booking' | 'call') => {
   (window as any).gtag('event', 'conversion', {
     send_to: `${ADS_ID}/${CONVERSION_LABEL}`,
   });
+
+  // Also fire a plain GA4 event (no send_to restriction, so it goes to the
+  // GA4 property configured in GoogleAnalytics.tsx, not just Google Ads).
+  // GA4 counts events without requiring cookie consent, unlike the Google
+  // Ads conversion above — on a small site like this, the Ads conversion
+  // rarely gets counted because Google's cookieless modeling needs far more
+  // traffic than we get. This gives us a reliable, consent-independent
+  // count of real leads. Mark "generate_lead" as a key event in the GA4
+  // admin UI to see it as a conversion there too.
+  (window as any).gtag('event', 'generate_lead', {
+    lead_type: eventName,
+  });
 };
