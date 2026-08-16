@@ -300,8 +300,14 @@ export default async function handler(req, res) {
       html: customerEmail.html,
     });
 
-    // Fire-and-forget: never let this affect the success response above.
-    notifyInspectionsApp({
+    // Awaited (not fire-and-forget): Vercel freezes the serverless instance
+    // right after the response is sent, so an un-awaited call here was
+    // getting killed mid-flight before its fetch (or even its error log)
+    // could complete — this is why leads silently never reached the
+    // inspections app. notifyInspectionsApp has its own try/catch and 5s
+    // timeout, so this still can never turn into an error response for the
+    // website visitor; it just makes sure the call actually finishes first.
+    await notifyInspectionsApp({
       name: name.trim(),
       email: validatedEmail,
       phone: hasPhone ? phone.trim() : undefined,
@@ -309,7 +315,7 @@ export default async function handler(req, res) {
       message: message.trim(),
       date: isBooking ? date.trim() : undefined,
       time: isBooking ? time.trim() : undefined,
-    }).catch(() => {});
+    });
 
     return res.status(200).json({ success: true });
   } catch (err) {
