@@ -68,7 +68,7 @@ export const TechPage: React.FC<Props> = ({ onBack }) => {
         subtitle="Používame len certifikované materiály od svetových lídrov v oblasti hydroizolácií."
       />
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24 space-y-32">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 space-y-32">
         {roofCompositions.map((comp, idx) => (
           <div
             key={idx}
@@ -86,7 +86,7 @@ export const TechPage: React.FC<Props> = ({ onBack }) => {
             </div>
 
             <div className={`${idx % 2 === 1 ? 'lg:order-1' : ''}`}>
-              <h2 className="text-4xl font-black text-slate-900 mb-6 leading-tight uppercase tracking-tighter">
+              <h2 className="text-3xl font-black text-slate-900 mb-6 leading-tight uppercase tracking-tighter">
                 {comp.title}
               </h2>
 
@@ -115,7 +115,7 @@ export const TechPage: React.FC<Props> = ({ onBack }) => {
         ))}
       </div>
 
-      <div className="bg-white border-y border-slate-100 py-24">
+      <div className="bg-white border-y border-slate-100 py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
             <div className="text-center space-y-4">

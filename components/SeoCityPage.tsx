@@ -194,7 +194,7 @@ export const SeoCityPage: React.FC = () => {
             <span>{formattedCity}</span>
           </div>
 
-          <h1 className="text-5xl sm:text-7xl font-black tracking-tighter mb-8 uppercase leading-[0.9]">
+          <h1 className="text-4xl sm:text-7xl font-black tracking-tighter mb-8 uppercase leading-[0.9]">
             {serviceName}
             <br />
             <span className="text-blue-500">
@@ -239,7 +239,7 @@ export const SeoCityPage: React.FC = () => {
 
       
       
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-20">
 
           <div className="lg:col-span-8 space-y-12">

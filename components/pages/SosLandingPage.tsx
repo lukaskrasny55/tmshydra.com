@@ -42,14 +42,14 @@ const faqSnippets = [
 export const SosLandingPage: React.FC = () => {
   return (
     <div className="min-h-screen bg-slate-50">
-      <div className="bg-slate-900 py-14 sm:py-16 text-white overflow-hidden relative">
+      <div className="bg-slate-900 py-14 sm:py-12 text-white overflow-hidden relative">
         <div className="absolute top-0 right-0 w-1/3 h-full bg-blue-600/10 skew-x-12 transform translate-x-32"></div>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <div className="inline-flex items-center gap-2 bg-red-500/10 border border-red-500/30 text-red-400 px-4 py-2 rounded-full text-xs font-black uppercase tracking-widest mb-6">
             <span className="w-2 h-2 bg-red-500 rounded-full animate-pulse"></span>
             SOS – havarijný zásah do 48 hodín
           </div>
-          <h1 className="text-3xl sm:text-5xl font-black tracking-tighter mb-4 leading-tight uppercase">
+          <h1 className="text-3xl sm:text-4xl font-black tracking-tighter mb-4 leading-tight uppercase">
             Zateká vám <span className="text-blue-500">plochá strecha?</span>
           </h1>
           <p className="text-slate-400 text-lg max-w-2xl font-medium leading-relaxed mb-8">
@@ -77,7 +77,7 @@ export const SosLandingPage: React.FC = () => {
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-4 relative z-20 pb-8">
         {/* ČO ROBIŤ */}
-        <div className="bg-white rounded-[2.5rem] shadow-lg border border-slate-100 p-8 sm:p-12 mb-16">
+        <div className="bg-white rounded-[2.5rem] shadow-lg border border-slate-100 p-8 sm:p-8 mb-16">
           <h2 className="text-2xl sm:text-3xl font-black text-slate-900 uppercase tracking-tight mb-8">
             Čo robiť, keď strecha zateká
           </h2>
@@ -95,7 +95,7 @@ export const SosLandingPage: React.FC = () => {
         </div>
 
         {/* PREČO MY */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-8 bg-slate-900 text-white p-10 sm:p-12 rounded-[2.5rem] mb-16">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-8 bg-slate-900 text-white p-8 sm:p-8 rounded-[2.5rem] mb-16">
           {[
             { label: 'Zásah do', val: '48 hodín' },
             { label: 'Skúsenosti', val: '12+ rokov' },

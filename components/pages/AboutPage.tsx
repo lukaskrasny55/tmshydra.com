@@ -16,7 +16,7 @@ export const AboutPage: React.FC<Props> = ({ onBack }) => {
       />
 
       {/* O NÁS */}
-      <section className="py-24 bg-white overflow-hidden">
+      <section className="py-16 bg-white overflow-hidden">
         <div className="max-w-7xl mx-auto px-6">
 
           {/* HEADER */}
@@ -25,7 +25,7 @@ export const AboutPage: React.FC<Props> = ({ onBack }) => {
               O spoločnosti
             </p>
 
-            <h2 className="text-5xl md:text-7xl font-black text-slate-900 leading-[0.9] tracking-tighter uppercase mb-8">
+            <h2 className="text-4xl md:text-7xl font-black text-slate-900 leading-[0.9] tracking-tighter uppercase mb-8">
               VITAJTE VO SVETE
               <br />
               <span className="text-blue-600">
@@ -45,7 +45,7 @@ export const AboutPage: React.FC<Props> = ({ onBack }) => {
             {/* LEFT */}
             <div className="space-y-10">
 
-              <div className="bg-slate-50 rounded-[2.5rem] p-10 border border-slate-200">
+              <div className="bg-slate-50 rounded-[2.5rem] p-8 border border-slate-200">
                 <p className="text-slate-700 text-lg leading-relaxed font-medium">
                   Moje meno je <strong>Tomáš Solnoky</strong> a som zakladateľom spoločnosti TMS-HYDRA.
                   Za každým projektom, každou hydroizoláciou a každým zateplením plochej strechy
@@ -82,7 +82,7 @@ export const AboutPage: React.FC<Props> = ({ onBack }) => {
                 </p>
               </div>
 
-              <div className="bg-blue-600 rounded-[2.5rem] p-10 text-white shadow-2xl">
+              <div className="bg-blue-600 rounded-[2.5rem] p-8 text-white shadow-2xl">
                 <h3 className="text-3xl font-black uppercase tracking-tight mb-6">
                   Symbolika nášho mena
                 </h3>

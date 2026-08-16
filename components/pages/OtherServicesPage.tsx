@@ -59,14 +59,14 @@ export const OtherServicesPage: React.FC<Props> = ({ onBack, onNavigateToContact
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-12 relative z-20 pb-24">
         {/* Intro Card */}
-        <div className="bg-slate-900 rounded-[3rem] p-8 md:p-12 text-white mb-16 shadow-2xl overflow-hidden relative group">
+        <div className="bg-slate-900 rounded-[3rem] p-8 md:p-8 text-white mb-16 shadow-2xl overflow-hidden relative group">
           <div className="absolute top-0 right-0 w-64 h-64 bg-blue-600/10 rounded-full -mr-32 -mt-32 blur-3xl group-hover:bg-blue-600/20 transition-colors"></div>
           <div className="relative z-10 flex flex-col md:flex-row items-center gap-8">
-            <div className="w-20 h-20 bg-blue-600 rounded-2xl flex items-center justify-center flex-shrink-0 shadow-lg shadow-blue-600/20">
+            <div className="w-16 h-16 bg-blue-600 rounded-2xl flex items-center justify-center flex-shrink-0 shadow-lg shadow-blue-600/20">
               <CheckCircle2 className="w-12 h-12 text-white" />
             </div>
             <div>
-              <h2 className="text-3xl md:text-4xl font-black tracking-tighter uppercase mb-4 italic">
+              <h2 className="text-3xl md:text-3xl font-black tracking-tighter uppercase mb-4 italic">
                 Ponúkame aj <span className="text-blue-500">ostatné služby</span>
               </h2>
               <p className="text-slate-400 text-lg max-w-3xl italic">
@@ -107,8 +107,8 @@ export const OtherServicesPage: React.FC<Props> = ({ onBack, onNavigateToContact
 
         {/* CTA Section */}
         <div className="mt-24 text-center">
-          <div className="bg-white inline-block p-12 rounded-[4rem] shadow-2xl border border-slate-100 max-w-4xl mx-auto">
-            <h2 className="text-3xl md:text-4xl font-black text-slate-900 mb-6 tracking-tighter uppercase italic">
+          <div className="bg-white inline-block p-8 rounded-[4rem] shadow-2xl border border-slate-100 max-w-4xl mx-auto">
+            <h2 className="text-3xl md:text-3xl font-black text-slate-900 mb-6 tracking-tighter uppercase italic">
               Potrebujete <span className="text-blue-600">špecifické riešenie?</span>
             </h2>
             <p className="text-slate-500 text-lg mb-10 max-w-2xl mx-auto italic">
@@ -117,13 +117,13 @@ export const OtherServicesPage: React.FC<Props> = ({ onBack, onNavigateToContact
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
               <button 
                 onClick={onNavigateToContact}
-                className="w-full sm:w-auto bg-blue-600 text-white px-10 py-5 rounded-3xl font-black text-lg hover:bg-blue-700 transition-all shadow-xl shadow-blue-600/20 active:scale-[0.98]"
+                className="w-full sm:w-auto bg-blue-600 text-white px-8 py-4 rounded-3xl font-black text-lg hover:bg-blue-700 transition-all shadow-xl shadow-blue-600/20 active:scale-[0.98]"
               >
                 KONTAKTOVAŤ NÁS
               </button>
               <button 
                 onClick={onBack}
-                className="w-full sm:w-auto bg-slate-900 text-white px-10 py-5 rounded-3xl font-black text-lg hover:bg-slate-800 transition-all active:scale-[0.98]"
+                className="w-full sm:w-auto bg-slate-900 text-white px-8 py-4 rounded-3xl font-black text-lg hover:bg-slate-800 transition-all active:scale-[0.98]"
               >
                 SPÄŤ NA HLAVNÚ STRÁNKU
               </button>

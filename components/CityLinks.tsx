@@ -24,14 +24,14 @@ export const CityLinks: React.FC = () => {
   }
 
   return (
-    <section className="bg-slate-900 text-white py-20">
+    <section className="bg-slate-900 text-white py-14">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center gap-2 text-blue-400 font-bold mb-4 uppercase tracking-widest text-sm">
           <MapPin className="w-4 h-4" />
           <span>Pôsobíme po celom Slovensku</span>
         </div>
 
-        <h2 className="text-3xl sm:text-4xl font-black uppercase tracking-tight mb-10">
+        <h2 className="text-3xl sm:text-3xl font-black uppercase tracking-tight mb-10">
           Pôsobíme vo vašom meste
         </h2>
 

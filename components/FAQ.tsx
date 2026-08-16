@@ -66,7 +66,7 @@ export const FAQ: React.FC = () => {
   const [openIndex, setOpenIndex] = useState<number | null>(0);
 
   return (
-    <section className="py-20 bg-white border-t border-slate-100">
+    <section className="py-14 bg-white border-t border-slate-100">
       <Helmet>
         <script type="application/ld+json" id="faq-schema">
           {JSON.stringify(faqSchema)}
@@ -78,7 +78,7 @@ export const FAQ: React.FC = () => {
           <div className="text-blue-600 text-sm font-bold uppercase tracking-widest mb-3">
             Časté otázky
           </div>
-          <h2 className="text-3xl md:text-4xl font-black text-slate-900 uppercase">
+          <h2 className="text-3xl md:text-3xl font-black text-slate-900 uppercase">
             Čo vás zaujíma najčastejšie
           </h2>
         </div>

@@ -2,7 +2,7 @@ import React from 'react';
 import { HeroSection } from '../HeroSection';
 
 const Section: React.FC<{ heading: string; children: React.ReactNode }> = ({ heading, children }) => (
-  <div className="bg-slate-50 rounded-3xl border border-slate-100 p-8 sm:p-10">
+  <div className="bg-slate-50 rounded-3xl border border-slate-100 p-8 sm:p-8">
     <h2 className="text-xl sm:text-2xl font-black text-slate-900 tracking-tight mb-4">
       {heading}
     </h2>
@@ -21,7 +21,7 @@ export const PrivacyPolicyPage: React.FC = () => {
         subtitle="Zásady spracovania osobných údajov (GDPR)."
       />
 
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <p className="text-sm font-bold uppercase tracking-widest text-blue-600 mb-12">
           Posledná aktualizácia: júl 2026
         </p>

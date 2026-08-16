@@ -74,7 +74,7 @@ export const PriceLandingPage: React.FC = () => {
         </div>
 
         {/* CENNÍK */}
-        <div className="bg-white rounded-[2.5rem] shadow-lg border border-slate-100 p-8 sm:p-12 mb-16">
+        <div className="bg-white rounded-[2.5rem] shadow-lg border border-slate-100 p-8 sm:p-8 mb-16">
           <h2 className="text-2xl sm:text-3xl font-black text-slate-900 uppercase tracking-tight mb-2">
             Orientačný cenník
           </h2>
@@ -96,7 +96,7 @@ export const PriceLandingPage: React.FC = () => {
         </div>
 
         {/* PREČO MY */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-8 bg-slate-900 text-white p-10 sm:p-12 rounded-[2.5rem] mb-16">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-8 bg-slate-900 text-white p-8 sm:p-8 rounded-[2.5rem] mb-16">
           {[
             { label: 'Záruka', val: '15 rokov' },
             { label: 'Pohotovosť', val: '48 hodín' },

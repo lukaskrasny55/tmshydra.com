@@ -36,7 +36,7 @@ export const ServicesPage: React.FC<Props> = ({
         <ProcessSection />
 
         {/* QUALITY BADGES */}
-        <div className="mt-24 grid grid-cols-2 md:grid-cols-4 gap-12 bg-white p-12 rounded-[3.5rem] shadow-lg border border-slate-100">
+        <div className="mt-24 grid grid-cols-2 md:grid-cols-4 gap-12 bg-white p-8 rounded-[3.5rem] shadow-lg border border-slate-100">
 
           {[
             {

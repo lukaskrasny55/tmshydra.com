@@ -8,9 +8,9 @@ export const ContactPage: React.FC = () => {
     <div className="min-h-screen bg-slate-50">
 
       {/* HEADER */}
-      <section className="bg-slate-900 text-white py-24">
+      <section className="bg-slate-900 text-white py-16">
         <div className="max-w-7xl mx-auto px-6">
-          <h1 className="text-5xl md:text-7xl font-black uppercase tracking-tight">
+          <h1 className="text-4xl md:text-7xl font-black uppercase tracking-tight">
             Kontakt
           </h1>
 
@@ -21,13 +21,13 @@ export const ContactPage: React.FC = () => {
       </section>
 
       {/* KONTAKTNÉ INFORMÁCIE */}
-      <section className="py-24 bg-white">
+      <section className="py-16 bg-white">
         <div className="max-w-7xl mx-auto px-6">
 
           <div className="grid md:grid-cols-2 gap-16">
 
             {/* ADRESA */}
-            <div className="bg-slate-50 rounded-[2.5rem] p-10 border border-slate-200 shadow-sm">
+            <div className="bg-slate-50 rounded-[2.5rem] p-8 border border-slate-200 shadow-sm">
               <h2 className="text-3xl font-black text-slate-900 mb-8 uppercase tracking-tight">
                 Kontaktné údaje
               </h2>
@@ -105,10 +105,10 @@ export const ContactPage: React.FC = () => {
             <div className="space-y-8">
 
               {/* TELEFÓN */}
-              <div className="bg-slate-50 rounded-[2.5rem] p-6 sm:p-10 border border-slate-200 shadow-sm">
+              <div className="bg-slate-50 rounded-[2.5rem] p-6 sm:p-8 border border-slate-200 shadow-sm">
                 <div className="flex items-center gap-5 mb-8">
 
-                  <div className="w-20 h-20 rounded-2xl bg-slate-100 flex items-center justify-center">
+                  <div className="w-16 h-16 rounded-2xl bg-slate-100 flex items-center justify-center">
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
                       className="w-10 h-10 text-slate-800"
@@ -130,21 +130,21 @@ export const ContactPage: React.FC = () => {
                       Telefón
                     </p>
 
-                    <div className="w-24 h-1 bg-blue-600 mt-2 rounded-full"></div>
+                    <div className="w-20 h-1 bg-blue-600 mt-2 rounded-full"></div>
                   </div>
                 </div>
 
                 <a
                   href="tel:+421911551354"
                   onClick={() => trackConversion('call')}
-                  className="text-[1.8rem] sm:text-4xl font-black text-slate-800 hover:text-blue-600 transition"
+                  className="text-[1.8rem] sm:text-3xl font-black text-slate-800 hover:text-blue-600 transition"
                 >
                   +421 911 551 354
                 </a>
               </div>
 
               {/* KONTAKTNÝ FORMULÁR */}
-              <div className="bg-slate-50 rounded-[2.5rem] p-6 sm:p-10 border border-slate-200 shadow-sm">
+              <div className="bg-slate-50 rounded-[2.5rem] p-6 sm:p-8 border border-slate-200 shadow-sm">
                 <p className="text-sm font-black uppercase tracking-[0.3em] text-blue-600 mb-3">
                   Napíšte nám
                 </p>

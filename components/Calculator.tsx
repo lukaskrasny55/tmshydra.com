@@ -94,7 +94,7 @@ Systém: ${selectedSystem}`
   return (
     <section
       id="calculator"
-      className="py-20 bg-slate-50"
+      className="py-14 bg-slate-50"
     >
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16">
@@ -102,7 +102,7 @@ Systém: ${selectedSystem}`
             <CalcIcon className="w-10 h-10 text-white" />
           </div>
 
-          <h2 className="text-4xl md:text-5xl font-black text-slate-900 mb-6 uppercase">
+          <h2 className="text-3xl md:text-4xl font-black text-slate-900 mb-6 uppercase">
             Profesionálna kalkulačka ceny
           </h2>
 
@@ -290,7 +290,7 @@ Systém: ${selectedSystem}`
                 </>
               ) : (
                 <div className="text-center py-10">
-                  <div className="w-20 h-20 bg-green-500/20 rounded-full flex items-center justify-center mx-auto mb-6">
+                  <div className="w-16 h-16 bg-green-500/20 rounded-full flex items-center justify-center mx-auto mb-6">
                     <Check className="w-10 h-10 text-green-500" />
                   </div>
 

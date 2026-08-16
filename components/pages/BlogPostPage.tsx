@@ -70,7 +70,7 @@ export const BlogPostPage: React.FC = () => {
         </script>
       </Helmet>
 
-      <div className="bg-slate-900 py-14 sm:py-16 text-white overflow-hidden relative">
+      <div className="bg-slate-900 py-14 sm:py-12 text-white overflow-hidden relative">
         <div className="absolute top-0 right-0 w-1/3 h-full bg-blue-600/10 skew-x-12 transform translate-x-32"></div>
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <Link
@@ -86,14 +86,14 @@ export const BlogPostPage: React.FC = () => {
             <span>{post.readingTime}</span>
           </div>
 
-          <h1 className="text-3xl sm:text-5xl font-black tracking-tighter mb-4 leading-tight">
+          <h1 className="text-3xl sm:text-4xl font-black tracking-tighter mb-4 leading-tight">
             {post.title}
           </h1>
         </div>
       </div>
 
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-        <div className="bg-white rounded-[2.5rem] shadow-lg border border-slate-100 p-8 sm:p-12 mb-12 prose prose-lg prose-slate max-w-none">
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <div className="bg-white rounded-[2.5rem] shadow-lg border border-slate-100 p-8 sm:p-8 mb-12 prose prose-lg prose-slate max-w-none">
           {post.content.map((paragraph, i) => (
             <p key={i} className="text-slate-600 leading-relaxed">
               {paragraph}
@@ -101,7 +101,7 @@ export const BlogPostPage: React.FC = () => {
           ))}
         </div>
 
-        <div className="bg-slate-900 text-white rounded-[2.5rem] p-10 sm:p-12 mb-16 flex flex-col sm:flex-row items-center justify-between gap-8">
+        <div className="bg-slate-900 text-white rounded-[2.5rem] p-8 sm:p-8 mb-16 flex flex-col sm:flex-row items-center justify-between gap-8">
           <div>
             <h2 className="text-2xl font-black uppercase tracking-tight mb-2">
               Riešite podobnú situáciu na vlastnej streche?

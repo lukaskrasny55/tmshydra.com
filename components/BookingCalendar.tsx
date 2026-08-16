@@ -104,8 +104,8 @@ if (response.ok) {
     return (
       <section id="calendar" className="py-12 bg-slate-50 scroll-mt-20 w-full max-w-full">
         <div className="max-w-2xl mx-auto px-4 text-center">
-          <div className="bg-white p-10 rounded-3xl shadow-xl border border-blue-100 animate-in zoom-in duration-500">
-            <div className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
+          <div className="bg-white p-8 rounded-3xl shadow-xl border border-blue-100 animate-in zoom-in duration-500">
+            <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
               <CheckCircle className="w-12 h-12 text-green-600" />
             </div>
             <h2 className="text-2xl font-bold text-slate-900 mb-4">Požiadavka odoslaná!</h2>
@@ -153,7 +153,7 @@ if (response.ok) {
               </div>
             </div>
 
-            <div className="flex-grow p-8 sm:p-12">
+            <div className="flex-grow p-8 sm:p-8">
               {step === 1 ? (
                 <div className="animate-in slide-in-from-right duration-300">
                   <h3 className="text-xl font-bold mb-6 flex items-center gap-2">
@@ -254,7 +254,7 @@ if (response.ok) {
                         }
                         setStep(2);
                       }}
-                      className="bg-slate-900 text-white px-10 py-4 rounded-xl font-bold disabled:opacity-20 transition-all hover:bg-slate-800"
+                      className="bg-slate-900 text-white px-8 py-3.5 rounded-xl font-bold disabled:opacity-20 transition-all hover:bg-slate-800"
                     >
                       Pokračovať k údajom
                     </button>
@@ -334,7 +334,7 @@ if (response.ok) {
                       </button>
                       <button
                         type="submit"
-                        className="bg-blue-600 text-white px-10 py-4 rounded-xl font-bold hover:bg-blue-700 transition-all shadow-lg flex items-center gap-2"
+                        className="bg-blue-600 text-white px-8 py-3.5 rounded-xl font-bold hover:bg-blue-700 transition-all shadow-lg flex items-center gap-2"
                       >
                         <Send className="w-5 h-5" />
                         Odoslať rezerváciu

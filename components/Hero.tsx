@@ -18,7 +18,7 @@ const stats: [string, any][] = [
 
 export const Hero: React.FC = () => {
   return (
-    <section className="relative w-full bg-slate-900 text-white py-20 sm:py-24 lg:py-32 overflow-hidden flex items-center min-h-[480px] sm:min-h-[560px] lg:min-h-[640px]">
+    <section className="relative w-full bg-slate-900 text-white py-14 sm:py-16 lg:py-32 overflow-hidden flex items-center min-h-[480px] sm:min-h-[560px] lg:min-h-[640px]">
       <div className="absolute inset-0">
         <img
           src="/hero-1920.webp"
@@ -37,7 +37,7 @@ export const Hero: React.FC = () => {
 
       <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
         <div className="max-w-2xl">
-          <h1 className="text-3xl sm:text-4xl lg:text-5xl font-black leading-tight">
+          <h1 className="text-3xl sm:text-3xl lg:text-4xl font-black leading-tight">
             Hydroizolácia a zateplenie plochých striech
           </h1>
 
