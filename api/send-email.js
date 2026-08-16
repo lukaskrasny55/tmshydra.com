@@ -131,12 +131,20 @@ function wrapEmail(innerHtml) {
 async function notifyInspectionsApp({ name, email, phone, address, message, date, time }) {
   const url = process.env.INSPECTIONS_WEBHOOK_URL;
   const secret = process.env.INSPECTIONS_WEBHOOK_SECRET;
-  if (!url || !secret) return;
+  if (!url || !secret) {
+    // Logged (not thrown) so this stays fire-and-forget for the visitor, but
+    // a missing/misnamed env var is no longer invisible in Vercel logs.
+    console.error('notifyInspectionsApp: missing INSPECTIONS_WEBHOOK_URL or INSPECTIONS_WEBHOOK_SECRET', {
+      hasUrl: Boolean(url),
+      hasSecret: Boolean(secret),
+    });
+    return;
+  }
 
   const controller = new AbortController();
   const timeout = setTimeout(() => controller.abort(), 5000);
   try {
-    await fetch(`${url.replace(/\/$/, '')}/api/web-inquiry`, {
+    const res = await fetch(`${url.replace(/\/$/, '')}/api/web-inquiry`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -154,8 +162,15 @@ async function notifyInspectionsApp({ name, email, phone, address, message, date
       }),
       signal: controller.signal,
     });
+    if (!res.ok) {
+      const bodyText = await res.text().catch(() => '');
+      console.error('notifyInspectionsApp: non-OK response', res.status, bodyText.slice(0, 500));
+    }
   } catch (err) {
-    // Intentionally ignored — see comment above.
+    // Never rethrown — this must never affect the response to the website
+    // visitor — but logged so failures (bad URL, network, timeout) are
+    // diagnosable instead of silently vanishing.
+    console.error('notifyInspectionsApp: request failed', err instanceof Error ? err.message : err);
   } finally {
     clearTimeout(timeout);
   }
