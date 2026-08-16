@@ -1,8 +1,42 @@
 
 import React, { useState } from 'react';
-import { Calendar as CalendarIcon, Clock, CheckCircle, Send, User, Phone, Mail, MapPin } from 'lucide-react';
+import { Calendar as CalendarIcon, Clock, CheckCircle, Send, User, Phone, Mail, MapPin, ChevronLeft, ChevronRight } from 'lucide-react';
 import { trackConversion } from './GoogleAds';
 
+const WEEKDAY_LABELS = ['Po', 'Ut', 'St', 'Št', 'Pi', 'So', 'Ne'];
+
+// How far ahead a customer can book — long enough that "the calendar looks
+// empty" is never the reason someone can't find a slot, short enough that we
+// aren't promising availability we can't realistically plan for yet.
+const MAX_WEEKS_AHEAD = 8;
+
+function startOfDay(d: Date): Date {
+  return new Date(d.getFullYear(), d.getMonth(), d.getDate());
+}
+
+function addDays(d: Date, n: number): Date {
+  const copy = new Date(d);
+  copy.setDate(copy.getDate() + n);
+  return copy;
+}
+
+function isSameDay(a: Date, b: Date): boolean {
+  return a.getFullYear() === b.getFullYear() && a.getMonth() === b.getMonth() && a.getDate() === b.getDate();
+}
+
+// Mon-first grid for the given month: null cells pad out the leading days
+// from the previous month so the 1st lands under the correct weekday column.
+function buildMonthGrid(monthDate: Date): (Date | null)[] {
+  const year = monthDate.getFullYear();
+  const month = monthDate.getMonth();
+  const firstOfMonth = new Date(year, month, 1);
+  const leadingBlanks = (firstOfMonth.getDay() + 6) % 7; // getDay(): 0=Sun..6=Sat -> 0=Mon..6=Sun
+  const daysInMonth = new Date(year, month + 1, 0).getDate();
+  const cells: (Date | null)[] = [];
+  for (let i = 0; i < leadingBlanks; i++) cells.push(null);
+  for (let day = 1; day <= daysInMonth; day++) cells.push(new Date(year, month, day));
+  return cells;
+}
 
 export const BookingCalendar: React.FC = () => {
   const [step, setStep] = useState<1 | 2 | 3>(1);
@@ -17,25 +51,26 @@ export const BookingCalendar: React.FC = () => {
   });
 
   const availableTimes = ['09:00', '11:00', '13:00', '15:00'];
-  
-  // Get next 5 working days
-  const getNextDays = () => {
-    const days = [];
-    const now = new Date();
-    let i = 1;
-    while (days.length < 5 && i < 15) { // search up to 14 days ahead for 5 working days
-      const d = new Date(now);
-      d.setDate(now.getDate() + i);
-      const dayOfWeek = d.getDay();
-      if (dayOfWeek !== 0 && dayOfWeek !== 6) { // Skip Sunday (0) and Saturday (6)
-        days.push(d);
-      }
-      i++;
-    }
-    return days;
-  };
 
-  const days = getNextDays();
+  const today = startOfDay(new Date());
+  const minSelectable = addDays(today, 1); // earliest bookable day is tomorrow
+  const maxSelectable = addDays(today, MAX_WEEKS_AHEAD * 7);
+
+  const [viewMonth, setViewMonth] = useState(() => new Date(minSelectable.getFullYear(), minSelectable.getMonth(), 1));
+
+  function isSelectableDate(d: Date): boolean {
+    const dow = d.getDay();
+    if (dow === 0 || dow === 6) return false; // no weekend obhliadky
+    return d >= minSelectable && d <= maxSelectable;
+  }
+
+  const monthCells = buildMonthGrid(viewMonth);
+  const canGoPrevMonth =
+    viewMonth.getFullYear() > minSelectable.getFullYear() ||
+    (viewMonth.getFullYear() === minSelectable.getFullYear() && viewMonth.getMonth() > minSelectable.getMonth());
+  const canGoNextMonth =
+    viewMonth.getFullYear() < maxSelectable.getFullYear() ||
+    (viewMonth.getFullYear() === maxSelectable.getFullYear() && viewMonth.getMonth() < maxSelectable.getMonth());
 
   const handleBooking = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -125,25 +160,61 @@ if (response.ok) {
                     <CalendarIcon className="w-5 h-5 text-blue-600" />
                     Vyberte deň
                   </h3>
-                  <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3 mb-10">
-                    {days.map((d, i) => (
+                  <div className="mb-10">
+                    <div className="flex items-center justify-between mb-4">
                       <button
-                        key={i}
-                        onClick={() => setBooking({ ...booking, date: d.toISOString() })}
-                        className={`p-4 rounded-xl border-2 text-center transition-all ${
-                          booking.date === d.toISOString() 
-                            ? 'bg-blue-600 border-blue-600 text-white shadow-lg' 
-                            : 'bg-white border-slate-100 hover:border-blue-200 text-slate-700'
-                        }`}
+                        type="button"
+                        onClick={() => setViewMonth(new Date(viewMonth.getFullYear(), viewMonth.getMonth() - 1, 1))}
+                        disabled={!canGoPrevMonth}
+                        aria-label="Predchádzajúci mesiac"
+                        className="w-9 h-9 rounded-full flex items-center justify-center border-2 border-slate-100 hover:border-blue-200 disabled:opacity-20 disabled:hover:border-slate-100 transition-all"
                       >
-                        <div className="text-xs font-bold uppercase opacity-60 mb-1">
-                          {d.toLocaleDateString('sk-SK', { weekday: 'short' })}
-                        </div>
-                        <div className="text-lg font-bold">
-                          {d.getDate()}.{d.getMonth() + 1}.
-                        </div>
+                        <ChevronLeft className="w-4 h-4" />
                       </button>
-                    ))}
+                      <div className="font-bold text-slate-900 capitalize">
+                        {viewMonth.toLocaleDateString('sk-SK', { month: 'long', year: 'numeric' })}
+                      </div>
+                      <button
+                        type="button"
+                        onClick={() => setViewMonth(new Date(viewMonth.getFullYear(), viewMonth.getMonth() + 1, 1))}
+                        disabled={!canGoNextMonth}
+                        aria-label="Nasledujúci mesiac"
+                        className="w-9 h-9 rounded-full flex items-center justify-center border-2 border-slate-100 hover:border-blue-200 disabled:opacity-20 disabled:hover:border-slate-100 transition-all"
+                      >
+                        <ChevronRight className="w-4 h-4" />
+                      </button>
+                    </div>
+                    <div className="grid grid-cols-7 gap-1 sm:gap-2 mb-2">
+                      {WEEKDAY_LABELS.map((label) => (
+                        <div key={label} className="text-center text-xs font-bold uppercase text-slate-400">
+                          {label}
+                        </div>
+                      ))}
+                    </div>
+                    <div className="grid grid-cols-7 gap-1 sm:gap-2">
+                      {monthCells.map((d, i) => {
+                        if (!d) return <div key={i} />;
+                        const selectable = isSelectableDate(d);
+                        const isSelected = booking.date !== '' && isSameDay(new Date(booking.date), d);
+                        return (
+                          <button
+                            key={i}
+                            type="button"
+                            disabled={!selectable}
+                            onClick={() => setBooking({ ...booking, date: d.toISOString() })}
+                            className={`aspect-square rounded-lg text-sm font-bold transition-all ${
+                              isSelected
+                                ? 'bg-blue-600 text-white shadow-lg'
+                                : selectable
+                                ? 'bg-white border-2 border-slate-100 hover:border-blue-300 text-slate-700'
+                                : 'text-slate-300 cursor-not-allowed'
+                            }`}
+                          >
+                            {d.getDate()}
+                          </button>
+                        );
+                      })}
+                    </div>
                   </div>
 
                   {booking.date && (
