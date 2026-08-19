@@ -176,6 +176,53 @@ async function notifyInspectionsApp({ name, email, phone, address, message, date
   }
 }
 
+// Server-side GA4 lead tracking, sent via Measurement Protocol straight from
+// Vercel to Google — never touches the visitor's browser, so it can't be
+// stopped by ad blockers/privacy tools the way the client-side gtag.js event
+// can (confirmed: Consent Mode v2's gcs/gcd request parameters get caught by
+// EasyPrivacy-style filter lists, which is why real leads stopped showing up
+// in GA4 on 11 Aug even though the client-side code itself was correct).
+// Fire-and-forget from the visitor's perspective is fine here since it's
+// awaited internally (own try/catch, 3s timeout) same as notifyInspectionsApp.
+async function notifyGA4(leadType) {
+  const measurementId = process.env.GA4_MEASUREMENT_ID;
+  const apiSecret = process.env.GA4_MP_API_SECRET;
+  if (!measurementId || !apiSecret) {
+    console.error('notifyGA4: missing GA4_MEASUREMENT_ID or GA4_MP_API_SECRET', {
+      hasMeasurementId: Boolean(measurementId),
+      hasApiSecret: Boolean(apiSecret),
+    });
+    return;
+  }
+
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), 3000);
+  try {
+    const res = await fetch(
+      `https://www.google-analytics.com/mp/collect?measurement_id=${measurementId}&api_secret=${apiSecret}`,
+      {
+        method: 'POST',
+        // No real client_id available server-side (this never touches the
+        // visitor's browser/cookie) — a fresh random id per lead is fine,
+        // GA4 still counts the event; it just isn't tied to that visitor's
+        // earlier (client-side, possibly-blocked) session.
+        body: JSON.stringify({
+          client_id: `server.${Date.now()}.${Math.random().toString(36).slice(2)}`,
+          events: [{ name: 'generate_lead', params: { lead_type: leadType, source: 'server' } }],
+        }),
+        signal: controller.signal,
+      }
+    );
+    if (!res.ok) {
+      console.error('notifyGA4: non-OK response', res.status, (await res.text().catch(() => '')).slice(0, 300));
+    }
+  } catch (err) {
+    console.error('notifyGA4: request failed', err instanceof Error ? err.message : err);
+  } finally {
+    clearTimeout(timeout);
+  }
+}
+
 function companyInquiryEmail({ name, email, phone, message }) {
   return {
     subject: `Nový dopyt z webu – ${forHeader(name)}`,
@@ -316,6 +363,10 @@ export default async function handler(req, res) {
       date: isBooking ? date.trim() : undefined,
       time: isBooking ? time.trim() : undefined,
     });
+
+    // Same reasoning as notifyInspectionsApp above: awaited, not
+    // fire-and-forget, so Vercel doesn't freeze the instance mid-request.
+    await notifyGA4(isBooking ? 'booking' : 'form');
 
     return res.status(200).json({ success: true });
   } catch (err) {
