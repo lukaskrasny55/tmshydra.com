@@ -13,6 +13,31 @@ const ALLOWED_ORIGINS = [
 
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
+// Mirrors BookingCalendar.tsx's client-side rules — the calendar UI only
+// ever disables/hides invalid choices, so without this the server accepted
+// any date/time a direct API call sent it (e.g. a weekend), even though the
+// UI itself makes that impossible to select. Keep these two in sync if the
+// booking window or slots ever change.
+const AVAILABLE_TIMES = ['09:00', '11:00', '13:00', '15:00'];
+const MAX_WEEKS_AHEAD = 8;
+
+function isValidBookingDate(value) {
+  const d = new Date(value);
+  if (Number.isNaN(d.getTime())) return false;
+
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  const min = new Date(today);
+  min.setDate(min.getDate() + 1); // earliest bookable day is tomorrow
+  const max = new Date(today);
+  max.setDate(max.getDate() + MAX_WEEKS_AHEAD * 7);
+
+  const day = new Date(d.getFullYear(), d.getMonth(), d.getDate());
+  const dow = day.getDay();
+  if (dow === 0 || dow === 6) return false; // no weekend obhliadky
+  return day >= min && day <= max;
+}
+
 const RATE_LIMIT_WINDOW_MS = 10 * 60 * 1000; // 10 minutes
 const RATE_LIMIT_MAX_REQUESTS = 5; // per IP, per window
 
@@ -104,9 +129,13 @@ function validate(body) {
     }
     if (typeof date !== 'string' || date.trim().length === 0) {
       errors.push('Dátum je povinný pre rezerváciu.');
+    } else if (!isValidBookingDate(date.trim())) {
+      errors.push('Vybraný dátum nie je možné rezervovať (víkend alebo mimo dostupného obdobia).');
     }
     if (typeof time !== 'string' || time.trim().length === 0) {
       errors.push('Čas je povinný pre rezerváciu.');
+    } else if (!AVAILABLE_TIMES.includes(time.trim())) {
+      errors.push('Vybraný čas nie je dostupný.');
     }
   }
 
