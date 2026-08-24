@@ -12,14 +12,24 @@ const GA_MEASUREMENT_ID = 'G-9XC82FWJMG';
 const ADS_ID = 'AW-18181546633';
 
 // Google Consent Mode v2 ("advanced" mode): gtag.js loads on every visit,
-// with ad/analytics storage defaulting to denied until the visitor accepts.
-// This replaces the old approach of not loading gtag.js at all until consent
-// was accepted — that blocked ALL measurement (not just cookies) for anyone
-// who hadn't yet clicked through the banner, which in practice was most
-// visitors. Consent Mode lets Google send cookieless "modeled" pings for
-// denied/undecided visitors instead of nothing, while still respecting their
-// choice — no ad cookie is set and no personalization happens without
-// explicit consent.
+// with ad storage defaulting to denied until the visitor accepts. This
+// replaces the old approach of not loading gtag.js at all until consent was
+// accepted — that blocked ALL measurement (not just cookies) for anyone who
+// hadn't yet clicked through the banner, which in practice was most visitors.
+//
+// analytics_storage is granted unconditionally (not gated on consent) — this
+// was NOT the case from 11.8. to 19.8.2026, and it silently broke GA4
+// entirely: with analytics_storage denied, Google's "cookieless modeled
+// pings" promise turned out to require far more traffic than this site gets,
+// so denied/undecided visitors (the vast majority) produced literally zero
+// network requests to google-analytics.com — not modeled data, nothing.
+// Verified live: gtag.js loaded fine, but no /collect request ever fired.
+// GA4's basic hit doesn't set an ad/cross-site identifying cookie and isn't
+// used for personalization, so treating it like the ad signals below was
+// overly strict and cost us all measurement for 8 days straight.
+// ad_storage/ad_user_data/ad_personalization stay consent-gated below and in
+// consent.ts — those genuinely drive remarketing/ad personalization and need
+// real opt-in.
 let initialized = false;
 
 export default function GoogleAnalytics() {
@@ -36,12 +46,12 @@ export default function GoogleAnalytics() {
     window.gtag = gtag;
 
     const stored = getStoredConsent();
-    const initialState = stored === 'accepted' ? 'granted' : 'denied';
+    const adState = stored === 'accepted' ? 'granted' : 'denied';
     gtag('consent', 'default', {
-      ad_storage: initialState,
-      ad_user_data: initialState,
-      ad_personalization: initialState,
-      analytics_storage: initialState,
+      ad_storage: adState,
+      ad_user_data: adState,
+      ad_personalization: adState,
+      analytics_storage: 'granted',
     });
 
     const script = document.createElement('script');

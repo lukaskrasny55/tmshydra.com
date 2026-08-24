@@ -16,16 +16,20 @@ export function getStoredConsent(): ConsentValue | null {
 // Pushes the visitor's choice into Google's Consent Mode v2 signals. Safe to
 // call before gtag.js has finished loading — gtag() just queues onto
 // window.dataLayer, and Google applies the update once the tag is ready.
+//
+// Only the ad_* signals move with the visitor's choice. analytics_storage is
+// left out on purpose and stays granted (set in GoogleAnalytics.tsx) — see
+// the comment there for why gating it behind consent silently killed all GA4
+// measurement from 11.8. to 19.8.2026.
 export function pushConsentToGtag(value: ConsentValue | null): void {
   if (typeof window === 'undefined' || typeof (window as any).gtag !== 'function') {
     return;
   }
-  const state = value === 'accepted' ? 'granted' : 'denied';
+  const adState = value === 'accepted' ? 'granted' : 'denied';
   (window as any).gtag('consent', 'update', {
-    ad_storage: state,
-    ad_user_data: state,
-    ad_personalization: state,
-    analytics_storage: state,
+    ad_storage: adState,
+    ad_user_data: adState,
+    ad_personalization: adState,
   });
 }
 
