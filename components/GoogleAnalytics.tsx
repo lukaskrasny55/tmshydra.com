@@ -54,9 +54,19 @@ export default function GoogleAnalytics() {
       analytics_storage: 'granted',
     });
 
+    // Loaded via the Ads ID, not the GA4 ID. gtag.js is supposed to work
+    // either way (one script load + multiple `config` calls), and that's
+    // what this used to do — but Google Ads never actually registered the
+    // AW- destination that way: window.google_tag_manager only ever showed
+    // the G- container, `gtag('event','conversion',...)` produced zero
+    // network requests, and Google's own tag diagnostics confirmed it
+    // ("Značka nebola za posledných 48 hodín rozpoznaná", 0 prístupov for a
+    // full week). Google Ads' own "Pokyny na inštaláciu" snippet for this
+    // account loads the script with id=AW-18181546633, so we now match that
+    // exactly and let GA4 ride as the secondary `config` call instead.
     const script = document.createElement('script');
     script.async = true;
-    script.src = `https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`;
+    script.src = `https://www.googletagmanager.com/gtag/js?id=${ADS_ID}`;
     document.head.appendChild(script);
 
     gtag('js', new Date());
