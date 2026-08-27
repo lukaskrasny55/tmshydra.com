@@ -23,6 +23,10 @@ const ADS_ID = 'AW-18181546633';
 // pings" promise turned out to require far more traffic than this site gets,
 // so denied/undecided visitors (the vast majority) produced literally zero
 // network requests to google-analytics.com -- not modeled data, nothing.
+// Verified live: gtag.js loaded fine, but no /collect request ever fired.
+// GA4's basic hit doesn't set an ad/cross-site identifying cookie and isn't
+// used for personalization, so treating it like the ad signals below was
+// overly strict and cost us all measurement for 8 days straight.
 // ad_storage/ad_user_data/ad_personalization stay consent-gated below and in
 // consent.ts -- those genuinely drive remarketing/ad personalization and need
 // real opt-in.
@@ -50,27 +54,22 @@ export default function GoogleAnalytics() {
       analytics_storage: 'granted',
     });
 
-    // Each measurement destination needs its OWN <script src="...?id=..."> load
-    // to actually register in gtag.js's internal container list
-    // (window.google_tag_manager). A single script load plus two `config`
-    // calls looks like it should work per Google's generic docs, but
-    // empirically, for this account, only the ID that appears in the script
-    // `src` ever truly initializes -- the second `config` call gets pushed to
-    // dataLayer but never produces real network pings. We hit this in both
-    // directions: loading via GA_MEASUREMENT_ID alone left Ads conversions
-    // dead (0 pings for a week, fixed earlier), and loading via ADS_ID alone
-    // then left GA4 dead (0 requests to google-analytics.com, confirmed via
-    // live network capture). Loading one script per ID -- exactly what
-    // Google's own per-product install snippets do -- fixes both at once.
-    const gaScript = document.createElement('script');
-    gaScript.async = true;
-    gaScript.src = `https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`;
-    document.head.appendChild(gaScript);
-
-    const adsScript = document.createElement('script');
-    adsScript.async = true;
-    adsScript.src = `https://www.googletagmanager.com/gtag/js?id=${ADS_ID}`;
-    document.head.appendChild(adsScript);
+    // IMPORTANT: only ONE gtag.js <script> tag is loaded here, using the Ads
+    // ID. We also briefly tried loading a SECOND separate <script> for the
+    // GA4 ID (one script per destination, as Google's own per-product
+    // install snippets show) -- that broke BOTH destinations at once
+    // (confirmed via GA4 DebugView: zero events logged, and zero Ads
+    // conversion pings in live network capture). Loading gtag.js twice on
+    // this account collides internally. So: single script via ADS_ID, GA4
+    // rides along as a secondary `config` call. This gets Ads conversions
+    // working (confirmed live). GA4 stays broken until we find a working
+    // multi-destination setup (e.g. a real Google Tag Manager container, or
+    // server-side GA4 tracking) -- do not "fix" this by adding a second
+    // <script> tag again without re-testing both destinations live first.
+    const script = document.createElement('script');
+    script.async = true;
+    script.src = `https://www.googletagmanager.com/gtag/js?id=${ADS_ID}`;
+    document.head.appendChild(script);
 
     gtag('js', new Date());
     gtag('config', GA_MEASUREMENT_ID);
