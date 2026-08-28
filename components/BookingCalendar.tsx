@@ -24,6 +24,20 @@ function isSameDay(a: Date, b: Date): boolean {
   return a.getFullYear() === b.getFullYear() && a.getMonth() === b.getMonth() && a.getDate() === b.getDate();
 }
 
+// Plain 'YYYY-MM-DD', no time/zone component. We used to send
+// d.toISOString() (a full UTC instant) — for Slovak local midnight that's
+// always the previous day in UTC (UTC+1/+2), so the server (running in UTC)
+// saw every booking as one calendar day earlier than what was actually
+// clicked. That silently rejected valid weekdays whenever the shift landed
+// on a Saturday/Sunday (every Monday booking, for one). A bare date string
+// carries the calendar day unambiguously, independent of any timezone.
+function toDateOnlyString(d: Date): string {
+  const y = d.getFullYear();
+  const m = String(d.getMonth() + 1).padStart(2, '0');
+  const day = String(d.getDate()).padStart(2, '0');
+  return `${y}-${m}-${day}`;
+}
+
 // Mon-first grid for the given month: null cells pad out the leading days
 // from the previous month so the 1st lands under the correct weekday column.
 function buildMonthGrid(monthDate: Date): (Date | null)[] {
@@ -201,7 +215,7 @@ if (response.ok) {
                             key={i}
                             type="button"
                             disabled={!selectable}
-                            onClick={() => setBooking({ ...booking, date: d.toISOString() })}
+                            onClick={() => setBooking({ ...booking, date: toDateOnlyString(d) })}
                             className={`aspect-square rounded-lg text-sm font-bold transition-all ${
                               isSelected
                                 ? 'bg-blue-600 text-white shadow-lg'

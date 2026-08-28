@@ -21,6 +21,17 @@ const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const AVAILABLE_TIMES = ['09:00', '11:00', '13:00', '15:00'];
 const MAX_WEEKS_AHEAD = 8;
 
+// `value` is a plain 'YYYY-MM-DD' string from BookingCalendar.tsx (no time,
+// no timezone). Per spec, `new Date('YYYY-MM-DD')` parses that as UTC
+// midnight, so we read it back with the UTC getters, not the local ones.
+// The previous version used getFullYear()/getMonth()/getDate() (server-local
+// time) against a full ISO *instant* the client built from local midnight
+// (`d.toISOString()`) — for Slovakia's UTC+1/+2, local midnight is always
+// the previous day in UTC, so every booking was evaluated one calendar day
+// early. That silently rejected valid weekdays whenever the shift landed on
+// a Saturday/Sunday (every Monday booking, for example — confirmed live).
+// Using UTC getters on both sides removes the ambiguity regardless of what
+// timezone the server happens to run in.
 function isValidBookingDate(value) {
   const d = new Date(value);
   if (Number.isNaN(d.getTime())) return false;
@@ -32,7 +43,7 @@ function isValidBookingDate(value) {
   const max = new Date(today);
   max.setDate(max.getDate() + MAX_WEEKS_AHEAD * 7);
 
-  const day = new Date(d.getFullYear(), d.getMonth(), d.getDate());
+  const day = new Date(d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate());
   const dow = day.getDay();
   if (dow === 0 || dow === 6) return false; // no weekend obhliadky
   return day >= min && day <= max;
@@ -87,13 +98,14 @@ function forHeader(value) {
   return String(value).replace(/[\r\n]+/g, ' ').trim();
 }
 
-// BookingCalendar sends the booking date as a full ISO timestamp
-// (Date.toISOString()); emails should show it the way a customer reads a date.
+// BookingCalendar sends the booking date as a plain 'YYYY-MM-DD' string;
+// emails should show it the way a customer reads a date.
 function formatDate(value) {
   return new Date(value).toLocaleDateString('sk-SK', {
     day: 'numeric',
     month: 'long',
     year: 'numeric',
+    timeZone: 'UTC',
   });
 }
 
