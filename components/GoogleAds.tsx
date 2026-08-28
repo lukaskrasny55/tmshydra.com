@@ -7,7 +7,14 @@ import React from 'react';
 export const GoogleAds: React.FC = () => null;
 
 const ADS_ID = 'AW-18181546633';
-const CONVERSION_LABEL = 'HeRnCMjHydQcEInF0d1D';
+// This label was stale — it pointed at a conversion action that Google Ads
+// confirmed had never received a single tag ping since its creation, despite
+// this code firing correctly on every page. Verified by creating a fresh
+// conversion action ("Odoslanie formulára pre potenciálnych zákazníkov (2)",
+// secondary/non-bid-optimizing) in Google Ads and reading its ground-truth
+// event snippet directly — that is the only place Google exposes the real
+// label for an existing action. 27.8.2026.
+const CONVERSION_LABEL = 'f_vWCNWBw-kcEInF0d1D';
 
 // Fires unconditionally. Previously this checked getStoredConsent() and
 // silently no-op'd unless the visitor had explicitly clicked "Súhlasím" —
