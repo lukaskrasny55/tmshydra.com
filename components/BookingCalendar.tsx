@@ -38,6 +38,25 @@ function toDateOnlyString(d: Date): string {
   return `${y}-${m}-${day}`;
 }
 
+// Dates the team is unavailable for new obhliadky. Shown to visitors as
+// "Obsadené" (fully booked) rather than simply greyed out/disabled like a
+// weekend or a day outside the booking window — the point is that it reads
+// as high demand, not as "we're closed". Add/remove ranges here as needed;
+// each is inclusive of both start and end. 30.8.2026: blocked 13.–21.9.2026.
+const BLOCKED_RANGES: { start: string; end: string }[] = [
+  { start: '2026-09-13', end: '2026-09-21' },
+];
+
+function parseDateOnly(s: string): Date {
+  const [y, m, d] = s.split('-').map(Number);
+  return new Date(y, m - 1, d);
+}
+
+function isBlockedDate(d: Date): boolean {
+  const day = startOfDay(d);
+  return BLOCKED_RANGES.some(({ start, end }) => day >= parseDateOnly(start) && day <= parseDateOnly(end));
+}
+
 // Mon-first grid for the given month: null cells pad out the leading days
 // from the previous month so the 1st lands under the correct weekday column.
 function buildMonthGrid(monthDate: Date): (Date | null)[] {
@@ -75,6 +94,7 @@ export const BookingCalendar: React.FC = () => {
   function isSelectableDate(d: Date): boolean {
     const dow = d.getDay();
     if (dow === 0 || dow === 6) return false; // no weekend obhliadky
+    if (isBlockedDate(d)) return false; // fully booked, see BLOCKED_RANGES
     return d >= minSelectable && d <= maxSelectable;
   }
 
@@ -210,17 +230,27 @@ if (response.ok) {
                         if (!d) return <div key={i} />;
                         const selectable = isSelectableDate(d);
                         const isSelected = booking.date !== '' && isSameDay(new Date(booking.date), d);
+                        const dow = d.getDay();
+                        const isWeekend = dow === 0 || dow === 6;
+                        // Distinct from the plain "not selectable" look (weekends,
+                        // outside the booking window) — this should read to a
+                        // visitor as "someone else already took this day", not as
+                        // "unavailable for some other reason".
+                        const isFullyBooked = !isWeekend && isBlockedDate(d);
                         return (
                           <button
                             key={i}
                             type="button"
                             disabled={!selectable}
+                            title={isFullyBooked ? 'Obsadené' : undefined}
                             onClick={() => setBooking({ ...booking, date: toDateOnlyString(d) })}
                             className={`aspect-square rounded-lg text-sm font-bold transition-all ${
                               isSelected
                                 ? 'bg-blue-600 text-white shadow-lg'
                                 : selectable
                                 ? 'bg-white border-2 border-slate-100 hover:border-blue-300 text-slate-700'
+                                : isFullyBooked
+                                ? 'bg-red-50 text-red-300 line-through cursor-not-allowed'
                                 : 'text-slate-300 cursor-not-allowed'
                             }`}
                           >
