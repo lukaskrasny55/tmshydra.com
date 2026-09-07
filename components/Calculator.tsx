@@ -83,7 +83,10 @@ Systém: ${selectedSystem}`
       }
 
       setIsSubmitted(true);
-      trackConversion('form');
+      // Dopyt na cenovú ponuku z kalkulačky je vlastný typ konverzie (nie
+      // zdieľaný s kontaktným formulárom), aby sa dal v Google Ads sledovať
+      // a vyhodnocovať samostatne. 7.9.2026.
+      trackConversion('quote');
     } catch (err) {
       alert('Chyba pri odoslaní formulára.');
     } finally {

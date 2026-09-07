@@ -7,14 +7,25 @@ import React from 'react';
 export const GoogleAds: React.FC = () => null;
 
 const ADS_ID = 'AW-18181546633';
-// This label was stale — it pointed at a conversion action that Google Ads
-// confirmed had never received a single tag ping since its creation, despite
-// this code firing correctly on every page. Verified by creating a fresh
-// conversion action ("Odoslanie formulára pre potenciálnych zákazníkov (2)",
-// secondary/non-bid-optimizing) in Google Ads and reading its ground-truth
-// event snippet directly — that is the only place Google exposes the real
-// label for an existing action. 27.8.2026.
-const CONVERSION_LABEL = 'f_vWCNWBw-kcEInF0d1D';
+
+// 7.9.2026 (night) -- previously ALL three event types (form/booking/call)
+// shared one single label (f_vWCNWBw-kcEInF0d1D, "Odoslanie formulára pre
+// potenciálnych zákazníkov (2)"), so Google Ads could not tell a contact-form
+// lead apart from a phone-call click or a price-quote request from the
+// Calculator -- everything landed on one conversion action. User confirmed
+// real form leads (>=3) were undercounted (only 1 ever recorded), and asked
+// for calls and price-quote requests to be tracked as their own distinct,
+// working conversion types. Created two new conversion actions in Google Ads
+// (event snippets, same AW-18181546633 account) and split the label per
+// event type below. The original label stays as the "form"/"booking" one
+// (unchanged, still the account's primary lead action); "call" and "quote"
+// now get their own.
+const CONVERSION_LABELS: Record<'form' | 'booking' | 'call' | 'quote', string> = {
+  form: 'f_vWCNWBw-kcEInF0d1D',
+  booking: 'f_vWCNWBw-kcEInF0d1D',
+  call: 'HMtWCKjc2PAcEInF0d1D',
+  quote: 'wCTYCK3b2PAcEInF0d1D',
+};
 
 // Fires unconditionally. Previously this checked getStoredConsent() and
 // silently no-op'd unless the visitor had explicitly clicked "Súhlasím" —
@@ -25,14 +36,16 @@ const CONVERSION_LABEL = 'f_vWCNWBw-kcEInF0d1D';
 // cookied conversion or a cookieless modeled one based on the visitor's
 // actual choice — that distinction belongs in gtag's consent state, not in
 // a second, separate gate here.
-export const trackConversion = (eventName: 'form' | 'booking' | 'call') => {
+export const trackConversion = (eventName: 'form' | 'booking' | 'call' | 'quote') => {
   if (typeof window === 'undefined') {
     return;
   }
 
+  const label = CONVERSION_LABELS[eventName];
+
   if (typeof (window as any).gtag === 'function') {
     (window as any).gtag('event', 'conversion', {
-      send_to: `${ADS_ID}/${CONVERSION_LABEL}`,
+      send_to: `${ADS_ID}/${label}`,
     });
 
     // Also fire a plain GA4 event (no send_to restriction, so it goes to the
@@ -67,7 +80,7 @@ export const trackConversion = (eventName: 'form' | 'booking' | 'call') => {
   try {
     const conversionId = ADS_ID.replace('AW-', '');
     const img = new Image(1, 1);
-    img.src = `https://www.googleadservices.com/pagead/conversion/${conversionId}/?label=${CONVERSION_LABEL}&guid=ON&script=0`;
+    img.src = `https://www.googleadservices.com/pagead/conversion/${conversionId}/?label=${label}&guid=ON&script=0`;
   } catch {
     // Never let a tracking pixel break the actual user-facing flow.
   }
