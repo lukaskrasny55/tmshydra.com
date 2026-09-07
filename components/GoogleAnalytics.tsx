@@ -10,25 +10,43 @@ declare global {
 
 const GA_MEASUREMENT_ID = 'G-9XC82FWJMG';
 
-// Google Consent Mode v2 ("advanced" mode): gtag.js loads on every visit,
-// with ad storage defaulting to denied until the visitor accepts. This
-// replaces the old approach of not loading gtag.js at all until consent was
-// accepted -- that blocked ALL measurement (not just cookies) for anyone who
-// hadn't yet clicked through the banner, which in practice was most visitors.
-//
-// analytics_storage is granted unconditionally (not gated on consent) -- this
-// was NOT the case from 11.8. to 19.8.2026, and it silently broke GA4
-// entirely: with analytics_storage denied, Google's "cookieless modeled
-// pings" promise turned out to require far more traffic than this site gets,
-// so denied/undecided visitors (the vast majority) produced literally zero
-// network requests to google-analytics.com -- not modeled data, nothing.
-// Verified live: gtag.js loaded fine, but no /collect request ever fired.
-// GA4's basic hit doesn't set an ad/cross-site identifying cookie and isn't
-// used for personalization, so treating it like the ad signals below was
-// overly strict and cost us all measurement for 8 days straight.
-// ad_storage/ad_user_data/ad_personalization stay consent-gated below and in
-// consent.ts -- those genuinely drive remarketing/ad personalization and need
-// real opt-in.
+// 7.9.2026 (evening) -- root cause finally isolated by correlating GA4's own
+// daily Active Users report against deploy history: GA4 measured real
+// traffic every single day through 10.8.2026, then dropped to a hard,
+// unbroken zero starting 11.8.2026 -- and stayed at zero through every fix
+// attempted since (24.8 analytics_storage grant, 25.8 Ads-ID-first, 27.8 dual
+// script, 27.8 revert, 7.9 morning GA4-ID-only rewrite). The 11.8.2026 commit
+// ("Marketing plan Faza 1/2/4: Consent Mode v2...") is the exact point GA4
+// broke, and it changed more than just the consent defaults: it also
+// replaced how gtag() gets called. Before 11.8, this component appended TWO
+// <script> tags -- one external (the gtag.js loader) and a second, separate
+// inline <script> whose CONTENT was the literal dataLayer/gtag/js/config
+// code, parsed and run by the browser as real script text. From 11.8 onward,
+// that second script tag was dropped in favor of calling gtag() as plain JS
+// function calls from inside this React effect. Every fix attempt since kept
+// that "call gtag() directly from React" shape and only ever changed which
+// ID(s) it configured -- none of them restored a single day of data. That
+// points at the shape itself, not the consent/ID details layered on top of
+// it, so this restores the original two-<script>-tag shape (the one
+// combination not yet tried since 11.8), while keeping the real fixes made
+// along the way:
+//   - loading is unconditional now (11.8's actual intended change, unrelated
+//     to the regression) -- no more full-blocking of measurement for anyone
+//     who hasn't yet clicked the cookie banner.
+//   - analytics_storage stays granted unconditionally (24.8 fix, still
+//     correct) -- only ad_storage/ad_user_data/ad_personalization follow the
+//     visitor's real consent choice (here and in consent.ts).
+//   - the Ads (AW-) destination is intentionally NOT loaded/configured via
+//     gtag.js here. It doesn't need to be: GoogleAds.tsx's trackConversion()
+//     fires Ads conversions via its own manual <img> pixel straight to
+//     googleadservices.com, proven to work independently of gtag.js/
+//     dataLayer entirely (see the comment there, 28.8.2026).
+// If this does NOT restore GA4 data either, the problem is not in this
+// component's code shape at all (every plausible variant of it will have
+// been tried) and points at something account/domain-level on Google's side
+// -- next step would be GA4 Measurement Protocol sent server-side (bypasses
+// the browser/gtag.js entirely), mirroring the pattern already proven to
+// work for lead events in api/send-email.js's notifyGA4().
 let initialized = false;
 
 export default function GoogleAnalytics() {
@@ -38,51 +56,38 @@ export default function GoogleAnalytics() {
     }
     initialized = true;
 
-    window.dataLayer = window.dataLayer || [];
-    function gtag(...args: any[]) {
-      window.dataLayer.push(args);
-    }
-    window.gtag = gtag;
-
     const stored = getStoredConsent();
     const adState = stored === 'accepted' ? 'granted' : 'denied';
-    gtag('consent', 'default', {
-      ad_storage: adState,
-      ad_user_data: adState,
-      ad_personalization: adState,
-      analytics_storage: 'granted',
-    });
 
-    // 7.9.2026 -- reverted back to loading gtag.js via the GA4 ID alone,
-    // with NO Ads (AW-) config call at all. History of what was tried before
-    // this, so it isn't repeated:
-    //   - single script via GA4 ID, + config(ADS_ID) alongside it: GA4 measured
-    //     correctly, but Ads conversions never registered.
-    //   - single script via ADS_ID, + config(GA_MEASUREMENT_ID) alongside it
-    //     (25.8-7.9.2026): got Ads conversions "working" (they weren't --
-    //     see GoogleAds.tsx), but broke GA4 completely -- zero sessions/users
-    //     recorded site-wide for 3+ weeks. A second `config()` call for a
-    //     destination other than the one in the script's `id=` query param
-    //     does not reliably initialize on this account, in either direction.
-    //   - TWO separate <script> tags, one per destination: broke BOTH at
-    //     once (confirmed via GA4 DebugView + live network capture). Do not
-    //     retry this without re-testing both destinations live first.
-    // The AW- destination is intentionally not loaded/configured via gtag.js
-    // here at all anymore. It doesn't need to be: GoogleAds.tsx's
-    // trackConversion() already fires Ads conversions via a manually
-    // constructed <img> pixel that talks to googleadservices.com directly --
-    // proven to work independently of gtag.js/dataLayer entirely (see the
-    // comment there, 28.8.2026). Its gtag('event','conversion',...) call is
-    // now inert (no configured destination to send to) but harmless, and is
-    // left in place as a no-op in case a working multi-destination setup
-    // (e.g. a real Google Tag Manager container) replaces this later.
-    const script = document.createElement('script');
-    script.async = true;
-    script.src = `https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`;
-    document.head.appendChild(script);
+    // Script 1: external gtag.js loader. Same role as pre-11.8.
+    const loader = document.createElement('script');
+    loader.async = true;
+    loader.src = `https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`;
+    document.head.appendChild(loader);
 
-    gtag('js', new Date());
-    gtag('config', GA_MEASUREMENT_ID);
+    // Script 2: a SEPARATE inline <script> tag whose text content is the
+    // dataLayer/gtag setup and the consent/js/config calls -- run by the
+    // browser as parsed script text, not as plain JS calls from this React
+    // component. This is the one thing that changed on 11.8.2026 when GA4
+    // measurement stopped; restoring it is the point of this change. Do not
+    // "simplify" this back into direct gtag() calls from React without
+    // re-verifying live in GA4 Realtime first -- that exact simplification is
+    // what broke it.
+    const inline = document.createElement('script');
+    inline.innerHTML = `
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      window.gtag = gtag;
+      gtag('consent', 'default', {
+        ad_storage: '${adState}',
+        ad_user_data: '${adState}',
+        ad_personalization: '${adState}',
+        analytics_storage: 'granted'
+      });
+      gtag('js', new Date());
+      gtag('config', '${GA_MEASUREMENT_ID}');
+    `;
+    document.head.appendChild(inline);
   }, []);
 
   return null;
