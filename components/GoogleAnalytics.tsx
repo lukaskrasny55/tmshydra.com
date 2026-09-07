@@ -9,7 +9,6 @@ declare global {
 }
 
 const GA_MEASUREMENT_ID = 'G-9XC82FWJMG';
-const ADS_ID = 'AW-18181546633';
 
 // Google Consent Mode v2 ("advanced" mode): gtag.js loads on every visit,
 // with ad storage defaulting to denied until the visitor accepts. This
@@ -54,26 +53,36 @@ export default function GoogleAnalytics() {
       analytics_storage: 'granted',
     });
 
-    // IMPORTANT: only ONE gtag.js <script> tag is loaded here, using the Ads
-    // ID. We also briefly tried loading a SECOND separate <script> for the
-    // GA4 ID (one script per destination, as Google's own per-product
-    // install snippets show) -- that broke BOTH destinations at once
-    // (confirmed via GA4 DebugView: zero events logged, and zero Ads
-    // conversion pings in live network capture). Loading gtag.js twice on
-    // this account collides internally. So: single script via ADS_ID, GA4
-    // rides along as a secondary `config` call. This gets Ads conversions
-    // working (confirmed live). GA4 stays broken until we find a working
-    // multi-destination setup (e.g. a real Google Tag Manager container, or
-    // server-side GA4 tracking) -- do not "fix" this by adding a second
-    // <script> tag again without re-testing both destinations live first.
+    // 7.9.2026 -- reverted back to loading gtag.js via the GA4 ID alone,
+    // with NO Ads (AW-) config call at all. History of what was tried before
+    // this, so it isn't repeated:
+    //   - single script via GA4 ID, + config(ADS_ID) alongside it: GA4 measured
+    //     correctly, but Ads conversions never registered.
+    //   - single script via ADS_ID, + config(GA_MEASUREMENT_ID) alongside it
+    //     (25.8-7.9.2026): got Ads conversions "working" (they weren't --
+    //     see GoogleAds.tsx), but broke GA4 completely -- zero sessions/users
+    //     recorded site-wide for 3+ weeks. A second `config()` call for a
+    //     destination other than the one in the script's `id=` query param
+    //     does not reliably initialize on this account, in either direction.
+    //   - TWO separate <script> tags, one per destination: broke BOTH at
+    //     once (confirmed via GA4 DebugView + live network capture). Do not
+    //     retry this without re-testing both destinations live first.
+    // The AW- destination is intentionally not loaded/configured via gtag.js
+    // here at all anymore. It doesn't need to be: GoogleAds.tsx's
+    // trackConversion() already fires Ads conversions via a manually
+    // constructed <img> pixel that talks to googleadservices.com directly --
+    // proven to work independently of gtag.js/dataLayer entirely (see the
+    // comment there, 28.8.2026). Its gtag('event','conversion',...) call is
+    // now inert (no configured destination to send to) but harmless, and is
+    // left in place as a no-op in case a working multi-destination setup
+    // (e.g. a real Google Tag Manager container) replaces this later.
     const script = document.createElement('script');
     script.async = true;
-    script.src = `https://www.googletagmanager.com/gtag/js?id=${ADS_ID}`;
+    script.src = `https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`;
     document.head.appendChild(script);
 
     gtag('js', new Date());
     gtag('config', GA_MEASUREMENT_ID);
-    gtag('config', ADS_ID);
   }, []);
 
   return null;
