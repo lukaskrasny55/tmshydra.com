@@ -1,4 +1,5 @@
 import React from 'react';
+import { trackMetaEvent } from './MetaPixel';
 
 // The AW- tag is configured together with GA in GoogleAnalytics.tsx (single
 // shared gtag.js load, see the Consent Mode v2 comment there) — this
@@ -84,4 +85,11 @@ export const trackConversion = (eventName: 'form' | 'booking' | 'call' | 'quote'
   } catch {
     // Never let a tracking pixel break the actual user-facing flow.
   }
+
+  // 8.9.2026 -- also mirror every conversion to the Meta Pixel (see
+  // MetaPixel.tsx) so FB/IG ad campaigns can measure and optimize toward
+  // real leads instead of just clicks/interactions. Kept as a single call
+  // here rather than editing every component that already calls
+  // trackConversion() individually.
+  trackMetaEvent(eventName);
 };

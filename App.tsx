@@ -16,6 +16,7 @@ import { Seo } from './components/Seo';
 import { GoogleAds } from './components/GoogleAds';
 import { SeoCityPage } from './components/SeoCityPage';
 import GoogleAnalytics from './components/GoogleAnalytics';
+import MetaPixel from './components/MetaPixel';
 import { MobileCallBar } from './components/MobileCallBar';
 
 const AboutPage = lazy(() =>
@@ -142,6 +143,7 @@ const Layout: React.FC = () => {
       {isKnownStaticRoute && <Seo slug={getSlugForPath(location.pathname)} />}
       <GoogleAds />
       <GoogleAnalytics />
+      <MetaPixel />
 
       <Navbar showCalculator={true} />
 
