@@ -10,6 +10,7 @@ import { trackConversion } from './GoogleAds';
 import { CookieConsent } from './CookieConsent';
 import { MobileCallBar } from './MobileCallBar';
 import { projects } from '../data/projects';
+import { ContactForm } from './ContactForm';
 
 // Real realizácie genuinely located in/near each city — verified against
 // actual municipality/district data, not guessed. Only cities with a
@@ -43,8 +44,11 @@ interface PageContent {
 export const SeoCityPage: React.FC = () => {
   const { service, city } = useParams<{ service: string; city: string }>();
 
+  // Proper display name (e.g. "Nové Zámky") taken from the city title in
+  // data/cities.js; falls back to the capitalised slug for unknown cities.
   const formattedCity = city
-    ? city.charAt(0).toUpperCase() + city.slice(1)
+    ? cityData[city]?.title?.replace(/^Hydroizolácie plochých striech\s+/, '') ||
+      city.charAt(0).toUpperCase() + city.slice(1)
     : '';
 
   const serviceName = service
@@ -218,13 +222,22 @@ export const SeoCityPage: React.FC = () => {
           </a>
 
           <div className="mt-10 flex flex-wrap gap-4">
-            <Link
-              to="/#calendar"
+            <a
+              href="#dopyt"
               className="bg-blue-600 text-white px-8 py-4 rounded-xl font-bold hover:bg-blue-700 transition-all flex items-center gap-2"
             >
               Bezplatná obhliadka
               <ArrowRight className="w-5 h-5" />
-            </Link>
+            </a>
+
+            <a
+              href="tel:+421911551354"
+              onClick={() => trackConversion('call')}
+              className="bg-white text-slate-900 px-8 py-4 rounded-xl font-bold hover:bg-slate-100 transition-all flex items-center gap-2"
+            >
+              <Phone className="w-5 h-5" />
+              Zavolať +421 911 551 354
+            </a>
 
             <Link
               to="/#calculator"
@@ -277,6 +290,19 @@ export const SeoCityPage: React.FC = () => {
                     </span>
                   </div>
                 ))}
+              </div>
+
+              <div
+                id="dopyt"
+                className="mt-16 not-prose scroll-mt-24 bg-slate-50 rounded-[2rem] border border-slate-100 p-6 sm:p-8"
+              >
+                <h3 className="text-2xl font-black text-slate-900 uppercase tracking-tight mb-2">
+                  Bezplatná obhliadka v meste {formattedCity}
+                </h3>
+                <p className="text-slate-600 mb-6">
+                  Napíšte nám a ozveme sa vám čo najskôr. Obhliadka strechy je vždy zdarma a nezáväzná.
+                </p>
+                <ContactForm city={formattedCity} />
               </div>
 
               {nearbyProjects.length > 0 && (
@@ -396,12 +422,12 @@ export const SeoCityPage: React.FC = () => {
                 </div>
               </a>
 
-              <Link
-                to="/#contact"
+              <a
+                href="#dopyt"
                 className="w-full bg-blue-600 text-white py-4 rounded-2xl font-black uppercase tracking-widest hover:bg-blue-700 transition-all flex items-center justify-center gap-2"
               >
                 Napíšte nám
-              </Link>
+              </a>
 
 <div className="mt-24 border-t border-white/10 pt-12">
 

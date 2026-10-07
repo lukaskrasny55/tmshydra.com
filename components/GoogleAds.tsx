@@ -57,9 +57,15 @@ export const trackConversion = (eventName: 'form' | 'booking' | 'call' | 'quote'
     // traffic than we get. This gives us a reliable, consent-independent
     // count of real leads. Mark "generate_lead" as a key event in the GA4
     // admin UI to see it as a conversion there too.
-    (window as any).gtag('event', 'generate_lead', {
-      lead_type: eventName,
-    });
+    // 7.10.2026 -- form/booking/quote leads are already sent to GA4 by the
+    // server (api/send-email.js notifyGA4), so firing generate_lead here too
+    // double-counted every lead. Only 'call' (no backend request) is sent
+    // from the browser.
+    if (eventName === 'call') {
+      (window as any).gtag('event', 'generate_lead', {
+        lead_type: eventName,
+      });
+    }
   }
 
   // Belt-and-suspenders fallback, fired unconditionally alongside the gtag

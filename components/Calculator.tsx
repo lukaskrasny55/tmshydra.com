@@ -71,6 +71,7 @@ export const Calculator: React.FC = () => {
           name: leadForm.name,
           email: leadForm.email,
           phone: leadForm.phone,
+          leadType: 'quote',
           message: `Dopyt na cenovú ponuku z kalkulačky.
 Typ objektu: ${buildingType}
 Plocha: ${area} m²

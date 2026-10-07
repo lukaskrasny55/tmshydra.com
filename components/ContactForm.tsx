@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { User, Mail, Phone, MessageSquare, Send, CheckCircle } from 'lucide-react';
 import { trackConversion } from './GoogleAds';
 
-export const ContactForm: React.FC = () => {
+export const ContactForm: React.FC<{ city?: string }> = ({ city }) => {
   const [form, setForm] = useState({ name: '', email: '', phone: '', message: '' });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
@@ -19,7 +19,7 @@ export const ContactForm: React.FC = () => {
           name: form.name,
           email: form.email,
           phone: form.phone,
-          message: form.message,
+          message: city ? `[Stránka mesta: ${city}]\n${form.message}` : form.message,
         }),
       });
 

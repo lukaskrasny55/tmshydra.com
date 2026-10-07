@@ -407,7 +407,7 @@ export default async function handler(req, res) {
 
     // Same reasoning as notifyInspectionsApp above: awaited, not
     // fire-and-forget, so Vercel doesn't freeze the instance mid-request.
-    await notifyGA4(isBooking ? 'booking' : 'form');
+    await notifyGA4(isBooking ? 'booking' : req.body.leadType === 'quote' ? 'quote' : 'form');
 
     return res.status(200).json({ success: true });
   } catch (err) {

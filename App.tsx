@@ -124,12 +124,43 @@ const Layout: React.FC = () => {
   const location = useLocation();
 
   useEffect(() => {
-    if (location.hash) {
-      const id = location.hash.slice(1);
-      document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
-    } else {
+    if (!location.hash) {
       window.scrollTo(0, 0);
+      return;
     }
+
+    // Cross-page anchor links (e.g. city landing page -> /#calendar) used to
+    // leave the visitor at the top of the home page: a single smooth scroll
+    // got lost while the page was still laying out. Jump right away, then
+    // re-align a couple of times as images/layout settle; stop as soon as
+    // the visitor scrolls themselves.
+    const id = decodeURIComponent(location.hash.slice(1));
+    let cancelled = false;
+    const cancel = () => { cancelled = true; };
+    window.addEventListener('wheel', cancel, { passive: true });
+    window.addEventListener('touchstart', cancel, { passive: true });
+    window.addEventListener('keydown', cancel);
+
+    const align = () => {
+      if (cancelled) return;
+      const el = document.getElementById(id);
+      if (!el) return;
+      const scrollMt = parseFloat(getComputedStyle(el).scrollMarginTop) || 0;
+      const target = el.getBoundingClientRect().top + window.scrollY - scrollMt;
+      if (Math.abs(window.scrollY - target) > 4) {
+        window.scrollTo({ top: Math.max(0, target), behavior: 'auto' });
+      }
+    };
+
+    align();
+    const timers = [150, 500, 1200].map((ms) => window.setTimeout(align, ms));
+
+    return () => {
+      timers.forEach(window.clearTimeout);
+      window.removeEventListener('wheel', cancel);
+      window.removeEventListener('touchstart', cancel);
+      window.removeEventListener('keydown', cancel);
+    };
   }, [location.pathname, location.hash]);
 
   // Only exact static routes use the generic seoData-driven <Seo>. Dynamic
