@@ -21,11 +21,11 @@ export const projects: Project[] = [
   {
     id: '1',
     slug: 'villa-hascak-bratislava',
-    title: 'Villa Hasčák',
+    title: 'Vila Hasčák',
     location: 'Bratislava',
-    description: 'Kompletná rekonštrukcia hydroizolácie.',
-    metaDescription: 'Kompletná rekonštrukcia hydroizolácie plochej strechy rodinnej vily v Bratislave – nová fólia, ošetrenie atík a detailov, dlhá životnosť bez zatekania.',
-    longDescription: 'Pri rodinnej vile v Bratislave sme realizovali kompletnú rekonštrukciu hydroizolácie plochej strechy. Pôvodná skladba už neplnila svoju funkciu a objavovali sa prvé príznaky zatekania, preto sme pristúpili k dôkladnej diagnostike a následnej výmene celej hydroizolačnej vrstvy za certifikovanú fóliu s vysokou odolnosťou voči UV žiareniu a poveternostným vplyvom. Súčasťou realizácie bolo aj ošetrenie všetkých detailov – atík, prestupov a odkvapového systému, ktoré sú pri plochých strechách najčastejším miestom porúch. Vďaka precíznemu prevedeniu a použitiu overených materiálov získala strecha dlhú životnosť bez nutnosti ďalších zásahov. Realizácie tohto typu robíme na rodinných domoch po celom Bratislavskom kraji – od diagnostiky, cez návrh skladby, až po odovzdanie hotového diela s garanciou kvality.',
+    description: 'Obnova hydroizolácie plochej strechy.',
+    metaDescription: 'Obnova hydroizolácie plochej strechy rodinnej vily v Bratislave – nová vrchná vrstva z asfaltových pásov APAO s minerálnym posypom a dôkladné opracovanie atík a prestupov.',
+    longDescription: 'Na rodinnej vile v Bratislave sme realizovali obnovu hydroizolácie plochej strechy. Pôvodná hydroizolácia už neplnila svoju funkciu a objavovali sa prvé príznaky zatekania. Po posúdení stavu strechy sme aplikovali novú vrchnú hydroizolačnú vrstvu z asfaltových pásov modifikovaných APAO s ochranným minerálnym posypom.\n\nSúčasťou rekonštrukcie bolo aj dôkladné opracovanie detailov – atík, prestupov a napojení na odkvapový systém, ktoré bývajú pri plochých strechách častým miestom porúch. Precízne zhotovenie spojov a detailov je základom spoľahlivej ochrany pred zatekaním a dlhej životnosti strechy.\n\nRekonštrukcie plochých striech realizujeme na rodinných a bytových domoch, komerčných budovách aj priemyselných halách po celom Bratislavskom kraji – od diagnostiky a návrhu vhodného riešenia až po odovzdanie hotového diela.',
     gallery: ['/vh1.webp', '/vh2.webp', '/vh3.webp', '/vh4.webp']
   },
   {

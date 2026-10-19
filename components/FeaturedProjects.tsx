@@ -5,9 +5,9 @@ import { ROUTE_PATHS } from '../routePaths';
 
 const featured = [
   {
-    title: 'Villa Hasčák',
+    title: 'Vila Hasčák',
     location: 'Bratislava',
-    description: 'Kompletná rekonštrukcia hydroizolácie.',
+    description: 'Obnova hydroizolácie plochej strechy.',
     image: '/vh1.webp',
     slug: 'villa-hascak-bratislava',
   },

@@ -142,7 +142,7 @@ export const ProjectDetailPage: React.FC = () => {
           <h2 className="text-2xl font-black text-slate-900 uppercase tracking-tight mb-6">
             O realizácii
           </h2>
-          <p className="text-slate-600 leading-relaxed">
+          <p className="text-slate-600 leading-relaxed whitespace-pre-line">
             {project.longDescription}
           </p>
         </div>
