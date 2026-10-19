@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import { Phone, Mail, Facebook, Instagram } from 'lucide-react';
 import { ROUTE_PATHS } from '../routePaths';
 import { trackConversion } from './GoogleAds';
+import { openCookieSettings } from '../consent';
 
 const PHONE_NUMBER = '+421911551354';
 const PHONE_DISPLAY = '+421 911 551 354';
@@ -90,6 +91,7 @@ export const Footer: React.FC = () => {
             <ul className="space-y-4 text-sm">
               <li><Link to={ROUTE_PATHS.privacyPolicy} className="hover:text-blue-400 transition-colors">Ochrana osobných údajov (GDPR)</Link></li>
               <li><Link to={ROUTE_PATHS.terms} className="hover:text-blue-400 transition-colors">Obchodné podmienky</Link></li>
+              <li><button type="button" onClick={openCookieSettings} className="hover:text-blue-400 transition-colors text-left">Nastavenia cookies</button></li>
               <li><p className="mt-4 text-slate-400">IČO: 57 086 699<br />DIČ: 2122561485</p></li>
             </ul>
           </div>

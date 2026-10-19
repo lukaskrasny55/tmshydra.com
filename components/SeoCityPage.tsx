@@ -11,6 +11,7 @@ import { CookieConsent } from './CookieConsent';
 import { MobileCallBar } from './MobileCallBar';
 import { projects } from '../data/projects';
 import { ContactForm } from './ContactForm';
+import { openCookieSettings } from '../consent';
 
 // Real realizácie genuinely located in/near each city — verified against
 // actual municipality/district data, not guessed. Only cities with a
@@ -458,6 +459,16 @@ export const SeoCityPage: React.FC = () => {
           </div>
 
         </div>
+      </div>
+
+      <div className="border-t border-slate-100 py-6 text-center text-sm text-slate-500">
+        <button
+          type="button"
+          onClick={openCookieSettings}
+          className="underline hover:text-blue-600 transition-colors"
+        >
+          Nastavenia cookies
+        </button>
       </div>
     </div>
     

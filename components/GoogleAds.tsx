@@ -1,5 +1,6 @@
 import React from 'react';
 import { trackMetaEvent } from './MetaPixel';
+import { getStoredConsent } from '../consent';
 
 // The AW- tag is configured together with GA in GoogleAnalytics.tsx (single
 // shared gtag.js load, see the Consent Mode v2 comment there) — this
@@ -84,10 +85,17 @@ export const trackConversion = (eventName: 'form' | 'booking' | 'call' | 'quote'
   // (GCLID) attribution the way a working gtag.js would, but for a
   // secondary/non-bid-optimizing goal, an unattributed conversion beats a
   // missing one. 28.8.2026.
+  // 10/2026 (audit item 3) -- the pixel is a request to Google's ad servers,
+  // so it is now only sent when the visitor has accepted cookies. For
+  // visitors who rejected (or have not chosen yet) no Ads request is made;
+  // their leads are still counted by the server-side GA4 event in
+  // api/send-email.js.
   try {
-    const conversionId = ADS_ID.replace('AW-', '');
-    const img = new Image(1, 1);
-    img.src = `https://www.googleadservices.com/pagead/conversion/${conversionId}/?label=${label}&guid=ON&script=0`;
+    if (getStoredConsent() === 'accepted') {
+      const conversionId = ADS_ID.replace('AW-', '');
+      const img = new Image(1, 1);
+      img.src = `https://www.googleadservices.com/pagead/conversion/${conversionId}/?label=${label}&guid=ON&script=0`;
+    }
   } catch {
     // Never let a tracking pixel break the actual user-facing flow.
   }
