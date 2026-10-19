@@ -44,10 +44,10 @@ export const projects: Project[] = [
     slug: 'novostavba-kolta',
     title: 'Novostavba',
     location: 'Kolta',
-    description: 'Zateplenie + TPO fólia.',
-    metaDescription: 'Kompletná skladba plochej strechy novostavby v Kolte – zateplenie a hydroizolácia TPO fóliou od základov, riešené už v hrubej stavbe.',
-    system: 'TPO fólia',
-    longDescription: 'Pri novostavbe rodinného domu v obci Kolta sme od základov riešili kompletnú skladbu plochej strechy vrátane zateplenia a hydroizolácie TPO fóliou. TPO fólia patrí medzi moderné hydroizolačné materiály s vynikajúcou odolnosťou voči UV žiareniu, mechanickému poškodeniu aj teplotným výkyvom, a preto je čoraz obľúbenejšou voľbou pri nových stavbách. Zateplenie sme navrhli s dôrazom na aktuálne požiadavky na energetickú hospodárnosť budov, aby strecha dlhodobo prispievala k nízkym nákladom na vykurovanie. Všetky detaily – atiky, prestupy inštalácií aj odvodnenie – sme riešili už vo fáze hrubej stavby v úzkej spolupráci so stavebníkom, čo je pri novostavbách kľúčové pre bezproblémové fungovanie strechy na desiatky rokov dopredu. Realizácie plochých striech pri novostavbách robíme na celom západnom Slovensku.',
+    description: 'Zateplenie, vyspádovanie a SBS hydroizolácia Sika.',
+    metaDescription: 'Plochá strecha novostavby administratívnej budovy v obci Kolta – EPS zateplenie so spádovými klinmi a hydroizolácia z SBS asfaltových pásov Sika.',
+    system: 'SBS asfaltové pásy Sika, EPS',
+    longDescription: 'Pri novostavbe administratívnej budovy spoločnosti KATEA s.r.o. v obci Kolta sme realizovali plochú strechu vrátane zateplenia, vyspádovania a hydroizolácie z kvalitných certifikovaných SBS modifikovaných asfaltových pásov od výrobcu Sika.\n\nTepelnú izoláciu strechy tvoria dosky z EPS polystyrénu doplnené o polystyrénové spádové kliny, ktoré vytvárajú potrebný sklon na odvádzanie dažďovej vody k strešným vpustom. Táto skladba prispieva k tepelnej ochrane budovy a správnemu odvodneniu strechy.\n\nPri zhotovení hydroizolácie sme kládli dôraz na dôkladné spojenie asfaltových pásov a precízne opracovanie všetkých detailov – atík, prestupov inštalácií a napojení na strešné vpusty. Kvalita týchto miest je zásadná pre spoľahlivú ochranu budovy pred zatekaním.\n\nPloché strechy na novostavbách rodinných a bytových domov, administratívnych budovách aj priemyselných halách realizujeme na celom západnom Slovensku – od návrhu vhodnej skladby cez zateplenie a vyspádovanie až po dokončenie hydroizolácie a odovzdanie hotového diela.',
     gallery: ['/ns1.webp', '/ns2.webp', '/ns3.webp', '/ns4.webp']
   },
   {
