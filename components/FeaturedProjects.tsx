@@ -21,7 +21,7 @@ const featured = [
   {
     title: 'Zelená strecha',
     location: 'Belgicko',
-    description: 'Prémiová TPO fólia na administratívnom objekte.',
+    description: 'Zateplenie a hydroizolácia strechy pod zelenú strechu.',
     image: '/b1.webp',
     slug: 'zelena-strecha-belgicko',
   },

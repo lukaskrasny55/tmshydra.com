@@ -75,10 +75,10 @@ export const projects: Project[] = [
     slug: 'zelena-strecha-belgicko',
     title: 'Zelená strecha',
     location: 'Belgicko',
-    description: 'Prémiová TPO fólia na administratívnom objekte.',
-    metaDescription: 'Prémiová TPO fólia na plochej streche administratívneho objektu v Belgicku – medzinárodná realizácia TMS-HYDRA.',
-    system: 'TPO fólia',
-    longDescription: 'Pre administratívny objekt v Belgicku sme dodali a nainštalovali prémiovú TPO fóliu ako hydroizolačnú vrstvu plochej strechy. Táto zákazka potvrdzuje, že kvalitu a spoľahlivosť našich realizácií oceňujú aj klienti mimo Slovenska. TPO fólia bola zvolená pre svoju vysokú odolnosť voči poveternostným vplyvom, chemickú stabilitu a dlhú životnosť, čo sú kľúčové parametre pri komerčných a administratívnych budovách s vysokými nárokmi na bezúdržbovú prevádzku. Realizácia zahŕňala presné napojenie na všetky strešné prestupy, atiky a technologické zariadenia umiestnené na streche. Medzinárodné projekty realizujeme s rovnakým dôrazom na kvalitu spracovania a dodržanie termínov ako zákazky na Slovensku. Skúsenosti z komerčných realizácií v zahraničí následne zúročujeme aj pri projektoch pre slovenských klientov.',
+    description: 'Zateplenie a hydroizolácia strechy pod zelenú strechu.',
+    metaDescription: 'Zateplenie a hydroizolácia plochej strechy novostavby administratívneho objektu v Belgicku – PIR izolácia, asfaltové pásy odolné proti prerastaniu koreňov a skladba pre zelenú strechu.',
+    system: 'Zelená strecha, PIR, asfaltové pásy',
+    longDescription: 'Na novostavbe administratívneho objektu v Belgicku sme realizovali zateplenie a hydroizoláciu plochej strechy so skladbou určenou pre zelenú strechu.\n\nNa železobetónovú dosku sme aplikovali penetráciu a parozábranu. Nasledovala tepelná izolácia z PIR dosiek, termoaktívna podkladová hydroizolačná vrstva a vrchná vrstva z asfaltových pásov odolných proti prerastaniu koreňov. Na takto pripravenom podklade bola následne zhotovená zelená strecha.\n\nDôležitou súčasťou realizácie bolo precízne opracovanie atík, strešných prestupov a odvodňovacích detailov. Pri zelených strechách je kvalita hydroizolácie a jej napojení obzvlášť dôležitá, pretože po dokončení vegetačného súvrstvia je prístup k týmto vrstvám náročnejší.\n\nVýsledná skladba spája tepelnú ochranu budovy, ochranu pred zatekaním a výhody vegetačnej strechy, ktorá pomáha zadržiavať dažďovú vodu a obmedzovať prehrievanie strešného povrchu.\n\nMedzinárodné projekty realizujeme s rovnakým dôrazom na kvalitu spracovania a dodržanie termínov ako zákazky na Slovensku. Skúsenosti z komerčných realizácií v zahraničí následne zúročujeme aj pri projektoch pre slovenských klientov.',
     gallery: ['/b1.webp', '/b2.webp', '/b3.webp']
   },
   {
