@@ -33,9 +33,10 @@ export const projects: Project[] = [
     slug: 'oprava-strechy-nove-zamky',
     title: 'Oprava strechy',
     location: 'Nové Zámky',
-    description: 'Lokálne opravy a pretesnenie strechy.',
-    metaDescription: 'Lokálna oprava a pretesnenie zatekajúcej plochej strechy rodinného domu v Nových Zámkoch – cielená oprava namiesto nákladnej výmeny celej skladby.',
-    longDescription: 'Plochá strecha rodinného domu v Nových Zámkoch trpela opakovaným zatekaním v oblasti prestupov a spojov hydroizolácie. Namiesto plošnej výmeny celej skladby sme zvolili cielenú lokálnu opravu – identifikovali sme presné miesta porúch, odstránili poškodené úseky pôvodnej krytiny a nahradili ich novým, dôkladne privareným materiálom vrátane pretesnenia všetkých kritických detailov. Tento prístup je pre majiteľov rodinných domov často ekonomickejším riešením, ak je zvyšná časť strechy ešte v dobrom technickom stave. Po dokončení opravy sme zrealizovali kontrolu vodotesnosti, aby sme mali istotu, že problém so zatekaním je definitívne vyriešený. Lokálne opravy plochých striech robíme na celom Slovensku a odporúčame ich vždy, keď to stav strechy objektívne umožňuje – ušetria čas aj náklady oproti kompletnej rekonštrukcii.',
+    description: 'Obnova hydroizolácie systémom 1Protect Basic.',
+    metaDescription: 'Obnova hydroizolácie plochej strechy rodinného domu v Nových Zámkoch systémom 1Protect Basic – lokálne opravy podkladu, penetrácia a nová vrstva z SBS asfaltových pásov.',
+    system: '1Protect Basic',
+    longDescription: 'Na rodinnom dome v Nových Zámkoch sme realizovali jednovrstvovú rekonštrukciu hydroizolácie plochej strechy systémom 1Protect Basic.\n\nPred aplikáciou novej hydroizolácie sme vykonali lokálne opravy pôvodnej vrstvy a odstránili vzniknuté bubliny, aby sme zabezpečili vhodný podklad pre ďalšie práce. Následne sme aplikovali penetráciu a zhotovili novú hydroizolačnú vrstvu z SBS modifikovaných asfaltových pásov s ochranným minerálnym posypom v tehlovočervenej farbe.\n\nObnova zahŕňala celú plochu strechy vrátane opracovania atík, prestupov a napojení na odvodnenie. Dôraz sme kládli na dôkladné natavenie pásov a precízne zhotovenie spojov a detailov.\n\nSystém 1Protect Basic predstavuje riešenie obnovy hydroizolácie pre strechy, ktorých technický stav umožňuje aplikáciu novej vrstvy bez výmeny celej pôvodnej skladby. Vhodnosť tohto postupu vždy posudzujeme podľa stavu konkrétnej strechy.\n\nRekonštrukcie plochých striech rodinných domov, bytových domov, administratívnych a priemyselných hál realizujeme v Nových Zámkoch a okolí aj v ďalších regiónoch Slovenska – od posúdenia stavu a návrhu technického riešenia až po odovzdanie hotového diela.',
     gallery: ['/nz1.webp', '/nz2.webp', '/nz3.webp', '/nz4.webp']
   },
   {
