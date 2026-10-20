@@ -4,7 +4,8 @@
 
 export const GOOGLE_REVIEWS_URL = 'https://www.google.com/maps/search/?api=1&query=TMS-Hydra+s.r.o.+Pal%C3%A1rikovo';
 export const GOOGLE_REVIEWS_RATING = '5,0';
-export const GOOGLE_REVIEWS_COUNT_LABEL = 'z 8 Google recenzií';
+export const GOOGLE_REVIEWS_COUNT = 9;
+export const GOOGLE_REVIEWS_COUNT_LABEL = `z ${GOOGLE_REVIEWS_COUNT} Google recenzií`;
 
 export const reviews = [
   {

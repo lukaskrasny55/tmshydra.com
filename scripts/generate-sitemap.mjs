@@ -24,6 +24,7 @@ const mainPagePriorities = {
   [ROUTE_PATHS.otherServices]: '0.7',
   [ROUTE_PATHS.tech]: '0.7',
   [ROUTE_PATHS.faq]: '0.7',
+  [ROUTE_PATHS.blog]: '0.7',
   [ROUTE_PATHS.privacyPolicy]: '0.3',
   [ROUTE_PATHS.terms]: '0.3',
 };

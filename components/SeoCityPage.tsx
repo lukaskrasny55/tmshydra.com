@@ -3,7 +3,9 @@ import { useParams, Link } from 'react-router-dom';
 import { CheckCircle2, ArrowRight, MapPin, Phone, Calculator, Quote } from 'lucide-react';
 import { Helmet } from 'react-helmet-async';
 import { cityData, serviceNames } from '../data/cities.js';
-import { GOOGLE_REVIEWS_URL, GOOGLE_REVIEWS_RATING, GOOGLE_REVIEWS_COUNT_LABEL, reviews } from '../data/reviews.js';
+import { getServiceCopy } from '../data/serviceContent.js';
+import { NotFoundPage } from './pages/NotFoundPage';
+import { GOOGLE_REVIEWS_URL, GOOGLE_REVIEWS_RATING, GOOGLE_REVIEWS_COUNT_LABEL, GOOGLE_REVIEWS_COUNT, reviews } from '../data/reviews.js';
 import { Stars } from './Testimonials';
 import GoogleAnalytics from './GoogleAnalytics';
 import { trackConversion } from './GoogleAds';
@@ -45,6 +47,17 @@ interface PageContent {
 export const SeoCityPage: React.FC = () => {
   const { service, city } = useParams<{ service: string; city: string }>();
 
+  // Unknown service/city combinations must not render a thin page with HTTP 200
+  // content; show the 404 page (noindex) instead.
+  if (!service || !city || !(service in serviceNames) || !(city in cityData)) {
+    return <NotFoundPage />;
+  }
+
+  return <SeoCityContent service={service} city={city} />;
+};
+
+const SeoCityContent: React.FC<{ service: string; city: string }> = ({ service, city }) => {
+
   // Proper display name (e.g. "Nové Zámky") taken from the city title in
   // data/cities.js; falls back to the capitalised slug for unknown cities.
   const formattedCity = city
@@ -60,23 +73,21 @@ export const SeoCityPage: React.FC = () => {
   ? cityData[city]
   : null;
 
-  const pageData: PageContent = {
-    title:
-      currentCityData?.title ||
-      `${serviceName} ${formattedCity}`,
+  const serviceCopy = getServiceCopy(service, formattedCity, city);
 
-    meta_title:
-      (currentCityData?.title || `${serviceName} ${formattedCity}`) +
-      ' | TMS HYDRA',
-
-    meta_description:
-      currentCityData?.description ||
-      `Profesionálna ${serviceName.toLowerCase()} v meste ${formattedCity}. Kontaktujte TMS HYDRA pre bezplatnú obhliadku strechy.`,
-
-    content:
-      currentCityData?.description ||
-      `Naša spoločnosť TMS HYDRA poskytuje profesionálne služby ${serviceName.toLowerCase()} v meste ${formattedCity}.`
-  };
+  const pageData: PageContent = serviceCopy
+    ? {
+        title: serviceCopy.title,
+        meta_title: `${serviceCopy.title} | TMS HYDRA`,
+        meta_description: serviceCopy.metaDescription,
+        content: serviceCopy.intro,
+      }
+    : {
+        title: currentCityData?.title || `${serviceName} ${formattedCity}`,
+        meta_title: (currentCityData?.title || `${serviceName} ${formattedCity}`) + ' | TMS HYDRA',
+        meta_description: currentCityData?.description || '',
+        content: currentCityData?.description || '',
+      };
 
   const canonicalUrl = `https://www.tmshydra.com/sluzby/${service}/${city}`;
   const ogImage = 'https://www.tmshydra.com/logo1.png';
@@ -84,7 +95,7 @@ export const SeoCityPage: React.FC = () => {
   // Kept as data (not just JSX) so the FAQPage schema below stays word-for-word
   // identical to what actually renders further down the page — Google
   // requires that match for the FAQ rich-result to be eligible at all.
-  const faqItems = [
+  const baseFaqItems = [
     {
       question: `Koľko stojí hydroizolácia plochej strechy v meste ${formattedCity}?`,
       answer: 'Cena závisí od veľkosti strechy, typu materiálu a rozsahu rekonštrukcie. Kontaktujte TMS HYDRA pre bezplatnú obhliadku a cenovú ponuku.',
@@ -111,6 +122,8 @@ export const SeoCityPage: React.FC = () => {
     },
   ];
 
+  const faqItems = serviceCopy ? [...serviceCopy.faq, ...baseFaqItems.slice(1)] : baseFaqItems;
+
   const nearbyProjectSlugs = city ? NEARBY_PROJECT_SLUGS[city] || [] : [];
   const nearbyProjects = projects.filter((proj) => nearbyProjectSlugs.includes(proj.slug));
 
@@ -129,7 +142,7 @@ export const SeoCityPage: React.FC = () => {
       "aggregateRating": {
         "@type": "AggregateRating",
         "ratingValue": "5.0",
-        "reviewCount": "8"
+        "reviewCount": String(GOOGLE_REVIEWS_COUNT)
       }
     },
     "areaServed": {

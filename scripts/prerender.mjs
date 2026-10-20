@@ -72,6 +72,19 @@ for (const url of urls) {
   }
 }
 
+// 404.html: Vercel serves it with HTTP 404 for any path that has no file.
+try {
+  const rawAppHtml = await render('/stranka-neexistuje-404');
+  const { head, body } = splitHoistedHead(rawAppHtml);
+  const html = template
+    .replace('<title>TMS-HYDRA | Hydroizolácie a zateplenie striech</title>', head)
+    .replace('<div id="root"></div>', `<div id="root">${body}</div>`);
+  writeFileSync(path.join(distDir, '404.html'), html, 'utf-8');
+} catch (error) {
+  failures += 1;
+  console.error('Failed to prerender 404.html:', error);
+}
+
 console.log(`Prerendered ${urls.length - failures}/${urls.length} routes.`);
 
 if (existsSync(ssrDir)) {
