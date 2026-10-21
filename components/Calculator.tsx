@@ -107,7 +107,7 @@ Systém: ${selectedSystem}`
           </div>
 
           <h2 className="text-3xl md:text-4xl font-black text-slate-900 mb-6 uppercase">
-            Profesionálna kalkulačka ceny
+            Požiadať o cenovú ponuku
           </h2>
 
           <p className="text-xl text-slate-600 max-w-2xl mx-auto">

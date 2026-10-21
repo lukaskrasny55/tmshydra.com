@@ -82,7 +82,7 @@ export const Navbar: React.FC<NavbarProps> = ({ showCalculator = true }) => {
                 onClick={scrollToCalculator}
                 className="bg-blue-600 text-white px-5 py-2.5 rounded-xl font-bold hover:bg-blue-700 transition-all shadow-lg hover:shadow-blue-600/20 active:scale-95 ml-2 text-[13px] whitespace-nowrap"
               >
-                Vypočítať cenu
+                Cenová ponuka
               </button>
             )}
           </div>
@@ -128,7 +128,7 @@ export const Navbar: React.FC<NavbarProps> = ({ showCalculator = true }) => {
                 onClick={scrollToCalculator}
                 className="mt-6 bg-blue-600 text-white w-full py-6 rounded-2xl font-black text-lg shadow-xl"
               >
-                Vypočítať cenu (Kalkulačka)
+                Požiadať o cenovú ponuku
               </button>
             )}
           </div>
