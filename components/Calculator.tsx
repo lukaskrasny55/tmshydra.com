@@ -12,7 +12,7 @@ import {
 import { trackConversion } from './GoogleAds';
 
 type BuildingType = 'family' | 'apartment' | 'industrial';
-type RoofSystem = 'single' | 'double' | 'triple_pir' | 'mpvc';
+type RoofSystem = 'basic' | 'standard' | 'plus' | 'premium' | 'unknown';
 
 export const Calculator: React.FC = () => {
   const [area, setArea] = useState<number>(100);
@@ -20,7 +20,7 @@ export const Calculator: React.FC = () => {
     useState<BuildingType>('family');
 
   const [selectedSystem, setSelectedSystem] =
-    useState<RoofSystem>('single');
+    useState<RoofSystem>('unknown');
 
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
@@ -31,28 +31,39 @@ export const Calculator: React.FC = () => {
     phone: ''
   });
 
-  const systems = [
+  const systems: { id: RoofSystem; label: string; description: string }[] = [
     {
-      id: 'single',
-      label: 'Jednovrstvová skladba strechy',
-      description: 'Základné riešenie pre nenáročné objekty'
+      id: 'basic',
+      label: '1Protect Basic',
+      description: 'Cenovo dostupná obnova hydroizolácie existujúcej asfaltovej strechy bez zateplenia.'
     },
     {
-      id: 'double',
-      label: 'Dvojvrstvová skladba strechy',
-      description: 'Zvýšená odolnosť a dlhšia životnosť'
+      id: 'standard',
+      label: '2Protect Standard',
+      description: 'Rekonštrukcia bez zateplenia s dvoma hydroizolačnými vrstvami pre vyššiu životnosť.'
     },
     {
-      id: 'triple_pir',
-      label: 'Trojvrstvová skladba so zateplením PIR 80mm',
-      description: 'Prémiové zateplenie a hydroizolácia'
+      id: 'plus',
+      label: '3Protect Plus',
+      description: 'Zateplenie a nová hydroizolácia s využitím pôvodnej vrstvy.'
     },
     {
-      id: 'mpvc',
-      label: 'Jednovrstvová skladba s mPVC fóliou',
-      description: 'Moderné riešenie s vysokou flexibilitou'
+      id: 'premium',
+      label: '4Protect Premium',
+      description: 'Kompletná nová skladba – maximálna tepelná a hydroizolačná ochrana.'
+    },
+    {
+      id: 'unknown',
+      label: 'Neviem, poraďte mi',
+      description: 'Vhodný systém navrhneme pri bezplatnej obhliadke.'
     }
   ];
+
+  const buildingLabels: Record<BuildingType, string> = {
+    family: 'Rodinný dom',
+    apartment: 'Bytový dom',
+    industrial: 'Priemyselný objekt'
+  };
 
   const handleSubmitLead = async (
     e: React.FormEvent
@@ -73,9 +84,9 @@ export const Calculator: React.FC = () => {
           phone: leadForm.phone,
           leadType: 'quote',
           message: `Dopyt na cenovú ponuku z kalkulačky.
-Typ objektu: ${buildingType}
+Typ objektu: ${buildingLabels[buildingType]}
 Plocha: ${area} m²
-Systém: ${selectedSystem}`
+Systém: ${systems.find((x) => x.id === selectedSystem)?.label}`
         })
       });
 
@@ -193,9 +204,7 @@ Systém: ${selectedSystem}`
                   <button
                     key={sys.id}
                     onClick={() =>
-                      setSelectedSystem(
-                        sys.id as RoofSystem
-                      )
+                      setSelectedSystem(sys.id)
                     }
                     className={`p-6 rounded-3xl border-2 text-left ${
                       selectedSystem === sys.id
