@@ -6,6 +6,7 @@ import { projects } from '../../data/projects';
 import { ROUTE_PATHS } from '../../routePaths';
 import { trackConversion } from '../GoogleAds';
 import { localBusinessSchema } from '../Seo';
+import { imgVariants } from '../responsiveImage';
 
 const PHONE_NUMBER = '+421911551354';
 const PHONE_DISPLAY = '+421 911 551 354';
@@ -128,7 +129,8 @@ export const ProjectDetailPage: React.FC = () => {
               className={`rounded-2xl overflow-hidden ${i === 0 ? 'col-span-2 row-span-2' : ''}`}
             >
               <img
-                src={img}
+                {...imgVariants(img)}
+                sizes="(min-width: 768px) 33vw, 50vw"
                 alt={`${project.title} – ${project.location} (foto ${i + 1}/${project.gallery.length})`}
                 loading="lazy"
                 className="w-full h-full object-cover hover:opacity-90 transition-opacity"
@@ -190,7 +192,8 @@ export const ProjectDetailPage: React.FC = () => {
                   className="bg-white rounded-[2rem] shadow-lg overflow-hidden hover:shadow-2xl hover:-translate-y-1 transition-all block border border-slate-100"
                 >
                   <img
-                    src={p.gallery[0]}
+                    {...imgVariants(p.gallery[0])}
+                    sizes="(min-width: 768px) 33vw, 100vw"
                     alt={`${p.title} – ${p.location}`}
                     loading="lazy"
                     className="h-48 w-full object-cover"

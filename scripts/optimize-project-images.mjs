@@ -17,12 +17,25 @@ const publicDir = path.join(rootDir, 'public');
 
 const sourceExts = ['.jpg', '.jpeg', '.png'];
 
-const webpPaths = new Set();
+const webpPaths = new Set(['/vh1.webp', '/pz1.webp', '/b1.webp']); // + home page featured cards
 for (const project of projects) {
   for (const img of project.gallery) {
     if (path.extname(img).toLowerCase() === '.webp') {
       webpPaths.add(img);
     }
+  }
+}
+
+// Smaller variants for cards / gallery tiles (see components/responsiveImage.ts).
+async function makeVariants(inputPath, webpRelPath) {
+  for (const w of [640, 1280]) {
+    const out = path.join(publicDir, webpRelPath.replace(/\.webp$/i, `-${w}.webp`));
+    if (existsSync(out) && statSync(out).mtimeMs >= statSync(inputPath).mtimeMs) continue;
+    await sharp(inputPath)
+      .rotate()
+      .resize({ width: w, withoutEnlargement: true })
+      .webp({ quality: 62 })
+      .toFile(out);
   }
 }
 
@@ -46,6 +59,7 @@ for (const webpRelPath of webpPaths) {
 
   if (!inputPath) {
     if (existsSync(outputPath)) {
+      await makeVariants(outputPath, webpRelPath);
       skipped += 1;
     } else {
       console.warn(`optimize-project-images: no source (.jpg/.jpeg/.png) found for ${webpRelPath}`);
@@ -56,6 +70,7 @@ for (const webpRelPath of webpPaths) {
 
   if (existsSync(outputPath) && statSync(outputPath).mtimeMs >= statSync(inputPath).mtimeMs) {
     skipped += 1;
+    await makeVariants(inputPath, webpRelPath);
     continue;
   }
 
@@ -74,6 +89,7 @@ for (const webpRelPath of webpPaths) {
     .resize({ width: 1920, withoutEnlargement: true })
     .webp({ quality: 55 })
     .toFile(outputPath);
+  await makeVariants(inputPath, webpRelPath);
   const outputSize = statSync(outputPath).size;
   savedBytes += Math.max(0, inputSize - outputSize);
   converted += 1;

@@ -2,6 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowRight } from 'lucide-react';
 import { ROUTE_PATHS } from '../routePaths';
+import { imgVariants } from './responsiveImage';
 
 const featured = [
   {
@@ -51,7 +52,8 @@ export const FeaturedProjects: React.FC = () => {
               className="bg-white rounded-[2.5rem] shadow-lg overflow-hidden hover:shadow-2xl hover:-translate-y-1 transition-all block border border-slate-100"
             >
               <img
-                src={p.image}
+                {...imgVariants(p.image)}
+                sizes="(min-width: 768px) 33vw, 100vw"
                 alt={`${p.title} – ${p.location}`}
                 loading="lazy"
                 className="h-56 w-full object-cover"

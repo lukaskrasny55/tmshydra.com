@@ -4,6 +4,7 @@ import { ArrowRight } from 'lucide-react';
 import { HeroSection } from '../HeroSection';
 import { ROUTE_PATHS } from '../../routePaths';
 import { projects } from '../../data/projects';
+import { imgVariants } from '../responsiveImage';
 
 interface Props {
   onBack: () => void;
@@ -28,7 +29,8 @@ export const ProjectsPage: React.FC<Props> = () => {
             className="bg-white rounded-[2.5rem] shadow-lg overflow-hidden hover:shadow-2xl hover:-translate-y-1 transition-all flex flex-col"
           >
             <img
-              src={p.gallery[0]}
+              {...imgVariants(p.gallery[0])}
+              sizes="(min-width: 1024px) 33vw, (min-width: 768px) 50vw, 100vw"
               alt={`${p.title} – ${p.location}`}
               loading="lazy"
               className="h-64 w-full object-cover"
