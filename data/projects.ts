@@ -210,7 +210,7 @@ export const projects: Project[] = [
     area: '100 m²',
     system: 'PVC fólia',
     longDescription: 'Rodinný dom na Úzkej ulici v Nesvadoch dostal novú strechu s hydroizoláciou PVC fóliou na ploche približne 100 m². Súčasťou realizácie boli aj kompletné klampiarske prvky a odvodnenie, ktoré spolu s kvalitnou hydroizolačnou vrstvou zaisťujú strechu spoľahlivo slúžiť majiteľom bez zásahov na dlhé roky dopredu. PVC fólia bola zvolená pre svoju osvedčenú kombináciu odolnosti, jednoduchej aplikácie a priaznivého pomeru ceny a životnosti, čo z nej robí najčastejšie využívaný materiál pri rekonštrukciách plochých striech rodinných domov na Slovensku. Pred samotnou pokládkou sme dôkladne skontrolovali stav podkladu a v prípade potreby ho pripravili tak, aby nová hydroizolácia mala optimálne podmienky na dlhodobú funkčnosť. Realizácie rodinných domov v okrese Komárno patria medzi časté zákazky nášho tímu.',
-    gallery: ['/nsv1.webp', '/nsv2.webp', '/nsv3.webp', '/nsv4.webp', '/nsv5.webp']
+    gallery: ['/nsv6.webp', '/nsv1.webp', '/nsv2.webp', '/nsv3.webp', '/nsv4.webp', '/nsv5.webp', '/nsv7.webp', '/nsv8.webp', '/nsv9.webp', '/nsv10.webp']
   },
   {
     id: '17',
