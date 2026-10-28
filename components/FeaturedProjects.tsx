@@ -16,7 +16,7 @@ const featured = [
     title: 'Panelová strecha',
     location: 'Bratislava - Petržalka',
     description: 'Obnova strechy bytového domu na sídlisku.',
-    image: '/pz1.webp',
+    image: '/pz5.webp',
     slug: 'panelova-strecha-petrzalka',
   },
   {
