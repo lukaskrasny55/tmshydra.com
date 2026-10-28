@@ -121,12 +121,12 @@ export const projects: Project[] = [
     id: '9',
     slug: 'rekonstrukcia-strechy-rovensko',
     title: 'Rekonštrukcia strechy',
-    location: 'Rovensko',
+    location: 'Slovensko',
     description: 'Kompletná rekonštrukcia strechy rodinného domu.',
-    metaDescription: 'Kompletná rekonštrukcia plochej strechy rodinného domu v Rovensku na ploche cca 130 m² – nová PVC hydroizolácia a klampiarske prvky.',
+    metaDescription: 'Kompletná rekonštrukcia plochej strechy rodinného domu na Slovensku na ploche cca 130 m² – nová PVC hydroizolácia a klampiarske prvky.',
     area: '130 m²',
     system: 'PVC fólia',
-    longDescription: 'Rodinný dom v Rovensku mal strechu na konci svojej životnosti, preto sme v spolupráci s partnerskou realizačnou firmou pristúpili ku kompletnej výmene celej skladby na ploche približne 130 m². Práce zahŕňali odstránenie pôvodnej krytiny, montáž novej PVC hydroizolačnej fólie a kompletné klampiarske prvky vrátane odkvapového systému a oplechovania atík. Spolupráca s ďalšou realizačnou firmou nám umožnila zvládnuť projekt v požadovanom termíne aj pri väčšom rozsahu prác. Pri kompletných rekonštrukciách vždy odporúčame dôkladné posúdenie stavu krovu a nosnej konštrukcie ešte pred začatím prác, aby sa predišlo dodatočným nákladom počas realizácie. Výsledkom je strecha s dlhou životnosťou, ktorá rieši nielen aktuálne problémy so zatekaním, ale aj budúce nároky na tepelnú a hydroizolačnú ochranu domu.',
+    longDescription: 'Rodinný dom na Slovensku mal strechu na konci svojej životnosti, preto sme v spolupráci s partnerskou realizačnou firmou pristúpili ku kompletnej výmene celej skladby na ploche približne 130 m². Práce zahŕňali odstránenie pôvodnej krytiny, montáž novej PVC hydroizolačnej fólie a kompletné klampiarske prvky vrátane odkvapového systému a oplechovania atík. Spolupráca s ďalšou realizačnou firmou nám umožnila zvládnuť projekt v požadovanom termíne aj pri väčšom rozsahu prác. Pri kompletných rekonštrukciách vždy odporúčame dôkladné posúdenie stavu krovu a nosnej konštrukcie ešte pred začatím prác, aby sa predišlo dodatočným nákladom počas realizácie. Výsledkom je strecha s dlhou životnosťou, ktorá rieši nielen aktuálne problémy so zatekaním, ale aj budúce nároky na tepelnú a hydroizolačnú ochranu domu.',
     gallery: ['/rv1.webp', '/rv2.webp', '/rv3.webp', '/rv4.webp', '/rv5.webp']
   },
   {
