@@ -139,7 +139,7 @@ export const projects: Project[] = [
     area: '140 m²',
     system: 'PVC fólia',
     longDescription: 'Pri novostavbe rodinného domu v Plaveckom Podhradí sme realizovali kompletnú skladbu plochej strechy s plochou približne 140 m² v spolupráci s partnerskou realizačnou firmou. Postup zahŕňal parozábranu, tepelnú izoláciu a finálnu hydroizolačnú PVC fóliu, ktorá je overeným štandardom pre nové plochy strechy vďaka jednoduchej aplikácii zváraním horúcim vzduchom a dlhej životnosti. Pri novostavbách je kľúčové vyriešiť všetky detaily – prestupy inštalácií, atiky a odvodnenie – už počas hrubej stavby, aby sa predišlo komplikáciám po dokončení objektu. Výsledná strecha spĺňa aktuálne požiadavky na energetickú úspornosť a poskytuje spoľahlivú ochranu domu na desaťročia dopredu. Realizácie plochých striech pri novostavbách robíme v spolupráci s partnerskými firmami po celom západnom Slovensku.',
-    gallery: ['/pp1.webp', '/pp2.webp', '/pp3.webp', '/pp4.webp', '/pp5.webp']
+    gallery: ['/pp6.webp', '/pp1.webp', '/pp2.webp', '/pp3.webp', '/pp4.webp', '/pp5.webp', '/pp7.webp', '/pp8.webp', '/pp9.webp', '/pp10.webp', '/pp11.webp']
   },
   {
     id: '11',
