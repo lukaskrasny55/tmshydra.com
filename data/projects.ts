@@ -115,7 +115,7 @@ export const projects: Project[] = [
     area: '150 m²',
     system: 'PIR 80 mm + PVC fólia',
     longDescription: 'Plechová strecha objektu v Bratislave trpela výraznými tepelnými stratami, ktoré sa prejavovali na vysokých nákladoch na vykurovanie priľahlých priestorov. Naším riešením bolo kompletné zateplenie plochy približne 150 m² pomocou PIR izolačných dosiek s hrúbkou 80 mm, ktoré patria medzi najúčinnejšie tepelnoizolačné materiály na trhu, a následné prekrytie certifikovanou PVC hydroizolačnou fóliou. Táto kombinácia výrazne zlepšila tepelnoizolačné vlastnosti strechy a zároveň zabezpečila jej dlhodobú vodotesnosť. Realizácia na plechovej streche si vyžadovala špecifický kotviaci systém prispôsobený existujúcej nosnej konštrukcii, ktorý sme navrhli v spolupráci so statikom. Zateplenie plechových striech patrí medzi realizácie, ktoré sa investorom vrátia už v priebehu niekoľkých vykurovacích sezón vďaka výraznej úspore energie.',
-    gallery: ['/bap1.webp', '/bap2.webp', '/bap3.webp', '/bap4.webp', '/bap5.webp']
+    gallery: ['/bap6.webp', '/bap1.webp', '/bap2.webp', '/bap3.webp', '/bap4.webp', '/bap5.webp', '/bap7.webp', '/bap8.webp']
   },
   {
     id: '9',
