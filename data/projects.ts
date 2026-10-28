@@ -103,7 +103,7 @@ export const projects: Project[] = [
     area: '110 m²',
     system: 'EPDM Rubercover',
     longDescription: 'Pri rekonštrukcii strechy rodinného domu v Modre sme zvolili hydroizoláciu kaučukovou fóliou EPDM Rubercover s celkovou plochou približne 110 m². EPDM fólia patrí medzi najodolnejšie hydroizolačné materiály na trhu – jej životnosť presahuje 50 rokov a vyniká vysokou pružnosťou, ktorá jej umožňuje bez poškodenia zvládať teplotné rozťažnosti aj pohyby strešnej konštrukcie. Fólia bola mechanicky kotvená a všetky spoje spracované špeciálnymi lepenými pásmi, čím sme dosiahli maximálnu vodotesnosť bez nutnosti zvárania horúcim vzduchom. Pred samotnou realizáciou sme dôkladne skontrolovali a pripravili podklad strechy tak, aby nová skladba vydržala desiatky rokov bez potreby ďalšieho zásahu. EPDM fólie odporúčame najmä tam, kde je dôraz na dlhú životnosť a minimálnu údržbu – ideálne pre rodinné domy aj menšie komerčné objekty.',
-    gallery: ['/md1.webp', '/md2.webp', '/md3.webp', '/md4.webp', '/md5.webp']
+    gallery: ['/md6.webp', '/md1.webp', '/md2.webp', '/md3.webp', '/md4.webp', '/md5.webp', '/md7.webp']
   },
   {
     id: '8',
