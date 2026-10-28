@@ -37,7 +37,7 @@ export const projects: Project[] = [
     metaDescription: 'Obnova hydroizolácie plochej strechy rodinného domu v Nových Zámkoch systémom 1Protect Basic – lokálne opravy podkladu, penetrácia a nová vrstva z SBS asfaltových pásov.',
     system: '1Protect Basic',
     longDescription: 'Na rodinnom dome v Nových Zámkoch sme realizovali jednovrstvovú rekonštrukciu hydroizolácie plochej strechy systémom 1Protect Basic.\n\nPred aplikáciou novej hydroizolácie sme vykonali lokálne opravy pôvodnej vrstvy a odstránili vzniknuté bubliny, aby sme zabezpečili vhodný podklad pre ďalšie práce. Následne sme aplikovali penetráciu a zhotovili novú hydroizolačnú vrstvu z SBS modifikovaných asfaltových pásov s ochranným minerálnym posypom v tehlovočervenej farbe.\n\nObnova zahŕňala celú plochu strechy vrátane opracovania atík, prestupov a napojení na odvodnenie. Dôraz sme kládli na dôkladné natavenie pásov a precízne zhotovenie spojov a detailov.\n\nSystém 1Protect Basic predstavuje riešenie obnovy hydroizolácie pre strechy, ktorých technický stav umožňuje aplikáciu novej vrstvy bez výmeny celej pôvodnej skladby. Vhodnosť tohto postupu vždy posudzujeme podľa stavu konkrétnej strechy.\n\nRekonštrukcie plochých striech rodinných domov, bytových domov, administratívnych a priemyselných hál realizujeme v Nových Zámkoch a okolí aj v ďalších regiónoch Slovenska – od posúdenia stavu a návrhu technického riešenia až po odovzdanie hotového diela.',
-    gallery: ['/nz1.webp', '/nz2.webp', '/nz3.webp', '/nz4.webp']
+    gallery: ['/nz1.webp', '/nz2.webp', '/nz3.webp', '/nz4.webp', '/nz5.webp', '/nz6.webp', '/nz7.webp', '/nz8.webp', '/nz9.webp', '/nz10.webp']
   },
   {
     id: '3',
