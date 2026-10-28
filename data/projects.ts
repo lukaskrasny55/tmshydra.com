@@ -151,7 +151,7 @@ export const projects: Project[] = [
     area: '90 m²',
     system: 'Biela PVC fólia',
     longDescription: 'Na Záhradníckej ulici v Senci sme zrealizovali hydroizoláciu strechy a priľahlej pochôdznej terasy bielou PVC fóliou na ploche približne 90 m². Svetlý povrch fólie odráža výrazne viac slnečného žiarenia než tmavé materiály, čím znižuje tepelné namáhanie strešnej konštrukcie a predlžuje jej životnosť. Terasa zároveň slúži majiteľom ako plnohodnotný pochôdzny priestor bez kompromisov na kvalite hydroizolácie pod ňou. Súčasťou realizácie bolo aj precízne riešenie spádovania, aby sa na povrchu nezhromažďovala voda, a osadenie odtokových prvkov. Biele PVC fólie sú v posledných rokoch čoraz obľúbenejšou voľbou pri rodinných domoch v okolí Bratislavy a Senca, kde investori oceňujú kombináciu estetiky, funkčnosti a nižšej tepelnej záťaže objektu počas letných mesiacov.',
-    gallery: ['/sc1.webp', '/sc2.webp', '/sc3.webp', '/sc4.webp', '/sc5.webp']
+    gallery: ['/sc6.webp', '/sc1.webp', '/sc2.webp', '/sc3.webp', '/sc4.webp', '/sc5.webp', '/sc7.webp', '/sc8.webp', '/sc9.webp', '/sc10.webp', '/sc11.webp', '/sc12.webp']
   },
   {
     id: '12',
