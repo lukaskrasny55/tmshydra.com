@@ -223,5 +223,15 @@ export const projects: Project[] = [
     system: 'PVC fólia',
     longDescription: 'Pre rodinný dom na Bočnej ulici v Nových Zámkoch sme zabezpečili realizáciu strechy na kľúč s celkovou plochou približne 130 m² – od zamerania a návrhu skladby, cez zateplenie, až po finálnu hydroizoláciu PVC fóliou. Klient tak dostal kompletné riešenie bez nutnosti koordinovať viacero dodávateľov, čo výrazne zjednodušuje priebeh stavby aj pre investorov, ktorí nemajú skúsenosti so stavebným procesom. Súčasťou realizácie boli aj všetky klampiarske prvky a odvodňovací systém, riešené v úzkej nadväznosti na tepelnoizolačnú vrstvu. Služba realizácie strechy na kľúč je vhodná najmä pre stavebníkov, ktorí chcú mať istotu jedného zodpovedného dodávateľa od návrhu až po odovzdanie hotovej strechy. Tento prístup uplatňujeme pri čoraz väčšom počte projektov v regióne Nových Zámkov aj okolia.',
     gallery: ['/nzb1.webp', '/nzb2.webp', '/nzb3.webp', '/nzb4.webp', '/nzb5.webp']
+  },
+  {
+    id: '19',
+    slug: 'obecny-a-kulturny-dom-cechy',
+    title: 'Obecný a kultúrny dom',
+    location: 'Čechy',
+    description: 'Realizácia plochej strechy obecného a kultúrneho domu.',
+    metaDescription: 'Realizácia plochej strechy obecného a kultúrneho domu v obci Čechy – fotodokumentácia od pôvodného stavu po hotové dielo.',
+    longDescription: 'Plochá strecha obecného a kultúrneho domu v obci Čechy – fotodokumentácia realizácie od pôvodného stavu cez jednotlivé fázy prác až po hotové dielo.',
+    gallery: ['/cz1.webp', '/cz2.webp', '/cz3.webp', '/cz4.webp', '/cz5.webp', '/cz6.webp', '/cz7.webp', '/cz8.webp', '/cz9.webp', '/cz10.webp', '/cz11.webp', '/cz12.webp', '/cz13.webp', '/cz14.webp', '/cz15.webp', '/cz16.webp', '/cz17.webp', '/cz18.webp', '/cz19.webp']
   }
 ];
