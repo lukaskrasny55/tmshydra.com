@@ -23,12 +23,13 @@ export const projects: Project[] = [
     slug: 'obecny-a-kulturny-dom-cechy',
     title: 'Obecný a kultúrny dom',
     location: 'Čechy',
-    description: 'Realizácia plochej strechy obecného a kultúrneho domu.',
-    metaDescription: 'Realizácia plochej strechy obecného a kultúrneho domu v obci Čechy – fotodokumentácia od pôvodného stavu po hotové dielo.',
-    longDescription: 'Plochá strecha obecného a kultúrneho domu v obci Čechy – fotodokumentácia realizácie od pôvodného stavu cez jednotlivé fázy prác až po hotové dielo.',
+    description: 'Rekonštrukcia plochých striech obecného úradu a kultúrneho domu na ploche 945 m².',
+    metaDescription: 'Rekonštrukcia plochých striech obecného úradu a kultúrneho domu v obci Čechy na ploche 945 m² – zateplenie PIR, spádové kliny EPS a hydroizolácia z asfaltových pásov SBS a APAO.',
+    area: '945 m²',
+    system: 'PIR 80 mm, asfaltové pásy SBS + APAO',
+    longDescription: 'Na budovách obecného úradu a kultúrneho domu v obci Čechy sme dokončili rozsiahlu rekonštrukciu plochých striech s celkovou výmerou 945 m². Naším cieľom nebolo iba obnoviť pôvodnú hydroizoláciu, ale vytvoriť kvalitnú, funkčnú a dlhodobo spoľahlivú strešnú skladbu, ktorá zabezpečí ochranu oboch budov pred poveternostnými vplyvmi a zároveň zlepší ich tepelnoizolačné vlastnosti.\n\nRekonštrukciu sme začali odstránením nevyhovujúcich častí pôvodnej strešnej skladby, demontážou nepotrebných komínových telies a dôkladnou prípravou podkladu na realizáciu nových vrstiev. Následne sme aplikovali penetračný náter a asfaltovú parozábranu s hliníkovou vložkou, ktorá pomáha obmedzovať prenikanie vodnej pary z interiéru do strešnej skladby.\n\nStrechy sme kompletne zateplili tepelnou izoláciou PIR s hrúbkou 80 mm a pomocou EPS spádových klinov sme vytvorili nové spádové vrstvy, ktoré zabezpečujú správne odvodnenie strešných plôch. Hydroizolačný systém tvorí termoaktívna samolepiaca podkladová vrstva na báze SBS modifikovaného asfaltu a vrchná vrstva z APAO modifikovaných asfaltových pásov s minerálnym bridlicovým posypom. Celkovo sme v jednotlivých vrstvách strešnej skladby aplikovali 3 100 m² asfaltových pásov.\n\nVeľkú pozornosť sme venovali atikám a strešným detailom. Atiky sme upravili a zateplili, prestupy, napojenia a kritické detaily sme precízne opracovali. Súčasťou prác bola aj kompletná výmena odkvapových žľabov, zvodových rúr a odkvapových plechov, vďaka čomu sa dažďová voda zo striech odvádza správne a spoľahlivo. Zateplili sme a povrchovo upravili aj existujúce komínové telesá vrátane armovacích vrstiev a finálnej fasádnej úpravy.\n\nV rámci projektu sme zrealizovali aj bleskozvodnú sústavu vrátane výkopových prác, osadenia uzemňovacích tyčí a následnej odbornej revízie, dokončili sme klampiarske detaily a ostatné súvisiace práce. Súčasťou projektu bolo aj osadenie vtáčích búdok, ktoré pomáhajú zachovať vhodné podmienky pre vtáctvo v okolí budov. Dielo sme odovzdali vrátane všetkých požadovaných kontrol a revízií.\n\nRekonštrukcia strechy nie je len o položení nového asfaltového pásu. Je to predovšetkým o správnom technickom riešení, kvalitných materiáloch, precíznom vypracovaní detailov a poctivej remeselnej práci. Ďakujeme obci Čechy za prejavenú dôveru a možnosť podieľať sa na obnove týchto dôležitých verejných budov.',
     gallery: ['/cz1.webp', '/cz2.webp', '/cz3.webp', '/cz4.webp', '/cz5.webp', '/cz6.webp', '/cz7.webp', '/cz8.webp', '/cz9.webp', '/cz10.webp', '/cz11.webp', '/cz12.webp', '/cz13.webp', '/cz14.webp', '/cz15.webp', '/cz16.webp', '/cz17.webp', '/cz18.webp', '/cz19.webp']
-  }
-,
+  },
   {
     id: '1',
     slug: 'villa-hascak-bratislava',
