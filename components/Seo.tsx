@@ -18,7 +18,7 @@ const seoData: Record<string, { title: string; description: string; keywords: st
     keywords: 'hydroizolácie, servis striech',
   },
   about: {
-    title: 'O nás | TMS HYDRA',
+    title: 'O nás – rodinná firma, 12 rokov praxe | TMS HYDRA',
     description: 'TMS HYDRA je rodinná firma Tomáša Solnokyho s 12-ročnou praxou z Belgicka. Hydroizolácie a zateplenie plochých striech s osobným, poctivým prístupom.',
     keywords: 'o nás, TMS HYDRA, Tomáš Solnoky',
   },
@@ -28,8 +28,8 @@ const seoData: Record<string, { title: string; description: string; keywords: st
     keywords: 'doplnkové služby, bleskozvody, zelené strechy',
   },
   projects: {
-    title: 'Realizácie | TMS HYDRA',
-    description: 'Pozrite si naše realizácie hydroizolácií a zateplení plochých striech – rodinné domy, bytové domy aj novostavby po celom Slovensku.',
+    title: 'Realizácie plochých striech – fotky a referencie | TMS HYDRA',
+    description: 'Pozrite si naše realizácie hydroizolácií a zateplení plochých striech – rodinné domy, bytové domy, obecné budovy aj novostavby. Fotodokumentácia zo Slovenska aj zahraničia.',
     keywords: 'realizácie, referencie, TMS HYDRA',
   },
   tech: {
@@ -38,8 +38,8 @@ const seoData: Record<string, { title: string; description: string; keywords: st
     keywords: 'technológie, hydroizolačné systémy, TMS HYDRA',
   },
   contact: {
-    title: 'Kontakt | TMS HYDRA',
-    description: 'Kontaktujte TMS-HYDRA pre bezplatnú obhliadku alebo cenovú ponuku na hydroizoláciu a zateplenie plochej strechy. Palárikovo, pôsobíme po celom Slovensku.',
+    title: 'Kontakt – bezplatná obhliadka plochej strechy | TMS HYDRA',
+    description: 'Zavolajte +421 911 551 354 alebo napíšte a dohodneme bezplatnú obhliadku plochej strechy. TMS-HYDRA, Palárikovo – pôsobíme po celom Slovensku.',
     keywords: 'kontakt, TMS HYDRA',
   },
   faq: {
@@ -53,8 +53,8 @@ const seoData: Record<string, { title: string; description: string; keywords: st
     keywords: 'poradňa hydroizolácia, údržba plochej strechy, blog strechy, TMS HYDRA',
   },
   'price-landing': {
-    title: 'Hydroizolácia plochej strechy – cena, cenník a bezplatná obhliadka | TMS HYDRA',
-    description: 'Orientačná cena hydroizolácie plochej strechy od 15 €/m². PVC, TPO a EPDM fólie, záruka až 15 rokov, bezplatná obhliadka po celom Slovensku. Zavolajte alebo si dohodnite termín online.',
+    title: 'Hydroizolácia plochej strechy cena od 15 €/m² | TMS HYDRA',
+    description: 'Koľko stojí hydroizolácia plochej strechy? Orientačná cena od 15 €/m² (PVC, TPO, EPDM), záruka až 15 rokov. Bezplatná obhliadka a cenová ponuka po celom Slovensku.',
     keywords: 'hydroizolácia plochej strechy cena, cena za m2, cenník hydroizolácie strechy, TMS HYDRA',
   },
   'sos-landing': {
@@ -103,7 +103,7 @@ export const localBusinessSchema = {
   aggregateRating: {
     '@type': 'AggregateRating',
     ratingValue: '5.0',
-    reviewCount: '8',
+    reviewCount: '9',
   },
 };
 

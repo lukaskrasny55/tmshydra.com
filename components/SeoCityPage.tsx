@@ -79,13 +79,13 @@ const SeoCityContent: React.FC<{ service: string; city: string }> = ({ service, 
   const pageData: PageContent = serviceCopy
     ? {
         title: serviceCopy.title,
-        meta_title: `${serviceCopy.title} | TMS HYDRA`,
+        meta_title: `${serviceCopy.title} | Obhliadka zdarma`,
         meta_description: serviceCopy.metaDescription,
         content: serviceCopy.intro,
       }
     : {
         title: currentCityData?.title || `${serviceName} ${formattedCity}`,
-        meta_title: (currentCityData?.title || `${serviceName} ${formattedCity}`) + ' | TMS HYDRA',
+        meta_title: `${serviceName} ${formattedCity} | Obhliadka zdarma`,
         meta_description: currentCityData?.description || '',
         content: currentCityData?.description || '',
       };
