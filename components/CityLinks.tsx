@@ -1,20 +1,17 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { MapPin, ArrowRight } from 'lucide-react';
-import { cityData } from '../data/cities.js';
+import { cityData, cityMeta } from '../data/cities.js';
 
 const primaryService = 'hydroizolacia-plochej-strechy';
 
+// Every city page is linked from the homepage (the main cities first) so
+// search engines can reach all of them from the strongest page of the site.
+const mainCities = ['bratislava', 'nitra', 'trnava', 'zilina', 'trencin', 'banska-bystrica', 'nove-zamky', 'komarno'];
 const featuredCities: { slug: string; label: string }[] = [
-  { slug: 'bratislava', label: 'Bratislava' },
-  { slug: 'nitra', label: 'Nitra' },
-  { slug: 'trnava', label: 'Trnava' },
-  { slug: 'zilina', label: 'Žilina' },
-  { slug: 'trencin', label: 'Trenčín' },
-  { slug: 'banska-bystrica', label: 'Banská Bystrica' },
-  { slug: 'nove-zamky', label: 'Nové Zámky' },
-  { slug: 'komarno', label: 'Komárno' },
-];
+  ...mainCities,
+  ...Object.keys(cityData).filter((key) => !mainCities.includes(key)),
+].map((slug) => ({ slug, label: cityMeta[slug]?.name || slug }));
 
 export const CityLinks: React.FC = () => {
   const cities = featuredCities.filter((c) => cityData[c.slug]);

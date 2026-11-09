@@ -126,3 +126,28 @@ export const cityData = {
   },
 
 };
+
+// Display name, district and region for every city page. Used for proper
+// anchor texts in internal links and for the short regional paragraph on the
+// city landing pages (administrative facts only).
+export const cityMeta = {
+  nitra: { name: 'Nitra', okres: 'Nitra', kraj: 'Nitriansky kraj' },
+  'nove-zamky': { name: 'Nové Zámky', okres: 'Nové Zámky', kraj: 'Nitriansky kraj' },
+  trnava: { name: 'Trnava', okres: 'Trnava', kraj: 'Trnavský kraj' },
+  bratislava: { name: 'Bratislava', okres: 'Bratislava', kraj: 'Bratislavský kraj' },
+  trencin: { name: 'Trenčín', okres: 'Trenčín', kraj: 'Trenčiansky kraj' },
+  zilina: { name: 'Žilina', okres: 'Žilina', kraj: 'Žilinský kraj' },
+  'banska-bystrica': { name: 'Banská Bystrica', okres: 'Banská Bystrica', kraj: 'Banskobystrický kraj' },
+  martin: { name: 'Martin', okres: 'Martin', kraj: 'Žilinský kraj' },
+  prievidza: { name: 'Prievidza', okres: 'Prievidza', kraj: 'Trenčiansky kraj' },
+  komarno: { name: 'Komárno', okres: 'Komárno', kraj: 'Nitriansky kraj' },
+  levice: { name: 'Levice', okres: 'Levice', kraj: 'Nitriansky kraj' },
+  topolcany: { name: 'Topoľčany', okres: 'Topoľčany', kraj: 'Nitriansky kraj' },
+  sala: { name: 'Šaľa', okres: 'Šaľa', kraj: 'Nitriansky kraj' },
+  galanta: { name: 'Galanta', okres: 'Galanta', kraj: 'Trnavský kraj' },
+  surany: { name: 'Šurany', okres: 'Nové Zámky', kraj: 'Nitriansky kraj' },
+  zvolen: { name: 'Zvolen', okres: 'Zvolen', kraj: 'Banskobystrický kraj' },
+  sladkovicovo: { name: 'Sládkovičovo', okres: 'Galanta', kraj: 'Trnavský kraj' },
+  'dunajska-streda': { name: 'Dunajská Streda', okres: 'Dunajská Streda', kraj: 'Trnavský kraj' },
+  samorin: { name: 'Šamorín', okres: 'Dunajská Streda', kraj: 'Trnavský kraj' },
+};

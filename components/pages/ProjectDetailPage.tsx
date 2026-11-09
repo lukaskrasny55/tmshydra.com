@@ -30,7 +30,13 @@ export const ProjectDetailPage: React.FC = () => {
     );
   }
 
-  const otherProjects = projects.filter((p) => p.slug !== project.slug).slice(0, 3);
+  // The next three projects in the list (wrapping around), so that every
+  // project page links to different neighbours and all of them end up
+  // interlinked instead of always pointing at the same first three.
+  const currentIndex = projects.findIndex((p) => p.slug === project.slug);
+  const otherProjects = [1, 2, 3]
+    .map((offset) => projects[(currentIndex + offset) % projects.length])
+    .filter((p, i, arr) => p.slug !== project.slug && arr.findIndex((q) => q.slug === p.slug) === i);
   const url = `https://www.tmshydra.com${ROUTE_PATHS.projects}/${project.slug}`;
   const title = `${project.title} – ${project.location} | TMS HYDRA realizácie`;
 

@@ -2,7 +2,7 @@ import React from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { CheckCircle2, ArrowRight, MapPin, Phone, Calculator, Quote } from 'lucide-react';
 import { Helmet } from 'react-helmet-async';
-import { cityData, serviceNames } from '../data/cities.js';
+import { cityData, serviceNames, cityMeta } from '../data/cities.js';
 import { getServiceCopy } from '../data/serviceContent.js';
 import { NotFoundPage } from './pages/NotFoundPage';
 import { GOOGLE_REVIEWS_URL, GOOGLE_REVIEWS_RATING, GOOGLE_REVIEWS_COUNT_LABEL, GOOGLE_REVIEWS_COUNT, reviews } from '../data/reviews.js';
@@ -14,6 +14,7 @@ import { MobileCallBar } from './MobileCallBar';
 import { projects } from '../data/projects';
 import { ContactForm } from './ContactForm';
 import { openCookieSettings } from '../consent';
+import { ROUTE_PATHS } from '../routePaths';
 
 // Real realizácie genuinely located in/near each city — verified against
 // actual municipality/district data, not guessed. Only cities with a
@@ -125,7 +126,23 @@ const SeoCityContent: React.FC<{ service: string; city: string }> = ({ service, 
   const faqItems = serviceCopy ? [...serviceCopy.faq, ...baseFaqItems.slice(1)] : baseFaqItems;
 
   const nearbyProjectSlugs = city ? NEARBY_PROJECT_SLUGS[city] || [] : [];
-  const nearbyProjects = projects.filter((proj) => nearbyProjectSlugs.includes(proj.slug));
+  const hasLocalProjects = nearbyProjectSlugs.length > 0;
+  // Cities without a confirmed local project show the latest realizácie under a
+  // neutral heading (no claim of local presence) so every city page links to the
+  // project pages.
+  const nearbyProjects = hasLocalProjects
+    ? projects.filter((proj) => nearbyProjectSlugs.includes(proj.slug))
+    : projects.slice(0, 3);
+
+  const meta = cityMeta[city];
+  const otherServices = Object.keys(serviceNames).filter((key) => key !== service);
+  const otherCities = Object.keys(cityData)
+    .filter((key) => key !== city)
+    .sort((a, b) => {
+      const sameA = cityMeta[a]?.kraj === meta?.kraj ? 0 : 1;
+      const sameB = cityMeta[b]?.kraj === meta?.kraj ? 0 : 1;
+      return sameA - sameB;
+    });
 
   const structuredData = {
     "@context": "https://schema.org",
@@ -207,6 +224,14 @@ const SeoCityContent: React.FC<{ service: string; city: string }> = ({ service, 
         <div className="absolute top-0 right-0 w-1/3 h-full bg-blue-600/10 skew-x-12 transform translate-x-32"></div>
 
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+          <nav aria-label="Navigácia" className="flex flex-wrap items-center gap-x-4 gap-y-2 text-sm text-slate-400 mb-8">
+            <Link to={ROUTE_PATHS.home} className="font-bold text-white hover:text-blue-400">TMS HYDRA</Link>
+            <Link to={ROUTE_PATHS.services} className="hover:text-blue-400">Služby</Link>
+            <Link to={ROUTE_PATHS.projects} className="hover:text-blue-400">Realizácie</Link>
+            <Link to={ROUTE_PATHS.priceLanding} className="hover:text-blue-400">Cenník</Link>
+            <Link to={ROUTE_PATHS.faq} className="hover:text-blue-400">Časté otázky</Link>
+            <Link to={ROUTE_PATHS.contact} className="hover:text-blue-400">Kontakt</Link>
+          </nav>
           <div className="flex items-center gap-2 text-blue-400 font-bold mb-6 uppercase tracking-widest text-sm">
             <MapPin className="w-4 h-4" />
             <span>{formattedCity}</span>
@@ -280,6 +305,37 @@ const SeoCityContent: React.FC<{ service: string; city: string }> = ({ service, 
                 {pageData.content}
               </p>
 
+              {meta && (
+                <p className="text-slate-600 leading-relaxed">
+                  {formattedCity} patrí do okresu {meta.okres} ({meta.kraj}). Obhliadku plochých striech zabezpečujeme v meste aj v okolitých obciach. Stačí vyplniť formulár nižšie alebo zavolať a dohodneme termín.
+                </p>
+              )}
+
+              <div className="not-prose mt-8 rounded-2xl border border-slate-100 bg-slate-50 p-6">
+                <h3 className="text-lg font-black text-slate-900 uppercase tracking-tight mb-4">
+                  Ďalšie služby v meste {formattedCity}
+                </h3>
+                <ul className="space-y-2">
+                  {otherServices.map((key) => (
+                    <li key={key}>
+                      <Link to={`/sluzby/${key}/${city}`} className="font-bold text-blue-600 hover:underline">
+                        {serviceNames[key]} {formattedCity}
+                      </Link>
+                    </li>
+                  ))}
+                  <li>
+                    <Link to={ROUTE_PATHS.sosLanding} className="font-bold text-blue-600 hover:underline">
+                      Zateká strecha? Oprava zatekajúcej strechy
+                    </Link>
+                  </li>
+                  <li>
+                    <Link to={ROUTE_PATHS.priceLanding} className="font-bold text-blue-600 hover:underline">
+                      Orientačná cena hydroizolácie plochej strechy
+                    </Link>
+                  </li>
+                </ul>
+              </div>
+
               <h3 className="text-2xl font-black text-slate-900 uppercase tracking-tight mt-12 mb-6">
                 Prečo si vybrať TMS-HYDRA?
               </h3>
@@ -322,7 +378,7 @@ const SeoCityContent: React.FC<{ service: string; city: string }> = ({ service, 
               {nearbyProjects.length > 0 && (
                 <div className="mt-16 not-prose">
                   <h3 className="text-2xl font-black text-slate-900 uppercase tracking-tight mb-8">
-                    Realizácie v okolí {formattedCity}
+                    {hasLocalProjects ? `Realizácie v okolí ${formattedCity}` : 'Naše najnovšie realizácie'}
                   </h3>
 
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -451,14 +507,14 @@ const SeoCityContent: React.FC<{ service: string; city: string }> = ({ service, 
 
   <div className="flex flex-wrap gap-4">
 
-    {Object.keys(cityData).map((cityKey) => (
+    {otherCities.map((cityKey) => (
 
       <Link
         key={cityKey}
         to={`/sluzby/${service}/${cityKey}`}
         className="px-5 py-3 rounded-xl bg-white/5 border border-white/10 hover:bg-blue-600 hover:text-white hover:border-blue-600 transition-all font-bold text-slate-300"
       >
-        {cityKey.replace(/-/g, ' ')}
+        {cityMeta[cityKey]?.name || cityKey}
       </Link>
 
     ))}

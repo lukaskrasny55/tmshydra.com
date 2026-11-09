@@ -3,6 +3,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { Phone, Mail, Facebook, Instagram } from 'lucide-react';
 import { ROUTE_PATHS } from '../routePaths';
+import { cityData, cityMeta } from '../data/cities.js';
 import { trackConversion } from './GoogleAds';
 import { openCookieSettings } from '../consent';
 
@@ -95,6 +96,19 @@ export const Footer: React.FC = () => {
               <li><p className="mt-4 text-slate-400">IČO: 57 086 699<br />DIČ: 2122561485</p></li>
             </ul>
           </div>
+        </div>
+
+        <div className="border-t border-slate-800 pt-8 mb-8">
+          <h4 className="text-white font-bold mb-4">Hydroizolácia plochých striech podľa miest</h4>
+          <ul className="flex flex-wrap gap-x-5 gap-y-2 text-sm">
+            {Object.keys(cityData).map((city) => (
+              <li key={city}>
+                <Link to={`/sluzby/hydroizolacia-plochej-strechy/${city}`} className="hover:text-blue-400 transition-colors">
+                  {cityMeta[city]?.name || city}
+                </Link>
+              </li>
+            ))}
+          </ul>
         </div>
 
         <div className="border-t border-slate-800 pt-8 flex flex-col sm:flex-row justify-between items-center text-xs">

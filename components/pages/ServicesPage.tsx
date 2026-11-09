@@ -11,6 +11,7 @@ import {
 import { HeroSection } from '../HeroSection';
 import { ProcessSection } from '../ProcessSection';
 import { ROUTE_PATHS } from '../../routePaths';
+import { CityDirectory } from '../CityDirectory';
 
 interface Props {
   onBack: () => void;
@@ -79,6 +80,8 @@ export const ServicesPage: React.FC<Props> = ({
           ))}
 
         </div>
+
+        <CityDirectory />
 
         <div className="mt-16 text-center">
           <Link
