@@ -12,6 +12,7 @@ import { trackConversion } from './GoogleAds';
 import { CookieConsent } from './CookieConsent';
 import { MobileCallBar } from './MobileCallBar';
 import { projects } from '../data/projects';
+import { blogPosts } from '../data/blog';
 import { ContactForm } from './ContactForm';
 import { openCookieSettings } from '../consent';
 import { ROUTE_PATHS } from '../routePaths';
@@ -133,6 +134,17 @@ const SeoCityContent: React.FC<{ service: string; city: string }> = ({ service, 
   const nearbyProjects = hasLocalProjects
     ? projects.filter((proj) => nearbyProjectSlugs.includes(proj.slug))
     : projects.slice(0, 3);
+
+  // Related articles from the Poradňa per service, so every city page also
+  // links to helpful guides (and the guides get crawled from many pages).
+  const RELATED_ARTICLES: Record<string, string[]> = {
+    'hydroizolacia-plochej-strechy': ['kolko-stoji-hydroizolacia-plochej-strechy', 'pvc-vs-tpo-vs-epdm-folia-rozdiely', 'asfaltove-pasy-vs-folia-plocha-strecha'],
+    'zateplenie-plochej-strechy': ['zateplenie-plochej-strechy-pir-eps-spadove-kliny', 'kolko-stoji-hydroizolacia-plochej-strechy', 'priznaky-ze-plocha-strecha-potrebuje-rekonstrukciu'],
+    'oprava-plochej-strechy': ['zatekanie-plochej-strechy-pricina-a-riesenie', 'priznaky-ze-plocha-strecha-potrebuje-rekonstrukciu', 'ako-casto-kontrolovat-plochu-strechu'],
+  };
+  const relatedArticles = (RELATED_ARTICLES[service] || [])
+    .map((slug) => blogPosts.find((post) => post.slug === slug))
+    .filter((post): post is (typeof blogPosts)[number] => Boolean(post));
 
   const meta = cityMeta[city];
   const otherServices = Object.keys(serviceNames).filter((key) => key !== service);
@@ -328,6 +340,13 @@ const SeoCityContent: React.FC<{ service: string; city: string }> = ({ service, 
                       Zateká strecha? Oprava zatekajúcej strechy
                     </Link>
                   </li>
+                  {relatedArticles.map((post) => (
+                    <li key={post.slug}>
+                      <Link to={`${ROUTE_PATHS.blog}/${post.slug}`} className="font-bold text-blue-600 hover:underline">
+                        {post.title}
+                      </Link>
+                    </li>
+                  ))}
                   <li>
                     <Link to={ROUTE_PATHS.priceLanding} className="font-bold text-blue-600 hover:underline">
                       Orientačná cena hydroizolácie plochej strechy
