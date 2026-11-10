@@ -4,6 +4,7 @@ import { CheckCircle2, ArrowRight, MapPin, Phone, Calculator, Quote } from 'luci
 import { Helmet } from 'react-helmet-async';
 import { cityData, serviceNames, cityMeta } from '../data/cities.js';
 import { getServiceCopy } from '../data/serviceContent.js';
+import { cityContent } from '../data/cityContent.js';
 import { NotFoundPage } from './pages/NotFoundPage';
 import { GOOGLE_REVIEWS_URL, GOOGLE_REVIEWS_RATING, GOOGLE_REVIEWS_COUNT_LABEL, GOOGLE_REVIEWS_COUNT, reviews } from '../data/reviews.js';
 import { Stars } from './Testimonials';
@@ -146,6 +147,7 @@ const SeoCityContent: React.FC<{ service: string; city: string }> = ({ service, 
     .map((slug) => blogPosts.find((post) => post.slug === slug))
     .filter((post): post is (typeof blogPosts)[number] => Boolean(post));
 
+  const localParagraphs: string[] = cityContent[city]?.[service] || [];
   const meta = cityMeta[city];
   const otherServices = Object.keys(serviceNames).filter((key) => key !== service);
   const otherCities = Object.keys(cityData)
@@ -321,6 +323,19 @@ const SeoCityContent: React.FC<{ service: string; city: string }> = ({ service, 
                 <p className="text-slate-600 leading-relaxed">
                   {formattedCity} patrí do okresu {meta.okres} ({meta.kraj}). Obhliadku plochých striech zabezpečujeme v meste aj v okolitých obciach. Stačí vyplniť formulár nižšie alebo zavolať a dohodneme termín.
                 </p>
+              )}
+
+              {localParagraphs.length > 0 && (
+                <>
+                  <h3 className="text-2xl font-black text-slate-900 uppercase tracking-tight mt-10 mb-4">
+                    Z našich realizácií v okolí: {formattedCity}
+                  </h3>
+                  {localParagraphs.map((text, i) => (
+                    <p key={i} className="text-slate-600 leading-relaxed">
+                      {text}
+                    </p>
+                  ))}
+                </>
               )}
 
               <div className="not-prose mt-8 rounded-2xl border border-slate-100 bg-slate-50 p-6">
