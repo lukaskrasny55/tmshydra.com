@@ -1,4 +1,5 @@
 import { Resend } from 'resend';
+import { botSignal, isValidName, isValidPhone, looksLikeSpamMessage } from './_formGuard.js';
 
 // Only these origins may call this endpoint. Local dev ports are included so
 // the flow can be tested before deploying.
@@ -117,6 +118,8 @@ function validate(body) {
     errors.push('Meno je povinné.');
   } else if (name.trim().length > 100) {
     errors.push('Meno môže mať najviac 100 znakov.');
+  } else if (!isValidName(name)) {
+    errors.push('Zadajte prosím meno a priezvisko tak, ako sa bežne píšu.');
   }
 
   if (typeof email !== 'string' || email.trim().length === 0) {
@@ -129,10 +132,14 @@ function validate(body) {
     errors.push('Správa je povinná.');
   } else if (message.length > 2000) {
     errors.push('Správa môže mať najviac 2000 znakov.');
+  } else if (looksLikeSpamMessage(message)) {
+    errors.push('Správa vyzerá ako spam. Napíšte nám prosím niekoľko viet vlastnými slovami.');
   }
 
   if (typeof phone !== 'string' || phone.trim().length === 0) {
     errors.push('Telefón je povinný.');
+  } else if (!isValidPhone(phone)) {
+    errors.push('Zadajte telefón vo formáte 0911 123 456 alebo +421 911 123 456.');
   }
 
   if (type === 'booking') {
@@ -342,6 +349,16 @@ export default async function handler(req, res) {
 
   if (isRateLimited(getClientIp(req))) {
     return res.status(429).json({ error: 'Príliš veľa požiadaviek. Skúste to prosím neskôr.' });
+  }
+
+  // Honeypot filled / implausibly fast submit: answer "success" so the script
+  // gets nothing to adapt to, but send nothing — no e-mail, no inspections-app
+  // entry, no GA4 lead. `ignored: true` tells our own client not to count a
+  // conversion for it either.
+  const signal = botSignal(req.body);
+  if (signal) {
+    console.warn('send-email: bot submission ignored', signal, getClientIp(req));
+    return res.status(200).json({ success: true, ignored: true });
   }
 
   const errors = validate(req.body);

@@ -10,6 +10,7 @@ import {
   Send
 } from 'lucide-react';
 import { trackConversion } from './GoogleAds';
+import { HoneypotField, useFormGuard, validateName, validatePhone, wasIgnored } from './formGuard';
 
 type BuildingType = 'family' | 'apartment' | 'industrial';
 type RoofSystem = 'basic' | 'standard' | 'plus' | 'premium' | 'unknown';
@@ -24,6 +25,8 @@ export const Calculator: React.FC = () => {
 
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const [formError, setFormError] = useState<string | null>(null);
+  const guard = useFormGuard();
 
   const [leadForm, setLeadForm] = useState({
     name: '',
@@ -69,6 +72,24 @@ export const Calculator: React.FC = () => {
     e: React.FormEvent
   ) => {
     e.preventDefault();
+    setFormError(null);
+
+    // Honeypot filled: a script, not a visitor. Pretend it worked, send and
+    // count nothing.
+    if (guard.honeypot.trim().length > 0) {
+      setIsSubmitted(true);
+      return;
+    }
+
+    const problem = validateName(leadForm.name) || validatePhone(leadForm.phone);
+    if (problem) {
+      setFormError(problem);
+      return;
+    }
+    if (guard.looksAutomated()) {
+      setFormError('Skontrolujte prosím údaje a odošlite formulár znova.');
+      return;
+    }
 
     setIsSubmitting(true);
 
@@ -83,6 +104,7 @@ export const Calculator: React.FC = () => {
           email: leadForm.email,
           phone: leadForm.phone,
           leadType: 'quote',
+          ...guard.payload(),
           message: `Dopyt na cenovú ponuku z kalkulačky.
 Typ objektu: ${buildingLabels[buildingType]}
 Plocha: ${area} m²
@@ -97,8 +119,11 @@ Systém: ${systems.find((x) => x.id === selectedSystem)?.label}`
       setIsSubmitted(true);
       // Dopyt na cenovú ponuku z kalkulačky je vlastný typ konverzie (nie
       // zdieľaný s kontaktným formulárom), aby sa dal v Google Ads sledovať
-      // a vyhodnocovať samostatne. 7.9.2026.
-      trackConversion('quote');
+      // a vyhodnocovať samostatne. 7.9.2026. Nepočíta sa, ak server dopyt
+      // zahodil ako bota (11.11.2026).
+      if (!(await wasIgnored(response))) {
+        trackConversion('quote');
+      }
     } catch (err) {
       alert('Chyba pri odoslaní formulára.');
     } finally {
@@ -244,6 +269,7 @@ Systém: ${systems.find((x) => x.id === selectedSystem)?.label}`
                     onSubmit={handleSubmitLead}
                     className="space-y-4"
                   >
+                    <HoneypotField value={guard.honeypot} onChange={guard.setHoneypot} />
                     <input
                       type="text"
                       placeholder="Meno"
@@ -285,6 +311,12 @@ Systém: ${systems.find((x) => x.id === selectedSystem)?.label}`
                       }
                       className="w-full bg-slate-800 border border-slate-700 rounded-xl px-4 py-3"
                     />
+
+                    {formError && (
+                      <p role="alert" className="text-sm text-red-400">
+                        {formError}
+                      </p>
+                    )}
 
                     <button
                       type="submit"

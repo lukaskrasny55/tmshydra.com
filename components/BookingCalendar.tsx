@@ -2,6 +2,7 @@
 import React, { useState } from 'react';
 import { Calendar as CalendarIcon, Clock, CheckCircle, Send, User, Phone, Mail, MapPin, ChevronLeft, ChevronRight } from 'lucide-react';
 import { trackConversion } from './GoogleAds';
+import { HoneypotField, useFormGuard, validateMessage, validateName, validatePhone, wasIgnored } from './formGuard';
 
 const WEEKDAY_LABELS = ['Po', 'Ut', 'St', 'Št', 'Pi', 'So', 'Ne'];
 
@@ -85,6 +86,9 @@ export const BookingCalendar: React.FC = () => {
 
   const availableTimes = ['09:00', '11:00', '13:00', '15:00'];
 
+  const [formError, setFormError] = useState<string | null>(null);
+  const guard = useFormGuard();
+
   const today = startOfDay(new Date());
   const minSelectable = addDays(today, 1); // earliest bookable day is tomorrow
   const maxSelectable = addDays(today, MAX_WEEKS_AHEAD * 7);
@@ -108,31 +112,52 @@ export const BookingCalendar: React.FC = () => {
 
   const handleBooking = async (e: React.FormEvent) => {
     e.preventDefault();
-    
-const response = await fetch('/api/send-email', {
-  method: 'POST',
-  headers: {
-    'Content-Type': 'application/json',
-  },
-  body: JSON.stringify({
-    type: 'booking',
-    name: booking.name,
-    email: booking.email,
-    phone: booking.phone,
-    address: booking.address,
-    date: booking.date,
-    time: booking.time,
-    message: booking.message.trim() || 'Bez poznámky.',
-  }),
-});
+    setFormError(null);
 
-if (response.ok) {
-  setStep(3);
-  trackConversion('booking');
-} else {
-  alert('Chyba pri odoslaní rezervácie. Skúste to prosím neskôr.');
-}
-};
+    // Honeypot filled: a script, not a visitor. Pretend it worked, send and
+    // count nothing.
+    if (guard.honeypot.trim().length > 0) {
+      setStep(3);
+      return;
+    }
+
+    const problem = validateName(booking.name) || validatePhone(booking.phone) || validateMessage(booking.message);
+    if (problem) {
+      setFormError(problem);
+      return;
+    }
+    if (guard.looksAutomated()) {
+      setFormError('Skontrolujte prosím údaje a odošlite rezerváciu znova.');
+      return;
+    }
+
+    const response = await fetch('/api/send-email', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        type: 'booking',
+        name: booking.name,
+        email: booking.email,
+        phone: booking.phone,
+        address: booking.address,
+        date: booking.date,
+        time: booking.time,
+        message: booking.message.trim() || 'Bez poznámky.',
+        ...guard.payload(),
+      }),
+    });
+
+    if (response.ok) {
+      setStep(3);
+      if (!(await wasIgnored(response))) {
+        trackConversion('booking');
+      }
+    } else {
+      alert('Chyba pri odoslaní rezervácie. Skúste to prosím neskôr.');
+    }
+  };
 
   if (step === 3) {
     return (
@@ -308,6 +333,7 @@ if (response.ok) {
                 <div className="animate-in slide-in-from-right duration-300">
                   <h3 className="text-xl font-bold mb-6">Vaše kontaktné údaje</h3>
                   <form onSubmit={handleBooking} className="space-y-6">
+                    <HoneypotField value={guard.honeypot} onChange={guard.setHoneypot} />
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                       <div className="relative">
                         <User className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-500 w-5 h-5" />
@@ -367,6 +393,12 @@ if (response.ok) {
                         className="w-full px-4 py-4 rounded-xl border-2 border-slate-100 focus:border-blue-500 focus:ring-0 outline-none transition-all resize-none"
                       />
                     </div>
+
+                    {formError && (
+                      <p role="alert" className="text-sm text-red-600">
+                        {formError}
+                      </p>
+                    )}
 
                     <div className="flex flex-col sm:flex-row justify-between items-center gap-4 pt-6">
                       <button

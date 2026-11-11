@@ -1,14 +1,36 @@
 import React, { useState } from 'react';
 import { User, Mail, Phone, MessageSquare, Send, CheckCircle } from 'lucide-react';
 import { trackConversion } from './GoogleAds';
+import { HoneypotField, useFormGuard, validateMessage, validateName, validatePhone, wasIgnored } from './formGuard';
 
 export const ContactForm: React.FC<{ city?: string }> = ({ city }) => {
   const [form, setForm] = useState({ name: '', email: '', phone: '', message: '' });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const [formError, setFormError] = useState<string | null>(null);
+  const guard = useFormGuard();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setFormError(null);
+
+    // Honeypot filled: a script, not a visitor. Pretend it worked, send and
+    // count nothing.
+    if (guard.honeypot.trim().length > 0) {
+      setIsSubmitted(true);
+      return;
+    }
+
+    const problem = validateName(form.name) || validatePhone(form.phone) || validateMessage(form.message);
+    if (problem) {
+      setFormError(problem);
+      return;
+    }
+    if (guard.looksAutomated()) {
+      setFormError('Skontrolujte prosím údaje a odošlite formulár znova.');
+      return;
+    }
+
     setIsSubmitting(true);
 
     try {
@@ -20,6 +42,7 @@ export const ContactForm: React.FC<{ city?: string }> = ({ city }) => {
           email: form.email,
           phone: form.phone,
           message: city ? `[Stránka mesta: ${city}]\n${form.message}` : form.message,
+          ...guard.payload(),
         }),
       });
 
@@ -28,7 +51,9 @@ export const ContactForm: React.FC<{ city?: string }> = ({ city }) => {
       }
 
       setIsSubmitted(true);
-      trackConversion('form');
+      if (!(await wasIgnored(response))) {
+        trackConversion('form');
+      }
     } catch (err) {
       alert('Chyba pri odoslaní správy. Skúste to prosím neskôr, alebo nám rovno zavolajte.');
     } finally {
@@ -50,6 +75,7 @@ export const ContactForm: React.FC<{ city?: string }> = ({ city }) => {
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
+      <HoneypotField value={guard.honeypot} onChange={guard.setHoneypot} />
       <div className="relative">
         <User className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 w-5 h-5" />
         <input
@@ -95,6 +121,11 @@ export const ContactForm: React.FC<{ city?: string }> = ({ city }) => {
           className="w-full pl-12 pr-4 py-3.5 rounded-xl border-2 border-slate-200 bg-white focus:border-blue-500 focus:ring-0 outline-none transition-all resize-none"
         />
       </div>
+      {formError && (
+        <p role="alert" className="text-sm text-red-600">
+          {formError}
+        </p>
+      )}
       <button
         type="submit"
         disabled={isSubmitting}
