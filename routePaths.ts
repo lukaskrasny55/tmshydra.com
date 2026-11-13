@@ -11,6 +11,7 @@ export const ROUTE_PATHS = {
   blog: '/blog',
   priceLanding: '/hydroizolacia-plochej-strechy-cena',
   sosLanding: '/oprava-zatekajucej-strechy',
+  bytoveDomy: '/hydroizolacia-strechy-bytoveho-domu',
   privacyPolicy: '/ochrana-osobnych-udajov',
   terms: '/obchodne-podmienky',
 } as const;
@@ -27,6 +28,7 @@ const SLUG_BY_PATH: Record<string, string> = {
   [ROUTE_PATHS.blog]: 'blog',
   [ROUTE_PATHS.priceLanding]: 'price-landing',
   [ROUTE_PATHS.sosLanding]: 'sos-landing',
+  [ROUTE_PATHS.bytoveDomy]: 'bytove-domy',
   [ROUTE_PATHS.privacyPolicy]: 'privacy-policy',
   [ROUTE_PATHS.terms]: 'terms',
 };

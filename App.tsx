@@ -85,6 +85,12 @@ const SosLandingPage = lazy(() =>
   }))
 );
 
+const BytoveDomyPage = lazy(() =>
+  import('./components/pages/BytoveDomyPage').then(module => ({
+    default: module.BytoveDomyPage
+  }))
+);
+
 const PrivacyPolicyPage = lazy(() =>
   import('./components/pages/PrivacyPolicyPage').then(module => ({
     default: module.PrivacyPolicyPage
@@ -218,6 +224,7 @@ const MainSite: React.FC = () => {
         <Route path="blog/:slug" element={<BlogPostPage />} />
         <Route path="hydroizolacia-plochej-strechy-cena" element={<PriceLandingPage />} />
         <Route path="oprava-zatekajucej-strechy" element={<SosLandingPage />} />
+        <Route path="hydroizolacia-strechy-bytoveho-domu" element={<BytoveDomyPage />} />
         <Route path="ochrana-osobnych-udajov" element={<PrivacyPolicyPage />} />
         <Route path="obchodne-podmienky" element={<TermsPage />} />
         <Route path="*" element={<NotFoundPage />} />

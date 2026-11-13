@@ -62,6 +62,11 @@ const seoData: Record<string, { title: string; description: string; keywords: st
     description: 'Strecha vám zateká? Zasiahneme do 48 hodín, strechu provizórne zabezpečíme a pripravíme trvalé riešenie. SOS havarijný tím TMS-HYDRA, bezplatná obhliadka po celom Slovensku.',
     keywords: 'oprava zatekajúcej strechy, havarijná oprava strechy, zateká strecha, SOS strecha, TMS HYDRA',
   },
+  'bytove-domy': {
+    title: 'Hydroizolácia strechy bytového domu od 15 €/m² | TMS HYDRA',
+    description: 'Obnova plochých striech bytových domov pre správcov a spoločenstvá vlastníkov. Bezplatná obhliadka, písomná ponuka, záruka až 15 rokov, realizácie po celom Slovensku.',
+    keywords: 'hydroizolácia strechy bytového domu, oprava strechy bytovky, rekonštrukcia plochej strechy bytový dom, správca bytového domu, SVB, TMS HYDRA',
+  },
   'privacy-policy': {
     title: 'Ochrana osobných údajov a cookies | TMS HYDRA',
     description: 'Zásady spracovania osobných údajov (GDPR) a používania súborov cookie na webe spoločnosti TMS HYDRA.',
