@@ -7,7 +7,10 @@ import {
   MapPin,
   Facebook,
   Instagram,
+  Star,
+  Euro,
 } from 'lucide-react';
+import { GOOGLE_REVIEWS_URL, GOOGLE_REVIEWS_RATING, GOOGLE_REVIEWS_COUNT_LABEL } from '../data/reviews.js';
 
 const stats: [string, any][] = [
   ['Kvalitné materiály', ShieldCheck],
@@ -69,6 +72,32 @@ export const Hero: React.FC = () => {
               Bezplatná obhliadka
               <ArrowRight className="w-5 h-5" />
             </button>
+          </div>
+
+          <div className="mt-6 flex flex-wrap items-center gap-x-5 gap-y-3 text-sm">
+            <a
+              href={GOOGLE_REVIEWS_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 bg-white text-slate-900 px-4 py-2 rounded-full shadow-lg hover:shadow-xl transition"
+              aria-label={`Google hodnotenie ${GOOGLE_REVIEWS_RATING} ${GOOGLE_REVIEWS_COUNT_LABEL}`}
+            >
+              <span className="flex gap-0.5">
+                {Array.from({ length: 5 }).map((_, i) => (
+                  <Star key={i} className="w-4 h-4 fill-amber-400 text-amber-400" />
+                ))}
+              </span>
+              <span className="font-black">{GOOGLE_REVIEWS_RATING}</span>
+              <span className="text-slate-500">{GOOGLE_REVIEWS_COUNT_LABEL}</span>
+            </a>
+            <span className="inline-flex items-center gap-2 font-semibold text-slate-100">
+              <ShieldCheck className="w-5 h-5 text-blue-400" />
+              Záruka až 15 rokov
+            </span>
+            <span className="inline-flex items-center gap-2 font-semibold text-slate-100">
+              <Euro className="w-5 h-5 text-blue-400" />
+              Cena od 15 €/m²
+            </span>
           </div>
 
           <p className="mt-4 text-slate-400 text-sm italic">
