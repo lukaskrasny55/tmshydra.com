@@ -40,6 +40,34 @@ const NEARBY_PROJECT_SLUGS: Record<string, string[]> = {
   ],
 };
 
+// Same figures as the price page (PriceLandingPage.tsx) — keep in sync.
+const PRICE_TIERS = [
+  { label: 'Samotná hydroizolačná fólia (jednovrstvový systém)', price: '15 – 30 €/m²' },
+  { label: 'Neizolovaná plochá strecha – kompletná skladba', price: '30 – 50 €/m²' },
+  { label: 'Izolovaná plochá strecha (s tepelnou izoláciou)', price: '80 – 100 €/m²' },
+  { label: 'Pochôdzna terasa', price: 'od 140 €/m²' },
+  { label: 'Zelená strecha (extenzívna)', price: 'od 170 €/m²' },
+];
+
+const PROCESS_STEPS: { title: string; text: (city: string) => string }[] = [
+  {
+    title: 'Bezplatná obhliadka',
+    text: (city) => `Technik príde priamo na strechu v meste ${city} a okolí, zmeria plochu a posúdi stav skladby, detailov a odvodnenia.`,
+  },
+  {
+    title: 'Cenová ponuka písomne',
+    text: () => 'Dostanete rozpis prác, materiálu a pevnú cenu. Ponuka je nezáväzná a bez skrytých položiek.',
+  },
+  {
+    title: 'Príprava podkladu a realizácia',
+    text: () => 'Strechu vyčistíme, opravíme podklad a detaily (atiky, vpuste, prestupy) a položíme hydroizolačnú fóliu. Väčšina prác trvá niekoľko dní.',
+  },
+  {
+    title: 'Kontrola a záruka',
+    text: () => 'Po dokončení skontrolujeme vodotesnosť, odovzdáme strechu a vystavíme záruku až 15 rokov.',
+  },
+];
+
 interface PageContent {
   title: string;
   meta_title: string;
@@ -157,6 +185,12 @@ const SeoCityContent: React.FC<{ service: string; city: string }> = ({ service, 
       const sameB = cityMeta[b]?.kraj === meta?.kraj ? 0 : 1;
       return sameA - sameB;
     });
+
+  // Up to 4 other cities in the same kraj, shown as "okolie" text.
+  const nearbyCityNames = otherCities
+    .filter((key) => cityMeta[key]?.kraj === meta?.kraj)
+    .slice(0, 4)
+    .map((key) => cityMeta[key]?.name || key);
 
   const structuredData = {
     "@context": "https://schema.org",
@@ -369,6 +403,56 @@ const SeoCityContent: React.FC<{ service: string; city: string }> = ({ service, 
                   </li>
                 </ul>
               </div>
+
+              <h3 className="text-2xl font-black text-slate-900 uppercase tracking-tight mt-12 mb-4">
+                Orientačná cena v meste {formattedCity}
+              </h3>
+              <p className="text-slate-600 leading-relaxed">
+                Cena plochej strechy závisí od stavu pôvodnej skladby, veľkosti plochy a zvoleného systému. Pre {formattedCity} a okolie počítame orientačne takto:
+              </p>
+              <div className="not-prose rounded-2xl border border-slate-100 overflow-hidden">
+                {PRICE_TIERS.map((tier) => (
+                  <div key={tier.label} className="flex items-center justify-between gap-4 px-5 py-3 border-b border-slate-100 last:border-b-0 bg-white">
+                    <span className="text-slate-700">{tier.label}</span>
+                    <span className="font-black text-slate-900 whitespace-nowrap">{tier.price}</span>
+                  </div>
+                ))}
+              </div>
+              <p className="text-slate-500 text-sm mt-3">
+                Presnú cenu vám písomne pošleme po bezplatnej obhliadke. Podrobnosti nájdete v{' '}
+                <Link to={ROUTE_PATHS.priceLanding} className="font-bold text-blue-600 hover:underline">
+                  cenníku hydroizolácie plochej strechy
+                </Link>
+                .
+              </p>
+
+              <h3 className="text-2xl font-black text-slate-900 uppercase tracking-tight mt-12 mb-4">
+                Ako prebieha práca krok za krokom
+              </h3>
+              <ol className="not-prose space-y-3">
+                {PROCESS_STEPS.map((step, i) => (
+                  <li key={step.title} className="flex gap-4 p-4 bg-slate-50 rounded-2xl border border-slate-100">
+                    <span className="flex-shrink-0 w-8 h-8 rounded-full bg-blue-600 text-white font-black flex items-center justify-center">
+                      {i + 1}
+                    </span>
+                    <div>
+                      <p className="font-black text-slate-900">{step.title}</p>
+                      <p className="text-slate-600 text-sm leading-relaxed">{step.text(formattedCity)}</p>
+                    </div>
+                  </li>
+                ))}
+              </ol>
+
+              {nearbyCityNames.length > 0 && (
+                <>
+                  <h3 className="text-2xl font-black text-slate-900 uppercase tracking-tight mt-12 mb-4">
+                    {formattedCity} a okolie
+                  </h3>
+                  <p className="text-slate-600 leading-relaxed">
+                    Na obhliadku a realizáciu k vám prídeme nielen do mesta {formattedCity}, ale aj do okolitých obcí a miest v rámci kraja ({meta?.kraj}), napríklad: {nearbyCityNames.join(', ')}. Vďaka tomu vieme termín obhliadky väčšinou dohodnúť v priebehu niekoľkých dní.
+                  </p>
+                </>
+              )}
 
               <h3 className="text-2xl font-black text-slate-900 uppercase tracking-tight mt-12 mb-6">
                 Prečo si vybrať TMS-HYDRA?
